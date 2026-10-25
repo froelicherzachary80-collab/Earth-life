@@ -53,3 +53,17 @@ with open(os.path.join(out, "fabric-api.txt"), "w") as f:
         r = subprocess.run(["javap", "-public", "-cp", cp, c], capture_output=True, text=True)
         f.write(f"==== {c}\n{r.stdout or r.stderr}\n")
 print("dumped", len(classes), "classes from", mc)
+
+# Full public-signature dump of every net.minecraft class (text only, gzipped) for offline porting.
+import gzip
+with gzip.open(os.path.join(out, "api-all.txt.gz"), "wt") as g:
+    batch = 300
+    for i in range(0, len(names), batch):
+        chunk = [n for n in names[i:i + batch] if "$$" not in n]
+        r = subprocess.run(["javap", "-public", "-cp", cp] + chunk, capture_output=True, text=True)
+        g.write(r.stdout)
+    fab_list = sorted(fab_names)
+    for i in range(0, len(fab_list), batch):
+        r = subprocess.run(["javap", "-public", "-cp", cp] + [n for n in fab_list[i:i + batch] if not n.endswith("package-info")], capture_output=True, text=True)
+        g.write(r.stdout)
+print("full dump written")
