@@ -14,9 +14,9 @@ jobs:
   windows-exe:
     runs-on: windows-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
-      - uses: actions/setup-java@v4
+      - uses: actions/setup-java@v5
         with:
           distribution: temurin
           java-version: "21"
@@ -31,7 +31,13 @@ jobs:
 
       - name: Build, test and package
         shell: pwsh
-        run: ./packaging/windows/build-exe.ps1 -Version "0.3.0"
+        run: |
+          ./packaging/windows/build-exe.ps1 -Version "0.3.0" *>&1 | Tee-Object -FilePath build.log
+          $code = $LASTEXITCODE
+          if (-not $? -or $code) {
+            Get-Content build.log -Tail 40 | ForEach-Object { if ($_.Trim()) { Write-Host "::error::$($_.Trim())" } }
+            exit 1
+          }
 
       - uses: actions/upload-artifact@v4
         with:

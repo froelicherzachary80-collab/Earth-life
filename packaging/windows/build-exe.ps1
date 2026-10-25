@@ -13,6 +13,7 @@
 #>
 param([string]$Version = "0.3.0", [switch]$SkipTests)
 $ErrorActionPreference = "Stop"
+trap { Write-Host "BUILD ERROR: $($_.Exception.Message) at line $($_.InvocationInfo.ScriptLineNumber)"; exit 1 }
 $Root = (Resolve-Path "$PSScriptRoot\..\..").Path
 Set-Location $Root
 
