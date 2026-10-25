@@ -45,7 +45,7 @@ public final class LauncherUI {
         f.add(header, BorderLayout.NORTH);
 
         JPanel side = new JPanel(new GridLayout(0, 1, 0, 8)); side.setBackground(BG); side.setBorder(new EmptyBorder(0, 16, 0, 0));
-        JButton signIn = button("Sign in with Microsoft", new Color(0x2F6FB0));
+        JButton signIn = button("Sign in & Play (Minecraft Launcher)", new Color(0x2F6FB0));
         JButton repair = button("Install / Repair", DIRT);
         JButton newWorld = button("New EarthLife World", DIRT);
         JButton mods = button("Mods", PANEL), saves = button("Saves", PANEL), settings = button("Settings", PANEL);
@@ -62,8 +62,8 @@ public final class LauncherUI {
         f.add(bottom, BorderLayout.SOUTH);
 
         signIn.addActionListener(e -> bg(() -> {
-            var s = launcher.signIn(msg -> { append(msg); SwingUtilities.invokeLater(() -> JOptionPane.showMessageDialog(f, msg, "Sign in", JOptionPane.INFORMATION_MESSAGE)); });
-            SwingUtilities.invokeLater(() -> account.setText("Signed in: " + s.username()));
+            launcher.playWithOfficialLauncher();
+            SwingUtilities.invokeLater(() -> account.setText("Using the Minecraft Launcher"));
         }));
         repair.addActionListener(e -> bg(() -> profile = launcher.install()));
         newWorld.addActionListener(e -> bg(() -> {
@@ -115,18 +115,15 @@ public final class LauncherUI {
         settings.addActionListener(e -> JOptionPane.showMessageDialog(f,
                 "Settings live in " + launcher.root.resolve("launcher.json") + "\n(gameVersion, fabricLoader, memoryMb, msaClientId)"));
         play.addActionListener(e -> bg(() -> {
-            if (launcher.session() == null) launcher.signIn(this::append);
-            if (profile == null) profile = launcher.install();
             String world = launcher.instance.listSaves().contains("EarthLife Williamson") ? "EarthLife Williamson" : null;
             if (world == null) launcher.instance.requestWorld("EarthLife Williamson", 43.2237, -77.1861, "Williamson, NY", 20261025L);
-            Process p = launcher.launch(profile, world);
-            append("Game running (pid " + p.pid() + ").");
+            launcher.playWithOfficialLauncher();
         }));
 
         f.setSize(900, 600);
         f.setLocationRelativeTo(null);
         f.setVisible(true);
-        append("Welcome to EarthLife. Sign in, then press PLAY.");
+        append("Welcome to EarthLife. Press PLAY: the official Minecraft Launcher opens with an \"EarthLife\" installation ready.");
     }
 
     private interface Job { void run() throws Exception; }

@@ -65,14 +65,17 @@ and `towns.json`, `data/airports.json` and `landmarks.json` (merge in `osm-landm
 3. Fix any API mismatches (start with `McCompat.java`, `earthlife.accesswidener`, `AirplaneEntity`'s save/hurt methods).
 4. Copy the jar next to the launcher as `earthlife-mod.jar`.
 
-## 4. Sign-in setup (one time, developer)
+## 4. Sign-in (no setup needed)
 
-Register a public-client app in Microsoft Entra, then apply to Mojang for Minecraft API access for that client ID.
-Set `EARTHLIFE_MSA_CLIENT_ID` or `"msaClientId"` in `<EarthLife>/launcher.json`. Details: `launcher/README.md`.
+EarthLife uses the **official Minecraft Launcher** for sign-in. Press **Sign in & Play** or **PLAY** in EarthLife. It adds an
+"EarthLife" installation (Fabric + the EarthLife mod, its own game folder) to the official launcher and opens it.
+Sign in there with your Microsoft account if asked, choose **EarthLife** next to the Play button, and press Play.
+Your existing installations are kept; a backup of `launcher_profiles.json` is saved alongside it.
+Requires the Minecraft Launcher (minecraft.net/download or the Xbox app). (Advanced: `login-direct` still supports your own Azure app id.)
 
 ## 5. Play
 
-`java -jar dist/earthlife-launcher.jar` → Sign in → Install/Repair → **Day length** (real time / 2 h / 1 h / vanilla) → PLAY.
+`EarthLife.exe` → **Day length** (optional) → **PLAY** → the Minecraft Launcher opens → select **EarthLife** → Play.
 First time: Create New World → World Type **EarthLife (Voxel Earth)**, name it `EarthLife Williamson`.
 
 | Do | How |

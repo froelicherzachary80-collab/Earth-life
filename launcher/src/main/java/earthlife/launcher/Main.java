@@ -23,16 +23,13 @@ public final class Main {
 
     private static void run(Launcher l, String cmd, String[] args) throws Exception {
         switch (cmd) {
-            case "login" -> l.signIn(System.out::println);
+            case "login", "official" -> l.playWithOfficialLauncher();
+            case "login-direct" -> l.signIn(System.out::println);   // advanced: own Azure app id (see launcher/README.md)
             case "repair", "install" -> { l.signIn(System.out::println); l.install(); }
             case "play" -> {
-                l.signIn(System.out::println);
-                var p = l.install();
-                var saves = l.instance.listSaves();
-                String world = saves.contains("EarthLife Williamson") ? "EarthLife Williamson" : null;
-                if (world == null) l.instance.requestWorld("EarthLife Williamson", 43.2237, -77.1861, "Williamson, NY", 20261025L);
-                Process proc = l.launch(p, world);
-                System.out.println("Minecraft started (pid " + proc.pid() + "). Log: " + l.instance.dir.resolve("latest-launch.log"));
+                if (!l.instance.listSaves().contains("EarthLife Williamson"))
+                    l.instance.requestWorld("EarthLife Williamson", 43.2237, -77.1861, "Williamson, NY", 20261025L);
+                l.playWithOfficialLauncher();
             }
             case "newworld" -> l.instance.requestWorld(args.length > 1 ? args[1] : "EarthLife Williamson", 43.2237, -77.1861, "Williamson, NY", System.nanoTime());
             case "mods" -> l.instance.listMods().forEach(m -> System.out.println((m.enabled() ? "[on]  " : "[off] ") + m.file()));

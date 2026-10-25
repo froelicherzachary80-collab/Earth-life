@@ -121,6 +121,21 @@ public final class LauncherTest {
         try { in.setTime("SCALED", 0.2, "UTC"); } catch (IllegalArgumentException e) { rejected = true; }
         check(rejected, "invalid day length rejected");
 
+        // --- official Minecraft Launcher integration (no Azure needed)
+        Path mcDir = tmp.resolve(".minecraft");
+        Files.createDirectories(mcDir);
+        Files.writeString(mcDir.resolve("launcher_profiles.json"), "{\"profiles\":{\"abc\":{\"name\":\"Latest release\",\"type\":\"latest-release\",\"lastVersionId\":\"latest-release\"}},\"settings\":{\"keepLauncherOpen\":true},\"version\":3}");
+        var off = new earthlife.launcher.OfficialLauncher(mcDir);
+        String vid = off.installProfile(Files.readString(fabricDir.resolve("json")), in.dir, 6144, null);
+        check(vid.equals("fabric-loader-0.99.0-26.3-test") && Files.exists(mcDir.resolve("versions/" + vid + "/" + vid + ".json")), "Fabric version installed into .minecraft");
+        String prof = Files.readString(mcDir.resolve("launcher_profiles.json"));
+        check(prof.contains("\"Latest release\"") && prof.contains("keepLauncherOpen"), "existing profiles and settings kept");
+        check(prof.contains("\"name\":\"EarthLife\"") && prof.contains("\"lastVersionId\":\"" + vid + "\"") && prof.contains("-Xmx6144M"), "EarthLife installation added");
+        check(Files.exists(mcDir.resolve("launcher_profiles.json.earthlife-backup")), "backup of original profiles");
+        off.installProfile(Files.readString(fabricDir.resolve("json")), in.dir, 4096, null);
+        String prof2 = Files.readString(mcDir.resolve("launcher_profiles.json"));
+        check(prof2.indexOf("\"EarthLife\"") == prof2.lastIndexOf("\"EarthLife\"") && prof2.contains("-Xmx4096M"), "re-install updates, no duplicate");
+
         // --- live events settings
         in.setEventSetting("ticketmasterKey", "AbCdEf0123456789XyZ");
         in.setEventSetting("ics", "https://example.org/town.ics");

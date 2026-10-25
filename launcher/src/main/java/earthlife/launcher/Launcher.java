@@ -56,6 +56,28 @@ public final class Launcher {
     public MicrosoftAuth.Session session() { return session; }
 
     /** Ownership must be verified before any game files are downloaded. */
+    /**
+     * Sign in & play through the official Minecraft Launcher (no Azure setup): installs the Fabric version + an
+     * "EarthLife" installation into the official launcher, copies the EarthLife mod into the EarthLife game folder,
+     * and opens the official launcher. Sign in there (once) and press Play with "EarthLife" selected.
+     */
+    public String playWithOfficialLauncher() throws IOException, InterruptedException {
+        Installer inst = new Installer(root, log);
+        String gv = gameVersion();
+        String loader = (String) config.getOrDefault("fabricLoader", inst.latestFabricLoader(gv));
+        log.accept("Preparing Minecraft " + gv + " + Fabric Loader " + loader + " for the official launcher…");
+        String json = Http.getText(Installer.FABRIC_META + "/versions/loader/" + gv + "/" + loader + "/profile/json");
+        instance.ensure();
+        installBundledMod();
+        var official = new OfficialLauncher(OfficialLauncher.defaultMinecraftDir());
+        Path icon = Path.of(System.getProperty("user.dir")).resolve("earthlife.png");
+        String id = official.installProfile(json, instance.dir, memoryMb(), icon);
+        log.accept("Added installation \"EarthLife\" (" + id + ") to the Minecraft Launcher.");
+        String how = official.open();
+        log.accept("Opened the Minecraft Launcher (" + how + "). Sign in there if asked, pick \"EarthLife\" next to Play, and press Play.");
+        return id;
+    }
+
     public VersionProfile install() throws IOException, InterruptedException {
         if (session == null) throw new IllegalStateException("Sign in first: game files are only downloaded for verified owners.");
         Installer inst = new Installer(root, log);
