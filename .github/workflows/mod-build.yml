@@ -24,7 +24,7 @@ jobs:
 
       - uses: gradle/actions/setup-gradle@v4
         with:
-          gradle-version: "9.6.0"
+          gradle-version: "current"
 
       - name: Resolve Minecraft / Fabric versions
         id: v
@@ -32,6 +32,16 @@ jobs:
           mkdir -p ci-out
           python3 tools/ci/resolve_versions.py ci-out/versions.json | tee ci-out/versions.txt
           python3 -c "import json;d=json.load(open('ci-out/versions.json'));[print(f'{k}={v}') for k,v in d.items()]" >> "$GITHUB_OUTPUT"
+          python3 - <<'PY'
+          import json, re
+          d = json.load(open('ci-out/versions.json'))
+          p = 'fabric-mod/gradle.properties'; s = open(p).read()
+          for k, key in (('minecraft', 'minecraft_version'), ('loader', 'loader_version'), ('fabric_api', 'fabric_version'), ('loom', 'loom_version')):
+              s = re.sub(rf'^{key}=.*$', f'{key}={d[k]}', s, flags=re.M)
+          open(p, 'w').write(s); open('gradle.properties', 'w').write(s)
+          print(s)
+          PY
+          gradle --version | tee ci-out/gradle-version.txt
 
       - name: Core engine tests
         run: gradle :core:runTests --no-daemon > ci-out/core-tests.log 2>&1 || echo "CORE_TESTS_FAILED" >> ci-out/core-tests.log
