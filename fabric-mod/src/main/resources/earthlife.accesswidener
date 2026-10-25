@@ -1,4 +1,4 @@
-accessWidener v2 named
+accessWidener v2 official
 # Needed to pose the block-display hull parts of the airliner from server code.
 # UNVERIFIED for 26.3: confirm method names/descriptors at first compile.
 accessible method net/minecraft/world/entity/Display$BlockDisplay setBlockState (Lnet/minecraft/world/level/block/state/BlockState;)V
