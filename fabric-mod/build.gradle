@@ -24,7 +24,7 @@ dependencies {
     include project(':core')
 }
 
-tasks.withType(JavaCompile).configureEach { options.release = 25; options.encoding = 'UTF-8' }
+tasks.withType(JavaCompile).configureEach { options.release = 25; options.encoding = 'UTF-8'; options.compilerArgs += ['-Xmaxerrs', '5000'] }
 
 processResources {
     inputs.property 'version', project.version

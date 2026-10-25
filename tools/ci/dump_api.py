@@ -60,7 +60,7 @@ with gzip.open(os.path.join(out, "api-all.txt.gz"), "wt") as g:
     batch = 300
     for i in range(0, len(names), batch):
         chunk = [n for n in names[i:i + batch] if "$$" not in n]
-        r = subprocess.run(["javap", "-public", "-cp", cp] + chunk, capture_output=True, text=True)
+        r = subprocess.run(["javap", "-protected", "-cp", cp] + chunk, capture_output=True, text=True)
         g.write(r.stdout)
     fab_list = sorted(fab_names)
     for i in range(0, len(fab_list), batch):
