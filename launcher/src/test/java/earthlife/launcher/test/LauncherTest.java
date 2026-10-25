@@ -80,7 +80,7 @@ public final class LauncherTest {
         var session = new MicrosoftAuth.Session("Zach", "uuid-123", "SECRET_TOKEN", 0, "xuid", null);
         List<String> cmd = LaunchCommand.build(profile, env, inst, root.resolve("natives"), session, opts);
         String joined = String.join(" ", cmd);
-        check(cmd.get(0).equals("/jre/bin/java") && cmd.contains("-Xmx4096M"), "java + memory");
+        check(cmd.get(0).equals(Path.of("/jre/bin/java").toString()) && cmd.contains("-Xmx4096M"), "java + memory");
         check(cmd.contains("net.fabricmc.loader.impl.launch.knot.KnotClient"), "main class present");
         int mc = cmd.indexOf("net.fabricmc.loader.impl.launch.knot.KnotClient");
         check(cmd.indexOf("-cp") < mc && cmd.get(cmd.indexOf("-cp") + 1).contains("fabric-loader-0.99.0.jar"), "classpath has loader");
