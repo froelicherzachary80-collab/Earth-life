@@ -9,7 +9,7 @@ plugins {
 
 version = project.mod_version
 group = 'earthlife'
-base { archivesName = 'earthlife-mod' }
+base { archivesName = 'earthlife' }
 
 loom { accessWidenerPath = file('src/main/resources/earthlife.accesswidener') }
 
@@ -24,10 +24,7 @@ dependencies {
     include project(':core')
 }
 
-java {
-    // Minecraft 26.x runs on Java 25; drop to 21 only if your target version still uses it.
-    toolchain { languageVersion = JavaLanguageVersion.of(25) }
-}
+tasks.withType(JavaCompile).configureEach { options.release = 25; options.encoding = 'UTF-8' }
 
 processResources {
     inputs.property 'version', project.version

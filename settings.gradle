@@ -2,7 +2,9 @@ pluginManagement {
     repositories {
         maven { url = 'https://maven.fabricmc.net/' }
         gradlePluginPortal()
+        mavenCentral()
     }
 }
 rootProject.name = 'earthlife'
-include 'core', 'launcher', 'fabric-mod'
+// V0.4: the playable product is the Fabric mod. The old standalone launcher stays in /launcher for reference only.
+include 'core', 'fabric-mod'

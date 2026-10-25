@@ -1,0 +1,73 @@
+# Compiles the EarthLife Fabric mod for Minecraft 26.3 on GitHub's Linux runners (which can reach Mojang + Fabric).
+# Full logs, resolved versions and javap dumps of the real 26.3 API are pushed to the `ci-logs` branch so the
+# code can be fixed against the actual API. The built jar is uploaded as the `earthlife-mod` artifact.
+name: Fabric mod build
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: "25"
+
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: "9.6.0"
+
+      - name: Resolve Minecraft / Fabric versions
+        id: v
+        run: |
+          mkdir -p ci-out
+          python3 tools/ci/resolve_versions.py ci-out/versions.json | tee ci-out/versions.txt
+          python3 -c "import json;d=json.load(open('ci-out/versions.json'));[print(f'{k}={v}') for k,v in d.items()]" >> "$GITHUB_OUTPUT"
+
+      - name: Core engine tests
+        run: gradle :core:runTests --no-daemon > ci-out/core-tests.log 2>&1 || echo "CORE_TESTS_FAILED" >> ci-out/core-tests.log
+
+      - name: Compile Fabric mod
+        id: build
+        continue-on-error: true
+        run: |
+          set -o pipefail
+          gradle :fabric-mod:build --no-daemon --stacktrace \
+            -Pminecraft_version=${{ steps.v.outputs.minecraft }} -Ploader_version=${{ steps.v.outputs.loader }} \
+            -Pfabric_version=${{ steps.v.outputs.fabric_api }} -Ploom_version=${{ steps.v.outputs.loom }} 2>&1 | tee ci-out/build.log
+
+      - name: Dump real 26.3 API signatures (for porting)
+        if: always()
+        run: python3 tools/ci/dump_api.py tools/ci/api_classes.txt ci-out || true
+
+      - name: Publish logs to ci-logs branch
+        if: always()
+        run: |
+          echo "${{ steps.build.outcome }}" > ci-out/RESULT
+          ls fabric-mod/build/libs >> ci-out/RESULT 2>/dev/null || true
+          git config user.name "ci"; git config user.email "ci@users.noreply.github.com"
+          cp -r ci-out /tmp/ci-out
+          git checkout --orphan ci-logs-tmp
+          git rm -rfq . ; rm -rf ./* .github 2>/dev/null || true
+          cp -r /tmp/ci-out/* .
+          git add -A && git commit -qm "CI logs for ${GITHUB_SHA}"
+          git push -f origin ci-logs-tmp:ci-logs
+
+      - uses: actions/upload-artifact@v4
+        if: steps.build.outcome == 'success'
+        with:
+          name: earthlife-mod
+          path: fabric-mod/build/libs/*.jar
+
+      - name: Fail if the mod did not build
+        if: steps.build.outcome != 'success'
+        run: exit 1
