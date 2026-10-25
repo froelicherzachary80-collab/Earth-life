@@ -1,0 +1,197 @@
+{
+ "_note": "FALLBACK DATA, hand-entered and approximate (runway ends derived from reference point, heading and length). Replace by running tools/import_ourairports.py, which sets verified=true. Source to use: OurAirports (public domain).",
+ "airports": [
+  {
+   "icao": "KSDC",
+   "iata": "SDC",
+   "name": "Williamson-Sodus Airport",
+   "country": "US",
+   "ref": [
+    43.2347,
+    -77.1211
+   ],
+   "elevation": 129,
+   "runways": [
+    {
+     "ident": "10",
+     "threshold": [
+      43.2353344,
+      -77.1281939
+     ],
+     "end": [
+      43.2340652,
+      -77.1140062
+     ],
+     "width": 23
+    },
+    {
+     "ident": "28",
+     "threshold": [
+      43.2340652,
+      -77.1140062
+     ],
+     "end": [
+      43.2353344,
+      -77.1281939
+     ],
+     "width": 23
+    }
+   ],
+   "gate": [
+    43.2363188,
+    -77.1211
+   ],
+   "verified": false
+  },
+  {
+   "icao": "KROC",
+   "iata": "ROC",
+   "name": "Frederick Douglass Greater Rochester International Airport",
+   "country": "US",
+   "ref": [
+    43.1189,
+    -77.6724
+   ],
+   "elevation": 170,
+   "runways": [
+    {
+     "ident": "10",
+     "threshold": [
+      43.1199685,
+      -77.6843293
+     ],
+     "end": [
+      43.1178302,
+      -77.6604711
+     ],
+     "width": 45
+    },
+    {
+     "ident": "28",
+     "threshold": [
+      43.1178302,
+      -77.6604711
+     ],
+     "end": [
+      43.1199685,
+      -77.6843293
+     ],
+     "width": 45
+    },
+    {
+     "ident": "04",
+     "threshold": [
+      43.1105017,
+      -77.6820525
+     ],
+     "end": [
+      43.1272975,
+      -77.6627448
+     ],
+     "width": 45
+    },
+    {
+     "ident": "22",
+     "threshold": [
+      43.1272975,
+      -77.6627448
+     ],
+     "end": [
+      43.1105017,
+      -77.6820525
+     ],
+     "width": 45
+    }
+   ],
+   "gate": [
+    43.1242959,
+    -77.6724
+   ],
+   "verified": false
+  },
+  {
+   "icao": "KIUA",
+   "iata": "IUA",
+   "name": "Canandaigua Airport",
+   "country": "US",
+   "ref": [
+    42.9089,
+    -77.3252
+   ],
+   "elevation": 248,
+   "runways": [
+    {
+     "ident": "13",
+     "threshold": [
+      42.913744,
+      -77.3330827
+     ],
+     "end": [
+      42.9040555,
+      -77.3173185
+     ],
+     "width": 30
+    },
+    {
+     "ident": "31",
+     "threshold": [
+      42.9040555,
+      -77.3173185
+     ],
+     "end": [
+      42.913744,
+      -77.3330827
+     ],
+     "width": 30
+    }
+   ],
+   "gate": [
+    42.911598,
+    -77.3252
+   ],
+   "verified": false
+  },
+  {
+   "icao": "KGVQ",
+   "iata": "GVQ",
+   "name": "Genesee County Airport",
+   "country": "US",
+   "ref": [
+    43.0317,
+    -78.1697
+   ],
+   "elevation": 277,
+   "runways": [
+    {
+     "ident": "10",
+     "threshold": [
+      43.032618,
+      -78.1799332
+     ],
+     "end": [
+      43.0307811,
+      -78.1594671
+     ],
+     "width": 30
+    },
+    {
+     "ident": "28",
+     "threshold": [
+      43.0307811,
+      -78.1594671
+     ],
+     "end": [
+      43.032618,
+      -78.1799332
+     ],
+     "width": 30
+    }
+   ],
+   "gate": [
+    43.034398,
+    -78.1697
+   ],
+   "verified": false
+  }
+ ]
+}

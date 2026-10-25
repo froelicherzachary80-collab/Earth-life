@@ -1,0 +1,25 @@
+{
+  "id": "26.3-test",
+  "type": "release",
+  "mainClass": "net.minecraft.client.main.Main",
+  "assetIndex": {"id": "test", "url": "@INDEX_URL@", "sha1": "@INDEX_SHA1@"},
+  "javaVersion": {"component": "java-runtime-delta", "majorVersion": 21},
+  "downloads": {"client": {"url": "@CLIENT_URL@", "sha1": "@CLIENT_SHA1@", "size": 20}},
+  "libraries": [
+    {"name": "org.lwjgl:lwjgl:3.3.3", "downloads": {"artifact": {"path": "org/lwjgl/lwjgl/3.3.3/lwjgl-3.3.3.jar", "url": "@LWJGL_URL@", "sha1": "@LWJGL_SHA1@", "size": 5}}},
+    {"name": "com.example:winonly:1.0", "downloads": {"artifact": {"path": "com/example/winonly/1.0/winonly-1.0.jar", "url": "@WIN_URL@", "sha1": "@WIN_SHA1@", "size": 16}},
+     "rules": [{"action": "allow", "os": {"name": "windows"}}]}
+  ],
+  "arguments": {
+    "game": ["--username", "${auth_player_name}", "--version", "${version_name}", "--gameDir", "${game_directory}",
+             "--assetsDir", "${assets_root}", "--assetIndex", "${assets_index_name}", "--uuid", "${auth_uuid}",
+             "--accessToken", "${auth_access_token}", "--clientId", "${clientid}", "--xuid", "${auth_xuid}",
+             "--userType", "${user_type}", "--versionType", "${version_type}",
+             {"rules": [{"action": "allow", "features": {"is_demo_user": true}}], "value": "--demo"},
+             {"rules": [{"action": "allow", "features": {"has_custom_resolution": true}}], "value": ["--width", "${resolution_width}", "--height", "${resolution_height}"]},
+             {"rules": [{"action": "allow", "features": {"is_quick_play_singleplayer": true}}], "value": ["--quickPlaySingleplayer", "${quickPlaySingleplayer}"]}],
+    "jvm": [{"rules": [{"action": "allow", "os": {"name": "osx"}}], "value": ["-XstartOnFirstThread"]},
+            "-Djava.library.path=${natives_directory}", "-Dminecraft.launcher.brand=${launcher_name}",
+            "-Dminecraft.launcher.version=${launcher_version}", "-cp", "${classpath}"]
+  }
+}

@@ -1,0 +1,8 @@
+plugins { id 'java-library' }
+java { toolchain { languageVersion = JavaLanguageVersion.of(21) } }
+sourceSets { test { java { srcDirs = ['src/test/java'] } } }
+tasks.register('runTests', JavaExec) {
+    classpath = sourceSets.test.runtimeClasspath
+    mainClass = 'earthlife.test.T'
+    systemProperty 'earthlife.data', file('../data').absolutePath
+}

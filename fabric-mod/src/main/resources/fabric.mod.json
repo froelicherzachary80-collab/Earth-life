@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "id": "earthlife",
+  "version": "${version}",
+  "name": "EarthLife - Reality Simulator",
+  "description": "Real-world voxel Earth, LifeCoins economy and working airliners for Minecraft survival.",
+  "license": "MIT",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "earthlife.mod.EarthLifeMod"
+    ],
+    "client": [
+      "earthlife.mod.client.EarthLifeClient"
+    ]
+  },
+  "depends": {
+    "fabricloader": "*",
+    "fabric-api": "*",
+    "minecraft": "~26.3",
+    "java": ">=25"
+  },
+  "accessWidener": "earthlife.accesswidener"
+}

@@ -1,0 +1,35 @@
+// EarthLife Fabric mod. Requires network access to maven.fabricmc.net and Mojang (not available in the
+// environment this was written in, so this build has NOT been run yet - see STATUS.md).
+//
+// Minecraft 26.x ships unobfuscated, so no mappings block is needed. If your Loom version still
+// expects mappings, add:  mappings loom.officialMojangMappings()
+plugins {
+    id 'net.fabricmc.fabric-loom' version "${loom_version}"
+}
+
+version = project.mod_version
+group = 'earthlife'
+base { archivesName = 'earthlife-mod' }
+
+loom { accessWidenerPath = file('src/main/resources/earthlife.accesswidener') }
+
+repositories { mavenCentral() }
+
+dependencies {
+    minecraft "com.mojang:minecraft:${project.minecraft_version}"
+    implementation "net.fabricmc:fabric-loader:${project.loader_version}"
+    implementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+    // Engine-independent core (geo, tiles, economy, aviation) - tested separately with build.sh.
+    implementation project(':core')
+    include project(':core')
+}
+
+java {
+    // Minecraft 26.x runs on Java 25; drop to 21 only if your target version still uses it.
+    toolchain { languageVersion = JavaLanguageVersion.of(25) }
+}
+
+processResources {
+    inputs.property 'version', project.version
+    filesMatching('fabric.mod.json') { expand 'version': project.version }
+}

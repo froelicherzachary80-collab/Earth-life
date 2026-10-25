@@ -1,0 +1,14 @@
+{
+ "_note": "Hand-entered landmarks with APPROXIMATE coordinates (verified=false). tools/match_landmarks.py snaps each one to the OpenStreetMap object of the same name (real position + footprint size) and sets verified=true. osm_to_earthlife.py --landmarks-out also adds every lighthouse, stadium, arena, church, water tower and monument mapped in OSM.",
+ "landmarks": [
+  {"id": "sodus_bay_lighthouse", "name": "Sodus Bay Lighthouse", "type": "LIGHTHOUSE", "lat": 43.2717, "lon": -76.9763, "height": 15, "aliases": ["Sodus Bay Lighthouse Museum"]},
+  {"id": "sodus_outer_light", "name": "Sodus Outer Light", "type": "LIGHTHOUSE", "lat": 43.2777, "lon": -76.9746, "height": 14, "aliases": ["Sodus Point Pier Light"]},
+  {"id": "charlotte_genesee_lighthouse", "name": "Charlotte-Genesee Lighthouse", "type": "LIGHTHOUSE", "lat": 43.2528, "lon": -77.6107, "height": 12, "aliases": ["Charlotte Lighthouse"]},
+  {"id": "innovative_field", "name": "Innovative Field", "type": "STADIUM", "lat": 43.1583, "lon": -77.6198, "heading": 45, "aliases": ["Frontier Field"]},
+  {"id": "blue_cross_arena", "name": "Blue Cross Arena", "type": "ARENA", "lat": 43.1530, "lon": -77.6137, "width": 80, "length": 100, "height": 25, "aliases": ["Blue Cross Arena at the War Memorial", "War Memorial"]},
+  {"id": "kodak_tower", "name": "Kodak Tower", "type": "TOWER", "lat": 43.1575, "lon": -77.6146, "height": 110, "width": 30, "length": 36, "aliases": ["Kodak Office Tower"]},
+  {"id": "xerox_tower", "name": "Xerox Tower", "type": "TOWER", "lat": 43.1560, "lon": -77.6057, "height": 135, "width": 34, "length": 40, "aliases": []},
+  {"id": "seabreeze", "name": "Seabreeze Amusement Park", "type": "AMUSEMENT_PARK", "lat": 43.2304, "lon": -77.5444, "aliases": ["Seabreeze"]},
+  {"id": "cmac", "name": "Constellation Brands - Marvin Sands Performing Arts Center", "type": "AMPHITHEATER", "lat": 42.8770, "lon": -77.2635, "aliases": ["CMAC", "Marvin Sands Performing Arts Center"]}
+ ]
+}

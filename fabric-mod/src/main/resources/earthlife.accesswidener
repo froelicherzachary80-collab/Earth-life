@@ -1,0 +1,8 @@
+accessWidener v2 named
+# Needed to pose the block-display hull parts of the airliner from server code.
+# UNVERIFIED for 26.3: confirm method names/descriptors at first compile.
+accessible method net/minecraft/world/entity/Display$BlockDisplay setBlockState (Lnet/minecraft/world/level/block/state/BlockState;)V
+accessible method net/minecraft/world/entity/Display setTransformation (Lcom/mojang/math/Transformation;)V
+accessible method net/minecraft/world/entity/Display setPosRotInterpolationDuration (I)V
+accessible method net/minecraft/world/entity/Display setTransformationInterpolationDuration (I)V
+accessible method net/minecraft/world/entity/Display$TextDisplay setText (Lnet/minecraft/network/chat/Component;)V

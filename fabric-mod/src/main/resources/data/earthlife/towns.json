@@ -1,0 +1,21 @@
+{
+ "_note": "FALLBACK list, hand-entered approximate centres (verified=false). tools/fetch_osm.py --places replaces it with OSM place nodes.",
+ "towns": [
+  {"name": "Williamson", "kind": "VILLAGE", "lat": 43.2237, "lon": -77.1861, "population": 2500},
+  {"name": "Pultneyville", "kind": "HAMLET", "lat": 43.2795, "lon": -77.1855, "population": 700},
+  {"name": "Sodus", "kind": "VILLAGE", "lat": 43.2376, "lon": -77.0617, "population": 1800},
+  {"name": "Sodus Point", "kind": "VILLAGE", "lat": 43.2723, "lon": -76.9744, "population": 900},
+  {"name": "Ontario", "kind": "VILLAGE", "lat": 43.2209, "lon": -77.2830, "population": 2200},
+  {"name": "Webster", "kind": "TOWN", "lat": 43.2123, "lon": -77.4300, "population": 5600},
+  {"name": "Fairport", "kind": "VILLAGE", "lat": 43.0987, "lon": -77.4419, "population": 5300},
+  {"name": "Macedon", "kind": "VILLAGE", "lat": 43.0692, "lon": -77.2994, "population": 1500},
+  {"name": "Palmyra", "kind": "VILLAGE", "lat": 43.0637, "lon": -77.2333, "population": 3500},
+  {"name": "Newark", "kind": "TOWN", "lat": 43.0467, "lon": -77.0950, "population": 9000},
+  {"name": "Lyons", "kind": "VILLAGE", "lat": 43.0645, "lon": -76.9902, "population": 3500},
+  {"name": "Wolcott", "kind": "VILLAGE", "lat": 43.2206, "lon": -76.8152, "population": 1600},
+  {"name": "Canandaigua", "kind": "TOWN", "lat": 42.8875, "lon": -77.2817, "population": 10500},
+  {"name": "Geneva", "kind": "TOWN", "lat": 42.8689, "lon": -76.9777, "population": 12800},
+  {"name": "Batavia", "kind": "TOWN", "lat": 42.9981, "lon": -78.1875, "population": 15000},
+  {"name": "Rochester", "kind": "CITY", "lat": 43.1566, "lon": -77.6088, "population": 210000}
+ ]
+}

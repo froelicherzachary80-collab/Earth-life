@@ -1,0 +1,50 @@
+# Builds the native Windows launcher on a GitHub-hosted Windows Server runner (same toolchain as Windows 10/11).
+# Push to GitHub, then download "EarthLife-windows" from the workflow run's Artifacts:
+#   EarthLife-<ver>-portable.zip  (unzip, double-click EarthLife.exe - Java is bundled)
+#   EarthLife-<ver>.exe           (installer with Start menu + desktop shortcuts)
+name: Windows EXE
+
+on:
+  push:
+    branches: [main, master]
+    tags: ["v*"]
+  workflow_dispatch:
+
+jobs:
+  windows-exe:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "21"
+
+      - name: Install WiX Toolset 3.14 (jpackage in JDK 21 uses WiX 3)
+        shell: pwsh
+        run: |
+          if (-not (Get-Command candle.exe -ErrorAction SilentlyContinue)) {
+            choco install wixtoolset -y --no-progress
+            echo "${env:ProgramFiles(x86)}\WiX Toolset v3.14\bin" | Out-File -Append -Encoding utf8 $env:GITHUB_PATH
+          }
+
+      - name: Build, test and package
+        shell: pwsh
+        run: ./packaging/windows/build-exe.ps1 -Version "0.3.0"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: EarthLife-windows
+          path: |
+            dist/windows/*.zip
+            dist/windows/*.exe
+          if-no-files-found: error
+
+      - name: Attach to release (tags only)
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            dist/windows/*.zip
+            dist/windows/*.exe

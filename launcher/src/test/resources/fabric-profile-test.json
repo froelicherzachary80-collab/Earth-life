@@ -1,0 +1,10 @@
+{
+  "id": "fabric-loader-0.99.0-26.3-test",
+  "inheritsFrom": "26.3-test",
+  "type": "release",
+  "mainClass": "net.fabricmc.loader.impl.launch.knot.KnotClient",
+  "arguments": {"game": [], "jvm": ["-Dfabric.test.jvm=1"]},
+  "libraries": [
+    {"name": "net.fabricmc:fabric-loader:0.99.0", "url": "@MAVEN@"}
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "generator.earthlife.earthlife": "EarthLife (Voxel Earth)",
+  "key.categories.earthlife": "EarthLife",
+  "key.earthlife.seatback": "Seatback map",
+  "key.earthlife.wallet": "Wallet & flights",
+  "entity.earthlife.airplane": "EarthLife Hopper",
+  "entity.earthlife.resident": "Resident",
+  "entity.earthlife.vehicle": "Vehicle"
+}
