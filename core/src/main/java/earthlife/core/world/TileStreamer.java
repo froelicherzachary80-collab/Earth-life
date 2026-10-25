@@ -24,7 +24,7 @@ public final class TileStreamer implements AutoCloseable {
     private final Map<TileKey, TileData> loaded;
     private final Map<TileKey, CompletableFuture<TileData>> inFlight = new ConcurrentHashMap<>();
     private final Consumer<TileData> onReady;
-    private volatile int generatedCount, diskHits;
+    private final java.util.concurrent.atomic.AtomicInteger generatedCount = new java.util.concurrent.atomic.AtomicInteger(), diskHits = new java.util.concurrent.atomic.AtomicInteger();
 
     public TileStreamer(TileGenerator generator, Path diskCache, ModificationStore edits, int threads, int maxLoaded, Consumer<TileData> onReady) {
         this.generator = generator;
@@ -89,19 +89,19 @@ public final class TileStreamer implements AutoCloseable {
     private TileData produce(TileKey k) {
         Path p = diskCache.resolve(k.fileName());
         if (Files.exists(p)) {
-            try { diskHits++; return TileData.fromBytes(Files.readAllBytes(p)); }
-            catch (IOException e) { diskHits--; System.err.println("[EarthLife] regenerating corrupt cached tile " + k + ": " + e.getMessage()); }
+            try { TileData t = TileData.fromBytes(Files.readAllBytes(p)); diskHits.incrementAndGet(); return t; }
+            catch (IOException e) { System.err.println("[EarthLife] regenerating corrupt cached tile " + k + ": " + e.getMessage()); }
         }
         TileData t = generator.generate(k);
-        generatedCount++;
+        generatedCount.incrementAndGet();
         try { AtomicFiles.write(p, t.toBytes()); } catch (IOException e) { System.err.println("[EarthLife] tile cache write failed: " + e.getMessage()); }
         return t;
     }
 
     public TileData getLoaded(TileKey k) { return loaded.get(k); }
     public int loadedCount() { return loaded.size(); }
-    public int generatedCount() { return generatedCount; }
-    public int diskHits() { return diskHits; }
+    public int generatedCount() { return generatedCount.get(); }
+    public int diskHits() { return diskHits.get(); }
     public ModificationStore edits() { return edits; }
 
     public void awaitIdle(long timeoutMs) throws InterruptedException {
