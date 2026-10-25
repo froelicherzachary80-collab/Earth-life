@@ -1,7 +1,15 @@
 """Finds the Minecraft jar Loom used and writes javap signatures of the classes EarthLife touches (CI only)."""
 import glob, os, subprocess, sys, zipfile
 
+import re
 classes = [l.strip() for l in open(sys.argv[1]) if l.strip()]
+# plus every class the mod source imports
+for root, _, files in os.walk("fabric-mod/src"):
+    for fn in files:
+        if fn.endswith(".java"):
+            for m in re.finditer(r"^import (net\.(?:minecraft|fabricmc)[\w.$]+);", open(os.path.join(root, fn)).read(), re.M):
+                if not m.group(1).endswith("*"): classes.append(m.group(1))
+classes = sorted(set(classes))
 out = sys.argv[2]
 home = os.path.expanduser("~/.gradle/caches")
 cands = [j for j in glob.glob(home + "/**/*.jar", recursive=True) if "minecraft" in os.path.basename(j).lower()]
@@ -21,10 +29,18 @@ with zipfile.ZipFile(mc) as z:
     names = sorted(n[:-6].replace("/", ".") for n in z.namelist() if n.endswith(".class") and n.startswith("net/minecraft"))
 open(os.path.join(out, "mc-classes.txt"), "w").write("\n".join(names))
 fabric = [j for j in glob.glob(home + "/**/fabric-*.jar", recursive=True)]
+fab_names = set()
+for j in fabric:
+    try:
+        with zipfile.ZipFile(j) as z:
+            fab_names.update(n[:-6].replace("/", ".") for n in z.namelist() if n.endswith(".class") and n.startswith("net/fabricmc/fabric/api"))
+    except Exception:
+        pass
+open(os.path.join(out, "fabric-classes.txt"), "w").write("\n".join(sorted(fab_names)))
 cp = os.pathsep.join([mc] + fabric)
 with open(os.path.join(out, "api.txt"), "w") as f:
     for c in classes:
-        r = subprocess.run(["javap", "-public", "-cp", cp, c], capture_output=True, text=True)
+        r = subprocess.run(["javap", "-public", "-cp", cp, c.replace("$", "$")], capture_output=True, text=True)
         f.write(f"==== {c}\n{r.stdout or r.stderr}\n")
 # Fabric API classes referenced by EarthLife
 fab = ["net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper", "net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback",
