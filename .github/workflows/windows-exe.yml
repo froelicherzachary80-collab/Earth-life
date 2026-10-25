@@ -35,7 +35,10 @@ jobs:
           ./packaging/windows/build-exe.ps1 -Version "0.3.0" *>&1 | Tee-Object -FilePath build.log
           $code = $LASTEXITCODE
           if (-not $? -or $code) {
-            Get-Content build.log -Tail 40 | ForEach-Object { if ($_.Trim()) { Write-Host "::error::$($_.Trim())" } }
+            $lines = Get-Content build.log
+            $bad = $lines | Select-String -Pattern 'FAIL|error|Exception|BUILD ERROR|failed|AssertionError' | Select-Object -First 30
+            $bad | ForEach-Object { Write-Host "::error::$($_.Line.Trim())" }
+            $lines | Select-Object -Last 8 | ForEach-Object { if ($_.Trim()) { Write-Host "::error::TAIL $($_.Trim())" } }
             exit 1
           }
 
