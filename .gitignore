@@ -1,4 +1,5 @@
-build/
-dist/
+/build/
+/dist/
+fabric-mod/build/
 __pycache__/
 *.class
