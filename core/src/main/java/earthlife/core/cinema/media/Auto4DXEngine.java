@@ -40,7 +40,7 @@ public final class Auto4DXEngine {
     private final EnumMap<Type, Long> since = new EnumMap<>(Type.class);       // sustained condition holding since (pts)
     private final EnumMap<Type, Long> activeUntil = new EnumMap<>(Type.class);
     private final Deque<long[]> flashes = new ArrayDeque<>();                  // recent bright flashes (pts) for thunder / space battles
-    private long lastPts = Long.MIN_VALUE;
+    private long lastPts = Long.MIN_VALUE, firstPts = Long.MIN_VALUE;
     private int frames;
     public final List<Event> history = new ArrayList<>();
     public volatile String lastSummary = "";
@@ -48,7 +48,7 @@ public final class Auto4DXEngine {
     public Auto4DXEngine(Settings s) { this.settings = s; }
 
     public void reset() {
-        lastFired.clear(); since.clear(); activeUntil.clear(); flashes.clear(); frames = 0; lastPts = Long.MIN_VALUE;
+        lastFired.clear(); since.clear(); activeUntil.clear(); flashes.clear(); frames = 0; lastPts = Long.MIN_VALUE; firstPts = Long.MIN_VALUE;
         avgLuma = 0.3f; avgLoud = 0.1f; avgBass = 0.1f; avgMotion = 0.1f; avgHigh = 0.05f; quietLoud = 0.1f;
     }
 
@@ -67,6 +67,7 @@ public final class Auto4DXEngine {
         long t = f.ptsMs();
         if (lastPts != Long.MIN_VALUE && (t < lastPts - 500 || t > lastPts + 5000)) reset();      // seek / jump
         lastPts = t;
+        if (firstPts == Long.MIN_VALUE) firstPts = t;
         frames++;
         if (f.sceneCut()) { since.clear(); }
         float sens = settings.sensitivity;
@@ -77,7 +78,7 @@ public final class Auto4DXEngine {
         if (flash > 0.25f) flashes.addLast(new long[]{t});
         while (!flashes.isEmpty() && t - flashes.peekFirst()[0] > 6000) flashes.removeFirst();
 
-        if (frames > 12) {          // let the averages settle on the first half second
+        if (frames > 6 && t - firstPts >= 500) {          // let the averages settle on the first half second
             // explosion: loud bass-heavy onset with a bright or fiery picture
             float cEx = sens * (clamp((onset - 0.18f) * 2.2f) * 0.45f + clamp(bassUp * 2.5f) * 0.25f + clamp(Math.max(flash * 2.2f, warmUp ? f.warm() * 2.2f : 0)) * 0.30f);
             if (onset > 0.15f && (flash > 0.12f || f.warm() > 0.15f)) fire(out, Type.EXPLOSION, t, 1800, clamp(Math.max(a.loud(), a.bass()) * 1.8f), cEx, dirX);

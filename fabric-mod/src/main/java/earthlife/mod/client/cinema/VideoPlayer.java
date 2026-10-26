@@ -61,6 +61,7 @@ public final class VideoPlayer implements AutoCloseable {
     /** Soundtrack levels by film time: the sound is decoded ahead of the picture, so 4DX looks up the moment on screen. */
     private final ArrayDeque<Object[]> levelLog = new ArrayDeque<>();
     private long audioFrames;
+    private final ArrayDeque<earthlife.core.cinema.media.Auto4DXEngine.Event> pendingFx = new ArrayDeque<>();
 
     earthlife.core.cinema.media.AudioAnalyzer.Levels levelsAt(long ptsMs) {
         synchronized (levelLog) {
@@ -240,6 +241,9 @@ public final class VideoPlayer implements AutoCloseable {
                 var feat = analyzer.analyze(b, w, h, startPosMs + n * 1000 / FPS);
                 if (screenX && n % 2 == 0) sides(b);
                 int avg = average(b);
+                // 4DX recognition on every decoded frame (independent of how fast the client renders);
+                // events wait in `pendingFx` until the picture on screen reaches them
+                for (var ev : fx.update(feat, levelsAt(feat.ptsMs()))) synchronized (pendingFx) { pendingFx.addLast(ev); if (pendingFx.size() > 64) pendingFx.removeFirst(); }
                 if (auto3d && stereo != null) {
                     byte[] out = buffer();
                     stereo.convert(b, out, w, h);
@@ -344,7 +348,12 @@ public final class VideoPlayer implements AutoCloseable {
         }
         features = due.features; avgRgb = due.avgRgb;
         shownLevels = levelsAt(due.ptsMs);
-        if (analyse4dx && due.features != null) for (var ev : fx.update(due.features, shownLevels)) { fxEvents.add(ev); if (fxEvents.size() > 64) fxEvents.poll(); }
+        synchronized (pendingFx) {
+            while (!pendingFx.isEmpty() && pendingFx.peekFirst().ptsMs() <= due.ptsMs + 20) {
+                var ev = pendingFx.removeFirst();
+                if (analyse4dx) { fxEvents.add(ev); if (fxEvents.size() > 64) fxEvents.poll(); }
+            }
+        }
         if (screenX && sidesDirty) uploadSides();
         status = "Playing";
     }

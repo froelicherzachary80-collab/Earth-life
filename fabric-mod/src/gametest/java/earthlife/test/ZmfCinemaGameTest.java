@@ -184,8 +184,8 @@ final class ZmfCinemaGameTest {
         // screenshots: outside (facade), lobby
         server(sp, s -> {
             var ms = MultiplexService.get(); var rec = ms.record(id); var pl = ms.placed(rec);
-            double[] out = pl.toWorld(-26, 0);
-            player(s).teleportTo(s.overworld(), out[0], rec.y + 9, out[1], Set.of(), (float) (pl.headingDeg + 180) % 360 - 180, 12, false);
+            double[] out = pl.toWorld(-34, 0);
+            player(s).teleportTo(s.overworld(), out[0], rec.y + 9, out[1], Set.of(), (float) (pl.headingDeg + 180), 12, false);
             return 0;
         });
         float yawOut = yawTowards(sp, id, 10);
@@ -195,7 +195,7 @@ final class ZmfCinemaGameTest {
         server(sp, s -> {
             var ms = MultiplexService.get(); var rec = ms.record(id); var pl = ms.placed(rec);
             double[] in = pl.toWorld(3, 0);
-            player(s).teleportTo(s.overworld(), in[0], rec.y + 1, in[1], Set.of(), 0, 0, false);
+            player(s).teleportTo(s.overworld(), in[0], rec.y + 1, in[1], Set.of(), (float) (pl.headingDeg + 180), 5, false);
             return 0;
         });
         float yawIn = yawTowards(sp, id, 30);
@@ -433,6 +433,7 @@ final class ZmfCinemaGameTest {
         if (imax != null) {
             watch(ctx, sp, imax, film, "2D", false);
             ctx.waitTicks(160);
+            t.lookAtScreen(ctx, imax);
             ctx.takeScreenshot("57_zmf_imax");
             String r = ctx.computeOnClient(mc -> { var p = CinemaClient.player(imax); return "IMAX room " + imax + ": " + (p == null ? "not playing" : p.status + " " + p.width() + "x" + p.height()) + "|" + (p != null && p.texture() != null); });
             check("IMAX room plays", r);
@@ -440,6 +441,7 @@ final class ZmfCinemaGameTest {
         if (sx != null) {
             watch(ctx, sp, sx, film, "2D", false);
             ctx.waitTicks(160);
+            t.lookAtScreen(ctx, sx);
             ctx.takeScreenshot("58_zmf_screenx");
             String r = ctx.computeOnClient(mc -> {
                 var p = CinemaClient.player(sx);
