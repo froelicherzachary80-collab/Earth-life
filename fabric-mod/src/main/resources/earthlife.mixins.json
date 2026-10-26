@@ -1,0 +1,12 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "earthlife.mod.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "client": [
+    "WorldCreationUiStateMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

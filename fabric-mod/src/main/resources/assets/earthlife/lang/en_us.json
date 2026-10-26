@@ -1,8 +1,14 @@
 {
-  "generator.earthlife.earthlife": "EarthLife (Voxel Earth)",
+  "generator.earthlife.earthlife": "Earth — 1:1 Real World",
+  "generator.earthlife.earthlife.info": "A 1:1 copy of the real Earth, starting in Williamson, New York. Use Customize to pick your town and options.",
+  "earthlife.settings.title": "Earth — World Settings",
+  "key.category.earthlife.earthlife": "EarthLife",
   "key.categories.earthlife": "EarthLife",
-  "key.earthlife.seatback": "Seatback map",
-  "key.earthlife.wallet": "Wallet & flights",
+  "key.earthlife.map": "LifeMap",
+  "key.earthlife.menu": "EarthLife menu",
+  "key.earthlife.jobs": "Jobs",
+  "key.earthlife.wallet": "Wallet",
+  "key.earthlife.nearby": "Nearby",
   "entity.earthlife.airplane": "EarthLife Hopper",
   "entity.earthlife.resident": "Resident",
   "entity.earthlife.vehicle": "Vehicle"

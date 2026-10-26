@@ -29,7 +29,12 @@ public interface ElevationSource {
         }
 
         public static Grid load(Path p, ElevationSource fallback) throws IOException {
-            try (var in = new DataInputStream(new java.io.BufferedInputStream(Files.newInputStream(p)))) {
+            try (var raw = Files.newInputStream(p)) { return read(raw, fallback); }
+        }
+
+        /** Reads an ELDG grid from a stream (e.g. a gzip stream of a grid bundled in the mod jar). */
+        public static Grid read(java.io.InputStream raw, ElevationSource fallback) throws IOException {
+            try (var in = new DataInputStream(new java.io.BufferedInputStream(raw))) {
                 byte[] magic = in.readNBytes(4);
                 if (!new String(magic).equals("ELDG")) throw new IOException("not an EarthLife DEM grid: " + p);
                 if (in.readInt() != 1) throw new IOException("unsupported DEM grid version");

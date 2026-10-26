@@ -119,6 +119,13 @@ public final class V04Commands {
                     if (life.work != null) sb.append(String.format("%n  work %.0f, %.0f", life.work.x(), life.work.z()));
                     for (var w : life.waypoints) sb.append(String.format("%n  %s %.0f, %.0f (%.0f m)", w.name(), w.x(), w.z(), Math.hypot(w.x() - p.getX(), w.z() - p.getZ())));
                     return sb.toString(); }))))
+            .then(lit("home").then(lit("setat").then(Commands.argument("x", DoubleArgumentType.doubleArg()).then(Commands.argument("z", DoubleArgumentType.doubleArg()).executes(c -> run(c, (p, x) -> {
+                PlayerLife life = EarthLifeServices.get().life.life(p);
+                double hx = DoubleArgumentType.getDouble(x, "x"), hz = DoubleArgumentType.getDouble(x, "z");
+                life.home = new PlayerLife.Waypoint("Home", "home", hx, p.getY(), hz);
+                life.markDirty();
+                EarthLifeServices.get().life.complete(p, "set_home");
+                return String.format("Home set at %.0f, %.0f (from the LifeMap).", hx, hz); }))))))
             .then(lit("home").then(lit("set").executes(c -> run(c, (p, x) -> {
                 PlayerLife life = EarthLifeServices.get().life.life(p);
                 life.home = new PlayerLife.Waypoint("Home", "home", p.getX(), p.getY(), p.getZ());
