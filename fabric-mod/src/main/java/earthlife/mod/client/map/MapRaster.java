@@ -81,6 +81,22 @@ public final class MapRaster {
         }
     }
 
+    private static final Map<Key, Future<int[]>> pixelCache = new LinkedHashMap<>(64, 0.75f, true);
+
+    /** Raw ARGB pixels of a map tile for software compositing (the car GPS); null while still being drawn. */
+    public static synchronized int[] pixels(ClientMapData data, int zoom, int tx, int tz, Layers layers) {
+        Key k = new Key(zoom, tx, tz, mask(layers) | 0x1000);
+        Future<int[]> f = pixelCache.get(k);
+        if (f == null) {
+            f = pool.submit(() -> draw(data, zoom, tx, tz, layers));
+            pixelCache.put(k, f);
+            if (pixelCache.size() > 48) { var it = pixelCache.entrySet().iterator(); it.next(); it.remove(); }
+            return null;
+        }
+        if (!f.isDone()) return null;
+        try { return f.get(); } catch (Exception e) { pixelCache.remove(k); return null; }
+    }
+
     // ------------------------------------------------------------------ rasterizer (background thread)
 
     static int[] draw(ClientMapData d, int zoom, int tx, int tz, Layers layers) {

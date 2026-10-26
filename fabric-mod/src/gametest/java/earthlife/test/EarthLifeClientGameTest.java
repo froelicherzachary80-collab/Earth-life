@@ -68,6 +68,8 @@ public final class EarthLifeClientGameTest implements FabricClientGameTest {
         save();
     }
 
+    static float mcYaw(ClientGameTestContext ctx) { return ctx.computeOnClient(mc -> mc.player.getYRot()); }
+
     void check(String test, String check, boolean ok, String evidence) { record(test, check, ok ? "PASSED" : "FAILED", evidence); }
 
     void attempt(String test, String check, Runnable r) {
@@ -627,6 +629,74 @@ public final class EarthLifeClientGameTest implements FabricClientGameTest {
             check(T, "vehicle ownership", r.endsWith("|true"), r.substring(0, r.lastIndexOf('|')));
             ctx.waitTicks(20);
             ctx.takeScreenshot("16_owned_car");
+        });
+        attempt(T, "car: doors, seat, interior GPS", () -> {
+            // walk up to the summoned car and get in: the nearest door opens, you sit in the driver's seat, it closes
+            String r = onServer(sp, s -> {
+                ServerPlayer p = s.getPlayerList().getPlayers().get(0);
+                var cars = p.level().getEntitiesOfClass(earthlife.mod.vehicle.VehicleEntity.class, p.getBoundingBox().inflate(16));
+                if (cars.isEmpty()) return "no car|false";
+                var car = cars.get(0);
+                // stand on the car's left (driver) side, then right-click it
+                double yaw = Math.toRadians(car.getYRot());
+                p.teleportTo(car.getX() + Math.cos(yaw) * 2.2, car.getY(), car.getZ() + Math.sin(yaw) * 2.2);
+                var res = car.interact(p, net.minecraft.world.InteractionHand.MAIN_HAND, net.minecraft.world.phys.Vec3.ZERO);
+                boolean seated = p.getVehicle() == car;
+                int seat = car.seatOf(p);
+                boolean doorOpen = (car.flags() & 1) != 0;
+                return String.format("interact=%s seated=%s seat=%d driverDoorOpen=%s type=%s|%s", res, seated, seat, doorOpen, car.vehicleType(), seated && seat == 0 && doorOpen);
+            });
+            check(T, "get in through the driver's door", r.endsWith("|true"), r.substring(0, r.lastIndexOf('|')));
+            ctx.runOnClient(mc -> mc.options.setCameraType(net.minecraft.client.CameraType.THIRD_PERSON_BACK));
+            ctx.waitTicks(4);
+            ctx.takeScreenshot("16b_car_door_opening");
+            ctx.waitTicks(40);
+            String closed = onServer(sp, s -> {
+                ServerPlayer p = s.getPlayerList().getPlayers().get(0);
+                return p.getVehicle() instanceof earthlife.mod.vehicle.VehicleEntity v ? "flags=" + v.flags() + "|" + ((v.flags() & 15) == 0) : "not in car|false";
+            });
+            check(T, "door closes after you sit down", closed.endsWith("|true"), closed.substring(0, closed.lastIndexOf('|')));
+            ctx.takeScreenshot("16c_car_third_person");
+            // route to the town centre, then look at the dashboard from the driver's seat
+            ctx.runOnClient(mc -> {
+                var w = ClientState.world;
+                earthlife.mod.client.screen.LifeMapScreen.startRoute(mc.player.getX() + 400, mc.player.getZ() - 300, "Test destination");
+                mc.options.setCameraType(net.minecraft.client.CameraType.FIRST_PERSON);
+            });
+            ctx.waitTicks(60);
+            ctx.getInput().lookAt(mcYaw(ctx), 22f);
+            ctx.waitTicks(20);
+            ctx.takeScreenshot("16d_car_driver_view_gps");
+            String g = ctx.computeOnClient(mc -> {
+                var gd = earthlife.mod.client.car.Gps.guidance;
+                return gd == null ? "no guidance|false" : String.format("action='%s' onto='%s' toTurn=%.0f m remaining=%.0f m street='%s' gpsTexture=%s|%s",
+                        gd.action(), gd.onto(), gd.toTurn(), gd.remaining(), gd.street(), earthlife.mod.client.car.Gps.textureId(), earthlife.mod.client.car.Gps.textureId() != null);
+            });
+            check(T, "in-car GPS", g.endsWith("|true"), g.substring(0, g.lastIndexOf('|')));
+            // drive forward for two seconds
+            double[] before = ctx.computeOnClient(mc -> new double[]{mc.player.getX(), mc.player.getZ()});
+            ctx.getInput().holdKeyFor(o -> o.keyUp, 40);
+            ctx.waitTicks(5);
+            double[] after = ctx.computeOnClient(mc -> new double[]{mc.player.getX(), mc.player.getZ()});
+            double moved = Math.hypot(after[0] - before[0], after[1] - before[1]);
+            ctx.takeScreenshot("16e_car_driving");
+            check(T, "driving moves the car", moved > 2, String.format("moved %.1f m in 2 s", moved));
+            // get out: sneak -> door opens, you stand beside it
+            ctx.getInput().holdKeyFor(o -> o.keyShift, 3);
+            ctx.waitTicks(3);
+            String out = onServer(sp, s -> {
+                ServerPlayer p = s.getPlayerList().getPlayers().get(0);
+                var cars = p.level().getEntitiesOfClass(earthlife.mod.vehicle.VehicleEntity.class, p.getBoundingBox().inflate(16));
+                if (cars.isEmpty()) return "car gone|false";
+                var c = cars.get(0);
+                double d = Math.hypot(p.getX() - c.getX(), p.getZ() - c.getZ());
+                return String.format("riding=%s doorFlags=%d distance from car centre=%.1f m|%s", p.getVehicle() != null, c.flags() & 15, d, p.getVehicle() == null && (c.flags() & 1) != 0 && d > 1.2);
+            });
+            ctx.runOnClient(mc -> mc.options.setCameraType(net.minecraft.client.CameraType.THIRD_PERSON_BACK));
+            ctx.waitTicks(3);
+            ctx.takeScreenshot("16f_car_get_out");
+            ctx.runOnClient(mc -> mc.options.setCameraType(net.minecraft.client.CameraType.FIRST_PERSON));
+            check(T, "get out beside the door", out.endsWith("|true"), out.substring(0, out.lastIndexOf('|')));
         });
         attempt(T, "Halloween trick-or-treat", () -> {
             String r = onServer(sp, s -> {

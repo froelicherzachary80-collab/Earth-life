@@ -161,7 +161,7 @@ public final class LifeMapScreen extends Screen {
         search.setFocused(true);
     }
 
-    static void startRoute(double tx, double tz, String label) {
+    public static void startRoute(double tx, double tz, String label) {
         var mc = net.minecraft.client.Minecraft.getInstance();
         if (mc.player == null) return;
         double fx = mc.player.getX(), fz = mc.player.getZ();

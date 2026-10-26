@@ -43,7 +43,7 @@ public final class EarthLifeClient implements ClientModInitializer {
     @Override public void onInitializeClient() {
         ClientConfig.load();
         EntityRendererRegistry.register(EarthLifeMod.AIRPLANE, NoopRenderer::new);
-        EntityRendererRegistry.register(EarthLifeMod.VEHICLE, NoopRenderer::new);        // models are block displays
+        EntityRendererRegistry.register(EarthLifeMod.VEHICLE, earthlife.mod.client.car.CarRenderer::new);   // cars: client model; others: block displays
         EntityRendererRegistry.register(EarthLifeMod.NPC, NpcRenderer::new);
 
         ClientPlayNetworking.registerGlobalReceiver(Payloads.CabinState.TYPE, (p, ctx) -> {
@@ -91,6 +91,11 @@ public final class EarthLifeClient implements ClientModInitializer {
                     && WALLET.same(mc.options.keyAdvancements) && ClientState.earth()) open(mc, "menu:wallet");
         });
         HudElementRegistry.addLast(EarthLifeMod.id("hud"), (g, delta) -> drawHud(g));
+        HudElementRegistry.addLast(EarthLifeMod.id("gps"), (g, delta) -> {
+            var mc = Minecraft.getInstance();
+            if (!mc.gui.hud.isHidden() && mc.player != null && ClientState.earth()) earthlife.mod.client.car.Gps.drawHud(g, mc);
+        });
+        ClientTickEvents.END_CLIENT_TICK.register(earthlife.mod.client.car.Gps::tick);
     }
 
     static net.minecraft.client.gui.screens.Screen screenAtTickStart;
@@ -139,7 +144,7 @@ public final class EarthLifeClient implements ClientModInitializer {
             }
         }
         var route = ClientState.routeTarget;
-        if (route != null) {
+        if (route != null && earthlife.mod.client.car.Gps.guidance == null) {     // in a car the GPS banner gives directions
             double dx = route[0] - mc.player.getX(), dz = route[1] - mc.player.getZ(), d = Math.hypot(dx, dz);
             if (d < 12) { ClientState.routeTarget = null; ClientState.route = List.of(); mc.player.sendOverlayMessage(net.minecraft.network.chat.Component.literal("You've arrived: " + ClientState.routeLabel)); }
             else {
