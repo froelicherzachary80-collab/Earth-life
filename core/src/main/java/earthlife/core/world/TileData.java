@@ -8,7 +8,9 @@ import java.util.zip.CRC32;
  * Per column: terrain Y, surface type, structure (building) top Y (0 = none), structure kind and flags.
  */
 public final class TileData {
-    public enum Surface { GRASS, FARMLAND, ORCHARD, FOREST, SAND, WATER, ASPHALT, ROAD_MARKING, GRAVEL_PATH, RUNWAY, TAXIWAY, CONCRETE, DIRT, WETLAND, RAIL_BED }
+    public enum Surface { GRASS, FARMLAND, ORCHARD, FOREST, SAND, WATER, ASPHALT, ROAD_MARKING, GRAVEL_PATH, RUNWAY, TAXIWAY, CONCRETE, DIRT, WETLAND, RAIL_BED,
+        /** V0.4.1: sidewalks along streets in towns and cities (region-pack detail tiers). */
+        SIDEWALK }
 
     public static final byte FLAG_ESTIMATED = 1;   // derived from procedural estimate, not verified data
     public static final byte FLAG_BUILDING = 2;

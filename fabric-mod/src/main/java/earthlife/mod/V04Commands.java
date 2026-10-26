@@ -32,7 +32,7 @@ import java.util.*;
 public final class V04Commands {
     private V04Commands() {}
 
-    static final String VERSION = "0.4.0";
+    static final String VERSION = "0.4.1";
 
     static int run(CommandContext<CommandSourceStack> c, V02Commands.Body b) { return V02Commands.run(c, b); }
 

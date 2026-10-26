@@ -144,6 +144,7 @@ public final class PackWorld {
                     Cell cell = cell(c[0], c[1]);
                     if (cell == null) continue;
                     Bucket cb = cell.index().get(tx, tz);
+                    out.tier = Math.max(out.tier, cell.tier().ordinal());
                     out.roads.addAll(cb.roads); out.buildings.addAll(cb.buildings); out.areas.addAll(cb.areas); out.water.addAll(cb.water);
                 }
                 merged.put(k, out);

@@ -67,14 +67,16 @@ jobs:
       - name: Verify distributable jar
         if: steps.build.outcome == 'success'
         run: |
-          test -s fabric-mod/build/libs/earthlife-0.4.0.jar
-          jar tf fabric-mod/build/libs/earthlife-0.4.0.jar | grep -x 'fabric.mod.json'
+          V=$(grep '^mod_version=' fabric-mod/gradle.properties | cut -d= -f2)
+          test -s fabric-mod/build/libs/earthlife-$V.jar
+          jar tf fabric-mod/build/libs/earthlife-$V.jar | grep -x 'fabric.mod.json'
+          echo "JAR=fabric-mod/build/libs/earthlife-$V.jar" >> $GITHUB_ENV
 
       - uses: actions/upload-artifact@v4
         if: steps.build.outcome == 'success'
         with:
           name: earthlife-mod
-          path: fabric-mod/build/libs/earthlife-0.4.0.jar
+          path: ${{ env.JAR }}
           if-no-files-found: error
 
       - name: Publish logs to ci-logs branch

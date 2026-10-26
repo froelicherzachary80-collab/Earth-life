@@ -9,6 +9,8 @@ public class FeatureIndex {
         public final List<Features.Building> buildings = new ArrayList<>();
         public final List<Features.Area> areas = new ArrayList<>();
         public final List<Features.Water> water = new ArrayList<>();
+        /** Detail tier of the map data here (region packs: 0 terrain .. 3 city; -1 = starter data / unknown). */
+        public int tier = -1;
     }
 
     private static final Bucket EMPTY = new Bucket();

@@ -306,6 +306,7 @@ public final class VoxelEarthChunkGenerator extends ChunkGenerator {
             case DIRT -> Blocks.COARSE_DIRT.defaultBlockState();
             case WETLAND -> Blocks.MUD.defaultBlockState();
             case RAIL_BED -> Blocks.GRAVEL.defaultBlockState();
+            case SIDEWALK -> McCompat.block("minecraft:smooth_stone");
         };
     }
 

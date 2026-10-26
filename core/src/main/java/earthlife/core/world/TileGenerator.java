@@ -224,6 +224,29 @@ public final class TileGenerator {
             });
         }
 
+        // Detail tiers (region packs): towns get 1.5 m sidewalks along their streets, cities 2.5 m with street trees.
+        if (b.tier >= RegionCell.Tier.TOWN.ordinal() && step == 1) {
+            boolean city = b.tier >= RegionCell.Tier.CITY.ordinal();
+            for (Road r : ordered) {
+                if (!(r.cls() == RoadClass.PRIMARY || r.cls() == RoadClass.SECONDARY || r.cls() == RoadClass.RESIDENTIAL)) continue;
+                double half = Math.max(0.5, r.widthM() / 2), sw = city ? 2.5 : 1.5;
+                double[] bb = Features.bbox(r.line(), half + sw + 1);
+                forEachSample(t, bb, (sx, sz, x, z) -> {
+                    int i = t.idx(sx, sz);
+                    if ((t.flags[i] & (TileData.FLAG_ROAD | TileData.FLAG_WATER | TileData.FLAG_RAIL | TileData.FLAG_SITE)) != 0) return;
+                    double best = Double.MAX_VALUE;
+                    for (int k = 1; k < r.line().size(); k++) best = Math.min(best, Features.distToSegment(x, z, r.line().get(k - 1), r.line().get(k)));
+                    if (best <= half || best > half + sw) return;
+                    t.surface[i] = (byte) Surface.SIDEWALK.ordinal();
+                    byte f = (byte) (t.flags[i] & ~TileData.FLAG_TREE);
+                    // street trees on the outer edge of city sidewalks, every ~14 m
+                    if (city && best > half + sw - 1 && (mix(seed, Math.floorDiv((int) x, 14), Math.floorDiv((int) z, 14)) & 7) == 0
+                            && Math.floorMod((int) x, 14) == 7 && Math.floorMod((int) z, 14) == 7) f |= TileData.FLAG_TREE;
+                    t.flags[i] = f;
+                });
+            }
+        }
+
         for (Building bd : b.buildings) {
             if (plans.size() > 400_000) plans.clear();               // region packs: millions of buildings; plans are deterministic
             Plan plan = plans.computeIfAbsent(bd.id(), id -> plan(bd));
