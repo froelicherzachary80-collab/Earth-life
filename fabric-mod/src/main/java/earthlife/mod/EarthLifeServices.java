@@ -67,6 +67,9 @@ public final class EarthLifeServices implements AutoCloseable {
     /** Where new players arrive: the chosen start town, snapped later to a safe surface block. */
     public final double spawnX, spawnZ;
     public final boolean bundledData;
+    /** Server option (config/earthlife/earthlife.json "allowLocationSharing", default true): players may opt in to appear on others' LifeMaps. */
+    public final boolean allowLocationSharing;
+    public final earthlife.mod.life.LifeService life;
 
     private EarthLifeServices(MinecraftServer server, earthlife.mod.world.EarthSettings settings) throws IOException {
         this.settings = settings;
@@ -75,6 +78,7 @@ public final class EarthLifeServices implements AutoCloseable {
         Path cfgDir = server.getServerDirectory().resolve("config/earthlife");
         Map<String, Object> cfg = readJson(cfgDir.resolve("earthlife.json"), Map.of());
         developerTools = Boolean.TRUE.equals(cfg.get("developerTools"));
+        allowLocationSharing = !Boolean.FALSE.equals(cfg.get("allowLocationSharing"));
         bundledData = settings.inWesternNy();
         GeoPoint origin = bundledData ? WESTERN_NY_ORIGIN : new GeoPoint(settings.lat(), settings.lon());
         region = bundledData ? "western-ny" : String.format(java.util.Locale.ROOT, "custom_%.3f_%.3f", settings.lat(), settings.lon()).replace('-', 'm');
@@ -104,12 +108,9 @@ public final class EarthLifeServices implements AutoCloseable {
         ElevationSource elevation = fallback;
         if (Files.exists(regionDir.resolve("dem.eldg"))) elevation = ElevationSource.Grid.load(regionDir.resolve("dem.eldg"), fallback);
         else if (bundledData) {
-            byte[] dem = bundledBytes("regions/western-ny/dem.eldg.gz");
-            if (dem != null) {
-                Path tmp = worldDir.resolve("dem-cache.eldg");
-                if (!Files.exists(tmp) || Files.size(tmp) != dem.length) AtomicFiles.write(tmp, dem);
-                elevation = ElevationSource.Grid.load(tmp, fallback);
-            }
+            // Coarse 60 m terrain for the whole region first, then the detailed 20 m starter grid on top of it.
+            ElevationSource coarse = loadBundledGrid("regions/western-ny/dem-region.eldg.gz", "dem-region-cache.eldg", fallback);
+            elevation = loadBundledGrid("regions/western-ny/dem.eldg.gz", "dem-cache.eldg", coarse);
         }
         if (!settings.realTerrain()) {
             double flat = elevation.elevationAt(spawnX, spawnZ);
@@ -148,7 +149,7 @@ public final class EarthLifeServices implements AutoCloseable {
         }
 
         String dataHash = hash(Json.write(Map.of("lm", landmarks.keySet().toString(), "f", features.roads.size() + "/" + features.buildings.size() + "/" + features.areas.size(),
-                "a", airportLayouts.keySet().toString(), "dem", String.valueOf(elevation.getClass().getSimpleName()), "s", settings.toString(), "v", "0.4")));
+                "a", airportLayouts.keySet().toString(), "dem", String.valueOf(elevation.getClass().getSimpleName()), "s", settings.toString(), "meta", String.valueOf(bundled("regions/western-ny/meta.json")), "v", "0.4")));
         tiles = new TileStreamer(generator, worldDir.resolve("tilecache").resolve(dataHash), new ModificationStore(worldDir.resolve("edits")),
                 Math.max(2, Runtime.getRuntime().availableProcessors() / 2), 4096, null);
 
@@ -162,6 +163,7 @@ public final class EarthLifeServices implements AutoCloseable {
         roadGraph = RoadGraph.roads(features);
         railGraph = RoadGraph.rails(features);
         if (settings.simulation()) buildPopulations();
+        life = new earthlife.mod.life.LifeService(this);
 
         // Real-time events (holidays computed locally; MLB / Ticketmaster / iCal fetched on this PC, cached for offline play).
         @SuppressWarnings("unchecked") Map<String, Object> ev = (Map<String, Object>) cfg.getOrDefault("events", Map.of());
@@ -243,6 +245,14 @@ public final class EarthLifeServices implements AutoCloseable {
         return out;
     }
 
+    private ElevationSource loadBundledGrid(String resource, String cacheName, ElevationSource fallback) throws IOException {
+        byte[] dem = bundledBytes(resource);
+        if (dem == null) return fallback;
+        Path tmp = worldDir.resolve(cacheName);
+        if (!Files.exists(tmp) || Files.size(tmp) != dem.length) AtomicFiles.write(tmp, dem);
+        return ElevationSource.Grid.load(tmp, fallback);
+    }
+
     static String bundled(String path) throws IOException {
         byte[] b = bundledBytes(path);
         return b == null ? null : new String(b, StandardCharsets.UTF_8);
@@ -295,6 +305,7 @@ public final class EarthLifeServices implements AutoCloseable {
     @Override public void close() throws IOException {
         rewards.save();
         time.save();
+        life.store.saveDirty();
         tiles.close();
     }
 }

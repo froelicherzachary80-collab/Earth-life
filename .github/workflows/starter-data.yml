@@ -1,0 +1,79 @@
+# Builds the Western New York starter dataset that ships inside the mod jar:
+#   - OpenStreetMap roads, buildings, land use, water, coastline, railways, aeroways (ODbL - attribution kept in the file)
+#   - elevation from the AWS Terrain Tiles (USGS 3DEP / NOAA bathymetry / SRTM; public, attribution in README)
+# and commits it to fabric-mod/src/main/resources/data/earthlife/regions/western-ny/. Run it manually (Actions tab)
+# or by changing the pipeline tools. GitHub's runners can reach Overpass and AWS; the result is cached in git.
+name: Starter dataset
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - "tools/fetch_osm.py"
+      - "tools/osm_to_earthlife.py"
+      - "tools/terrain_tiles.py"
+      - ".github/workflows/starter-data.yml"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: starter-data
+  cancel-in-progress: false
+
+jobs:
+  data:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    env:
+      ORIGIN: "43.2237,-77.1861"
+      # Starter box: Williamson, Pultneyville, Sodus, Sodus Point, Marion, Ontario, Walworth, Webster (east), lakeshore.
+      STARTER_BBOX: "43.120,-77.470,43.330,-76.940"
+      # Whole Western NY region for coarse terrain: Rochester -> Wolcott, Lake Ontario -> Canandaigua/Geneva.
+      REGION_BBOX: "42.840,-77.760,43.360,-76.780"
+      OUT: fabric-mod/src/main/resources/data/earthlife/regions/western-ny
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install pillow
+      - name: Pipeline self-test (offline)
+        run: python3 tools/test_pipeline.py
+      - name: Download OpenStreetMap data (Overpass, 3x3 pieces)
+        run: python3 tools/fetch_osm.py --bbox "$STARTER_BBOX" --split 3 -o raw/starter.osm.json
+      - name: Convert to EarthLife features
+        run: |
+          mkdir -p "$OUT"
+          python3 tools/osm_to_earthlife.py raw/starter.osm.json --origin "$ORIGIN" -o raw/features.json \
+            --towns-out raw/osm-towns.json --landmarks-out raw/osm-landmarks.json
+      - name: Starter terrain (20 m) and region terrain (60 m)
+        run: |
+          python3 tools/terrain_tiles.py --bbox "$STARTER_BBOX" --origin "$ORIGIN" --zoom 13 --cell 20 -o raw/dem.eldg
+          python3 tools/terrain_tiles.py --bbox "$REGION_BBOX" --origin "$ORIGIN" --zoom 11 --cell 60 -o raw/dem-region.eldg
+      - name: Package
+        run: |
+          gzip -9 -c raw/features.json > "$OUT/features.json.gz"
+          gzip -9 -c raw/dem.eldg > "$OUT/dem.eldg.gz"
+          gzip -9 -c raw/dem-region.eldg > "$OUT/dem-region.eldg.gz"
+          cp raw/osm-towns.json "$OUT/osm-towns.json"
+          python3 - <<'PY'
+          import json, os, datetime
+          f = json.load(open("raw/features.json"))
+          meta = {"region": "western-ny", "origin": [43.2237, -77.1861], "starter_bbox": os.environ["STARTER_BBOX"],
+                  "region_bbox": os.environ["REGION_BBOX"], "built": datetime.datetime.utcnow().isoformat() + "Z",
+                  "counts": {k: len(f.get(k, [])) for k in ("roads", "buildings", "areas", "water", "coastline")},
+                  "attribution": ["Map data (c) OpenStreetMap contributors, ODbL 1.0 - https://www.openstreetmap.org/copyright",
+                                  "Terrain: AWS Terrain Tiles (Mapzen); sources USGS 3DEP, NOAA Great Lakes bathymetry, SRTM and others"]}
+          json.dump(meta, open(os.environ["OUT"] + "/meta.json", "w"), indent=1)
+          print(json.dumps(meta, indent=1))
+          PY
+          ls -la "$OUT"
+      - name: Commit dataset
+        run: |
+          git config user.name "earthlife-data-bot"; git config user.email "ci@users.noreply.github.com"
+          git add "$OUT"
+          git diff --cached --quiet && { echo "no change"; exit 0; }
+          git commit -m "Starter dataset: Western NY (OSM + terrain) [data build ${GITHUB_RUN_ID}]"
+          for i in 1 2 3; do git pull --rebase -q origin main && git push -q origin HEAD:main && break; sleep 5; done

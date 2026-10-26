@@ -177,7 +177,10 @@ def convert(osm, proj):
             out["roads"].append({"id": wid, "class": cls, "width": width_of(tags, 30 if aw == "runway" else 15), "line": pts(geom), "prov": "VERIFIED"})
         elif hw in ROAD_CLASSES:
             cls, w = ROAD_CLASSES[hw]
-            out["roads"].append({"id": wid, "class": cls, "width": width_of(tags, w), "line": pts(geom), "prov": "VERIFIED"})
+            road = {"id": wid, "class": cls, "width": width_of(tags, w), "line": pts(geom), "prov": "VERIFIED"}
+            if tags.get("name"):
+                road["name"] = tags["name"]
+            out["roads"].append(road)
         elif "building" in tags and len(geom) >= 4:
             kind = tags.get("building", "yes")
             if aw == "terminal":
@@ -186,6 +189,8 @@ def convert(osm, proj):
                 kind = "control_tower"
             out["buildings"].append({"id": wid, "kind": kind, "levels": levels_of(tags, kind), "footprint": pts(geom, True),
                                      "name": tags.get("name"), "prov": "VERIFIED", "style": style_of(tags)})
+        elif tags.get("natural") == "coastline":
+            out.setdefault("coastline", []).append({"id": wid, "line": pts(geom)})
         elif tags.get("natural") == "water" or tags.get("waterway") == "riverbank" or tags.get("water"):
             if len(geom) >= 4:
                 out["water"].append({"id": wid, "ring": pts(geom, True), "prov": "VERIFIED"})

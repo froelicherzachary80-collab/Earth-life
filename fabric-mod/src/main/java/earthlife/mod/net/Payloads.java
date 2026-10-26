@@ -91,14 +91,15 @@ public final class Payloads {
      * and buildings from the same bundled map data the server uses, positioned with this origin.
      */
     public record WorldInfo(boolean earth, String region, double originLat, double originLon, int seaLevelYAt0m, String startTown,
-                            String scenario, boolean bundledData, String attribution, boolean showPlayersAllowed, List<Poi> pois) implements CustomPacketPayload {
+                            String scenario, boolean bundledData, String attribution, boolean showPlayersAllowed, boolean welcome,
+                            String settingsSummary, List<Poi> pois) implements CustomPacketPayload {
         public static final Type<WorldInfo> TYPE = new Type<>(id("world_info"));
         public static final StreamCodec<FriendlyByteBuf, WorldInfo> CODEC = StreamCodec.of((b, p) -> {
             b.writeBoolean(p.earth); b.writeUtf(p.region); b.writeDouble(p.originLat); b.writeDouble(p.originLon); b.writeVarInt(p.seaLevelYAt0m);
             b.writeUtf(p.startTown); b.writeUtf(p.scenario); b.writeBoolean(p.bundledData); b.writeUtf(p.attribution); b.writeBoolean(p.showPlayersAllowed);
-            writePois(b, p.pois);
+            b.writeBoolean(p.welcome); b.writeUtf(p.settingsSummary); writePois(b, p.pois);
         }, b -> new WorldInfo(b.readBoolean(), b.readUtf(), b.readDouble(), b.readDouble(), b.readVarInt(), b.readUtf(), b.readUtf(), b.readBoolean(),
-                b.readUtf(), b.readBoolean(), readPois(b, 4096)));
+                b.readUtf(), b.readBoolean(), b.readBoolean(), b.readUtf(), readPois(b, 4096)));
         @Override public Type<? extends CustomPacketPayload> type() { return TYPE; }
     }
 
@@ -148,6 +149,13 @@ public final class Payloads {
     public record MapPlayers(List<Poi> players) implements CustomPacketPayload {
         public static final Type<MapPlayers> TYPE = new Type<>(id("map_players"));
         public static final StreamCodec<FriendlyByteBuf, MapPlayers> CODEC = StreamCodec.of((b, p) -> writePois(b, p.players), b -> new MapPlayers(readPois(b, 256)));
+        @Override public Type<? extends CustomPacketPayload> type() { return TYPE; }
+    }
+
+    /** Ask the client to open one of its screens ("map", "menu:jobs", ...). Sent by /earthlife map and friends. */
+    public record OpenScreen(String screen) implements CustomPacketPayload {
+        public static final Type<OpenScreen> TYPE = new Type<>(id("open_screen"));
+        public static final StreamCodec<FriendlyByteBuf, OpenScreen> CODEC = StreamCodec.of((b, p) -> b.writeUtf(p.screen), b -> new OpenScreen(b.readUtf()));
         @Override public Type<? extends CustomPacketPayload> type() { return TYPE; }
     }
 }
