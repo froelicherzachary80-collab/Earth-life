@@ -12,6 +12,9 @@ public interface ElevationSource {
     /** True when the value comes from measured data (e.g. USGS 3DEP) rather than a procedural fill. */
     default boolean isMeasured(double x, double z) { return false; }
 
+    /** Water surface (m) where the terrain data marks sea or a Great Lake (the elevation is then the bed), else NaN. */
+    default double waterLevel(double x, double z) { return Double.NaN; }
+
     /**
      * Regular grid of elevations (produced by tools/dem_to_grid.py from USGS 3DEP GeoTIFFs), bilinearly
      * interpolated. Falls back to {@code fallback} outside the grid.

@@ -12,7 +12,18 @@ import java.util.Locale;
  * other worlds (Default/Superflat worlds never see them).
  */
 public record EarthSettings(String country, String state, String town, double lat, double lon, String quality,
-                            Options options, String startTime, String scenario, String dayLength, String npcDensity) {
+                            Options options, String startTime, String scenario, String dayLength, String npcDensity, String mapData) {
+
+    /**
+     * Map data source. NORTHEAST (new worlds, V0.4.1): the 1:1 New York / Pennsylvania / New Jersey / Vermont region packs,
+     * downloaded as you explore, one world coordinate system for all four states (Williamson = 0,0). STARTER: the Western NY
+     * starter data bundled in the jar (offline; worlds made before 0.4.1 keep it).
+     */
+    public enum MapData { NORTHEAST, STARTER }
+    public MapData mapDataEnum() { return parse(MapData.class, mapData, MapData.STARTER); }
+    /** True when this world uses the Northeast region packs (start location inside NY/PA/NJ/VT). */
+    public boolean regionPacks() { return mapDataEnum() == MapData.NORTHEAST && inNortheast(lat, lon); }
+    public static boolean inNortheast(double lat, double lon) { return lat > 38.85 && lat < 45.1 && lon > -80.6 && lon < -71.4; }
 
     public enum Quality { PERFORMANCE, BALANCED, DETAILED, ULTRA }
     public enum StartTime { REAL_TIME, MORNING, NOON, EVENING, NIGHT }
@@ -52,6 +63,7 @@ public record EarthSettings(String country, String state, String town, double la
     public record Place(String country, String state, String town, double lat, double lon, boolean bundledData) {
         public String label() {
             boolean wny = lat > 42.6 && lat < 43.5 && lon > -78.3 && lon < -76.6;
+            if (inNortheast(lat, lon)) return town + ", " + state + (bundledData ? "" : " (1:1 map)");
             return town + ", " + state + (bundledData ? "" : wny ? " (real terrain, estimated buildings)" : " (estimated terrain)");
         }
     }
@@ -71,6 +83,22 @@ public record EarthSettings(String country, String state, String town, double la
             new Place("United States", "New York", "Canandaigua", 42.8875, -77.2817, false),
             new Place("United States", "New York", "Geneva", 42.8689, -76.9777, false),
             new Place("United States", "New York", "New York City", 40.7128, -74.0060, false),
+            new Place("United States", "New York", "Buffalo", 42.8864, -78.8784, false),
+            new Place("United States", "New York", "Syracuse", 43.0481, -76.1474, false),
+            new Place("United States", "New York", "Albany", 42.6526, -73.7562, false),
+            new Place("United States", "New York", "Ithaca", 42.4440, -76.5019, false),
+            new Place("United States", "New York", "Lake Placid", 44.2795, -73.9799, false),
+            new Place("United States", "Pennsylvania", "Philadelphia", 39.9526, -75.1652, false),
+            new Place("United States", "Pennsylvania", "Pittsburgh", 40.4406, -79.9959, false),
+            new Place("United States", "Pennsylvania", "Harrisburg", 40.2732, -76.8867, false),
+            new Place("United States", "Pennsylvania", "Erie", 42.1292, -80.0851, false),
+            new Place("United States", "Pennsylvania", "Scranton", 41.4090, -75.6624, false),
+            new Place("United States", "New Jersey", "Newark", 40.7357, -74.1724, false),
+            new Place("United States", "New Jersey", "Jersey City", 40.7178, -74.0431, false),
+            new Place("United States", "New Jersey", "Atlantic City", 39.3643, -74.4229, false),
+            new Place("United States", "New Jersey", "Princeton", 40.3573, -74.6672, false),
+            new Place("United States", "Vermont", "Burlington", 44.4759, -73.2121, false),
+            new Place("United States", "Vermont", "Montpelier", 44.2601, -72.5754, false),
             new Place("United States", "California", "Los Angeles", 34.0522, -118.2437, false),
             new Place("United States", "California", "San Francisco", 37.7749, -122.4194, false),
             new Place("United Kingdom", "England", "London", 51.5074, -0.1278, false),
@@ -78,7 +106,7 @@ public record EarthSettings(String country, String state, String town, double la
             new Place("Australia", "New South Wales", "Sydney", -33.8688, 151.2093, false));
 
     public static final EarthSettings DEFAULT = new EarthSettings("United States", "New York", "Williamson", 43.2237, -77.1861,
-            "DETAILED", Options.ALL, "REAL_TIME", "NEW_LIFE", "VANILLA", "NORMAL");
+            "DETAILED", Options.ALL, "REAL_TIME", "NEW_LIFE", "VANILLA", "NORMAL", "NORTHEAST");
 
     public static final Codec<EarthSettings> CODEC = RecordCodecBuilder.create(i -> i.group(
             Codec.STRING.optionalFieldOf("country", DEFAULT.country).forGetter(EarthSettings::country),
@@ -91,7 +119,8 @@ public record EarthSettings(String country, String state, String town, double la
             Codec.STRING.optionalFieldOf("start_time", DEFAULT.startTime).forGetter(EarthSettings::startTime),
             Codec.STRING.optionalFieldOf("scenario", DEFAULT.scenario).forGetter(EarthSettings::scenario),
             Codec.STRING.optionalFieldOf("day_length", DEFAULT.dayLength).forGetter(EarthSettings::dayLength),
-            Codec.STRING.optionalFieldOf("npc_density", DEFAULT.npcDensity).forGetter(EarthSettings::npcDensity)
+            Codec.STRING.optionalFieldOf("npc_density", DEFAULT.npcDensity).forGetter(EarthSettings::npcDensity),
+            Codec.STRING.optionalFieldOf("map_data", "STARTER").forGetter(EarthSettings::mapData)      // absent = a world from before 0.4.1
     ).apply(i, EarthSettings::new));
 
     public Quality qualityEnum() {
@@ -117,14 +146,16 @@ public record EarthSettings(String country, String state, String town, double la
     /** True when the start town lies in the Western NY region (bundled terrain; roads/buildings inside the starter box). */
     public boolean inWesternNy() { return lat > 42.6 && lat < 43.5 && lon > -78.3 && lon < -76.6; }
 
-    public EarthSettings withPlace(Place p) { return new EarthSettings(p.country(), p.state(), p.town(), p.lat(), p.lon(), quality, options, startTime, scenario, dayLength, npcDensity); }
-    public EarthSettings withQuality(Quality q) { return new EarthSettings(country, state, town, lat, lon, q.name(), options, startTime, scenario, dayLength, npcDensity); }
-    public EarthSettings withOptions(Options o) { return new EarthSettings(country, state, town, lat, lon, quality, o, startTime, scenario, dayLength, npcDensity); }
-    public EarthSettings withStartTime(StartTime s) { return new EarthSettings(country, state, town, lat, lon, quality, options, s.name(), scenario, dayLength, npcDensity); }
-    public EarthSettings withScenario(Scenario s) { return new EarthSettings(country, state, town, lat, lon, quality, options, startTime, s.name(), dayLength, npcDensity); }
-    public EarthSettings withDayLength(DayLength d) { return new EarthSettings(country, state, town, lat, lon, quality, options, startTime, scenario, d.name(), npcDensity); }
+    public EarthSettings withPlace(Place p) { return new EarthSettings(p.country(), p.state(), p.town(), p.lat(), p.lon(), quality, options, startTime, scenario, dayLength, npcDensity, mapData); }
+    public EarthSettings withQuality(Quality q) { return new EarthSettings(country, state, town, lat, lon, q.name(), options, startTime, scenario, dayLength, npcDensity, mapData); }
+    public EarthSettings withOptions(Options o) { return new EarthSettings(country, state, town, lat, lon, quality, o, startTime, scenario, dayLength, npcDensity, mapData); }
+    public EarthSettings withStartTime(StartTime s) { return new EarthSettings(country, state, town, lat, lon, quality, options, s.name(), scenario, dayLength, npcDensity, mapData); }
+    public EarthSettings withScenario(Scenario s) { return new EarthSettings(country, state, town, lat, lon, quality, options, startTime, s.name(), dayLength, npcDensity, mapData); }
+    public EarthSettings withDayLength(DayLength d) { return new EarthSettings(country, state, town, lat, lon, quality, options, startTime, scenario, d.name(), npcDensity, mapData); }
 
-    public EarthSettings withNpcDensity(NpcDensity d) { return new EarthSettings(country, state, town, lat, lon, quality, options, startTime, scenario, dayLength, d.name()); }
+    public EarthSettings withNpcDensity(NpcDensity d) { return new EarthSettings(country, state, town, lat, lon, quality, options, startTime, scenario, dayLength, d.name(), mapData); }
+
+    public EarthSettings withMapData(MapData m) { return new EarthSettings(country, state, town, lat, lon, quality, options, startTime, scenario, dayLength, npcDensity, m.name()); }
 
     static <E extends Enum<E>> E parse(Class<E> c, String s, E def) {
         try { return Enum.valueOf(c, s.toUpperCase(Locale.ROOT)); } catch (Exception e) { return def; }

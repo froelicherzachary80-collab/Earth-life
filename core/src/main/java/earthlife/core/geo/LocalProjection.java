@@ -26,9 +26,22 @@ public final class LocalProjection {
     private final int seaLevelY;
     /** Vertical meters per block (1.0 = true scale). */
     private final double verticalScale;
+    /**
+     * Azimuthal-equidistant correction (V0.4.1 Northeast worlds): distances measured from the origin along the surface
+     * instead of on the flat tangent plane. The plain tangent plane shrinks radial distances by cos(d/R) (0.3% at 450 km,
+     * New York City from Williamson); with the correction the scale stays within ~0.1% across NY, PA, NJ and VT.
+     */
+    private final boolean azimuthal;
+    private final double radius;
 
-    public LocalProjection(GeoPoint origin, int seaLevelY, double verticalScale) {
+    public LocalProjection(GeoPoint origin, int seaLevelY, double verticalScale) { this(origin, seaLevelY, verticalScale, false); }
+
+    public LocalProjection(GeoPoint origin, int seaLevelY, double verticalScale, boolean azimuthal) {
         this.origin = origin;
+        this.azimuthal = azimuthal;
+        double la0 = Math.toRadians(origin.lat()), s2 = Math.sin(la0) * Math.sin(la0);
+        double m = A * (1 - E2) / Math.pow(1 - E2 * s2, 1.5), nn = A / Math.sqrt(1 - E2 * s2);
+        this.radius = Math.sqrt(m * nn);                  // Gaussian mean radius at the origin
         this.seaLevelY = seaLevelY;
         this.verticalScale = verticalScale;
         double la = Math.toRadians(origin.lat()), lo = Math.toRadians(origin.lon());
@@ -37,6 +50,7 @@ public final class LocalProjection {
     }
 
     public GeoPoint origin() { return origin; }
+    public boolean azimuthal() { return azimuthal; }
     public int seaLevelY() { return seaLevelY; }
 
     static double[] toEcef(double latDeg, double lonDeg, double h) {
@@ -79,14 +93,42 @@ public final class LocalProjection {
      */
     public BlockPos2 toBlock(double lat, double lon) {
         double[] enu = toEnu(new GeoPoint(lat, lon, 0));
-        return new BlockPos2(enu[0], -enu[1]);
+        if (!azimuthal) return new BlockPos2(enu[0], -enu[1]);
+        double k = arcScale(enu);
+        return new BlockPos2(enu[0] * k, -enu[1] * k);
+    }
+
+    /** Surface arc length / tangent-plane distance for an ENU point (1 at the origin). */
+    private double arcScale(double[] enu) {
+        double r = Math.hypot(enu[0], enu[1]);
+        if (r < 1) return 1;
+        double theta = Math.atan2(r, radius + enu[2]);
+        return radius * theta / r;
     }
 
     public GeoPoint fromBlock(double x, double z) {
-        // Recover the surface point: iterate so that height above ellipsoid is ~0.
+        if (!azimuthal) return planeFromBlock(x, z);
+        // invert the radial correction: find the tangent-plane point whose corrected position is (x, z)
+        double tx = x, tz = z;
+        GeoPoint g = planeFromBlock(tx, tz);
+        for (int i = 0; i < 8; i++) {
+            BlockPos2 b = toBlock(g.lat(), g.lon());
+            double want = Math.hypot(x, z), got = Math.hypot(b.x(), b.z());
+            if (got < 1e-9 || Math.abs(want - got) < 1e-4) break;
+            tx *= want / got; tz *= want / got;
+            g = planeFromBlock(tx, tz);
+        }
+        return g;
+    }
+
+    private GeoPoint planeFromBlock(double x, double z) {
+        // Recover the surface point: iterate so that height above ellipsoid is ~0 (more rounds far from the origin).
         GeoPoint g = fromEnu(x, -z, 0);
-        double[] enu = toEnu(new GeoPoint(g.lat(), g.lon(), 0));
-        g = fromEnu(x, -z, enu[2]);
+        int rounds = Math.hypot(x, z) > 100_000 ? 4 : 1;
+        for (int i = 0; i < rounds; i++) {
+            double[] enu = toEnu(new GeoPoint(g.lat(), g.lon(), 0));
+            g = fromEnu(x, -z, enu[2]);
+        }
         return new GeoPoint(g.lat(), g.lon(), 0);
     }
 

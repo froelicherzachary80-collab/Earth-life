@@ -85,6 +85,17 @@ public final class EarthSettingsScreen extends Screen {
                     .setTooltip(Tooltip.create(Component.literal(scenarioHelp(settings.scenarioEnum()))));
             addRenderableWidget(btn(rx, y, col, "Day length: " + dayLabel(settings.dayLengthEnum()), b -> {
                 settings = settings.withDayLength(next(List.of(EarthSettings.DayLength.values()), settings.dayLengthEnum())); rebuildWidgets(); }));
+            y += gap;
+            boolean ne = EarthSettings.inNortheast(settings.lat(), settings.lon());
+            boolean packs = settings.mapDataEnum() == EarthSettings.MapData.NORTHEAST;
+            Button md = btn(lx, y, col * 2 + 10, "Map data: " + (!ne ? "estimated (outside NY/PA/NJ/VT)" : packs ? "1:1 NY, PA, NJ, VT (downloads as you explore)" : "Western NY starter (offline, in the mod)"), b -> {
+                settings = settings.withMapData(packs ? EarthSettings.MapData.STARTER : EarthSettings.MapData.NORTHEAST); rebuildWidgets(); });
+            md.active = ne;
+            md.setTooltip(Tooltip.create(Component.literal(packs
+                    ? "The whole of New York, Pennsylvania, New Jersey and Vermont at 1:1: OpenStreetMap roads, buildings and land cover with USGS terrain. "
+                      + "Map packs (1-60 MB each, city areas are the big ones) download from the EarthLife GitHub releases the first time you go there."
+                    : "Only the bundled Western New York starter data (Williamson - Sodus - Webster); works without internet.")));
+            addRenderableWidget(md);
         } else {
             int[] idx = page == 1 ? new int[]{0, 1, 2, 3, 4, 5, 6, 7, 8, 9} : new int[]{10, 11, 12};
             boolean[] t = settings.options().array();

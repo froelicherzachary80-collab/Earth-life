@@ -58,6 +58,8 @@ public final class VehicleEntity extends Entity {
     private long fare;
     private List<Features.Pt> autoRoute;
     private final Map<UUID, Integer> seatOf = new HashMap<>();
+    /** Seat a rider just left (vanilla asks for the dismount spot after removing the passenger). */
+    private final Map<UUID, Integer> leftSeat = new HashMap<>();
     private final long[] doorCloseAt = new long[4];
 
     // client-side animation state
@@ -173,12 +175,14 @@ public final class VehicleEntity extends Entity {
     @Override protected void removePassenger(Entity p) {
         super.removePassenger(p);
         Integer seat = seatOf.remove(p.getUUID());
+        if (seat != null) leftSeat.put(p.getUUID(), seat);
         if (seat != null && !level().isClientSide()) openDoor(seat, 20);
     }
 
     /** Step out beside your door (or beside the vehicle). */
     @Override public Vec3 getDismountLocationForPassenger(LivingEntity passenger) {
-        int seat = seatOf.getOrDefault(passenger.getUUID(), -1);
+        Integer left = leftSeat.remove(passenger.getUUID());
+        int seat = seatOf.getOrDefault(passenger.getUUID(), left == null ? -1 : left);
         if (!clientModel(type) || seat < 0) return super.getDismountLocationForPassenger(passenger);
         double yaw = Math.toRadians(getYRot());
         double side = (seat % 2 == 0 ? -1 : 1) * (type.width / 2 + 0.7);      // left = negative "right"

@@ -28,8 +28,8 @@ public final class VideoPlayer implements AutoCloseable {
     record Frame(long ptsMs, byte[] rgba, float luma, float motion) {}
 
     final String key;
-    final String source, format;
-    final boolean anaglyph;
+    public final String source, format;
+    public final boolean anaglyph;
     public volatile String status = "Connecting...";
     public volatile String error;
     public volatile long durationMs;

@@ -15,7 +15,7 @@ import java.util.List;
  */
 public final class TileGenerator {
     /** Bump when the rasterisation changes, so cached tiles from older versions are regenerated. */
-    public static final int VERSION = 3;
+    public static final int VERSION = 4;
 
     static int roadRank(RoadClass c) {
         return switch (c) { case PATH -> 0; case RAIL -> 1; case SERVICE -> 2; case RESIDENTIAL -> 3; case SECONDARY -> 4; case PRIMARY -> 5; case MOTORWAY -> 6; case TAXIWAY -> 7; case RUNWAY -> 8; };
@@ -162,11 +162,22 @@ public final class TileGenerator {
             }
             if (!coverKnown) f |= TileData.FLAG_ESTIMATED;
             for (Water w : b.water) {
-                if (Features.pointInRing(w.ring(), x, z)) {
+                if (w.contains(x, z)) {
                     s = Surface.WATER;
                     f |= TileData.FLAG_WATER;
                     f &= ~TileData.FLAG_ESTIMATED;
                     t.terrainY[i] = (short) (t.terrainY[i] - 3); // basin; Fabric layer fills water to terrainY+2
+                    break;
+                }
+            }
+            // sea and Great Lakes from the terrain data's water mask: the elevation is the bed, water up to the surface
+            double wl = elevation.waterLevel(x, z);
+            if (!Double.isNaN(wl)) {
+                int wy = proj.elevationToY(wl);
+                if (wy > t.terrainY[i]) {
+                    s = Surface.WATER;
+                    f = (byte) ((f | TileData.FLAG_WATER) & ~TileData.FLAG_ESTIMATED & ~TileData.FLAG_TREE);
+                    t.waterY[i] = (short) wy;
                 }
             }
             if ((s == Surface.FOREST || s == Surface.ORCHARD) && step == 1) {
@@ -201,6 +212,12 @@ public final class TileGenerator {
                     default -> (best < 0.5 && step == 1 && r.cls() != RoadClass.SERVICE && Math.floorMod((int) (x + z), 8) < 4) ? Surface.ROAD_MARKING : Surface.ASPHALT;
                 };
                 t.surface[i] = (byte) s.ordinal();
+                // crossing water: the road runs on a causeway/bridge deck just above the water surface
+                if ((t.flags[i] & TileData.FLAG_WATER) != 0) {
+                    int surfaceY = t.waterY[i] != 0 ? t.waterY[i] : t.terrainY[i] + 2;
+                    t.terrainY[i] = (short) Math.max(t.terrainY[i], surfaceY + 1);
+                    t.waterY[i] = 0;
+                }
                 byte kindFlag = r.cls() == RoadClass.RAIL ? TileData.FLAG_RAIL : TileData.FLAG_ROAD;
                 t.flags[i] = (byte) ((t.flags[i] | kindFlag) & ~TileData.FLAG_TREE & ~TileData.FLAG_WATER);
                 if (r.prov() == Provenance.VERIFIED) t.flags[i] &= ~TileData.FLAG_ESTIMATED;
@@ -208,6 +225,7 @@ public final class TileGenerator {
         }
 
         for (Building bd : b.buildings) {
+            if (plans.size() > 400_000) plans.clear();               // region packs: millions of buildings; plans are deterministic
             Plan plan = plans.computeIfAbsent(bd.id(), id -> plan(bd));
             double[] bb = Features.bbox(bd.footprint(), 0);
             forEachSample(t, bb, (sx, sz, x, z) -> {

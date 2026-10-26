@@ -27,13 +27,23 @@ public final class Features {
         public int heightBlocks() { return Math.max(3, levels * 3 + 1); }
     }
     public record Area(String id, Landcover cover, List<Pt> ring, Provenance prov) {}
-    public record Water(String id, List<Pt> ring, Provenance prov) {}
+    /** A water body; {@code holes} are islands (inner rings of a multipolygon). */
+    public record Water(String id, List<Pt> ring, Provenance prov, List<List<Pt>> holes) {
+        public Water(String id, List<Pt> ring, Provenance prov) { this(id, ring, prov, List.of()); }
+        public boolean contains(double x, double z) {
+            if (!pointInRing(ring, x, z)) return false;
+            for (List<Pt> h : holes) if (pointInRing(h, x, z)) return false;
+            return true;
+        }
+    }
 
     public final String attribution;
     public final List<Road> roads = new ArrayList<>();
     public final List<Building> buildings = new ArrayList<>();
     public final List<Area> areas = new ArrayList<>();
     public final List<Water> water = new ArrayList<>();
+    /** Street names by road id (region packs; the LifeMap and in-car GPS show them). */
+    public final Map<String, String> names = new HashMap<>();
 
     public Features(String attribution) { this.attribution = attribution; }
 

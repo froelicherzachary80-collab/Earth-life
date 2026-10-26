@@ -3,7 +3,7 @@ package earthlife.core.world;
 import java.util.*;
 
 /** Geographic index: buckets every feature into the 256-block tiles its bounding box touches. */
-public final class FeatureIndex {
+public class FeatureIndex {
     public static final class Bucket {
         public final List<Features.Road> roads = new ArrayList<>();
         public final List<Features.Building> buildings = new ArrayList<>();

@@ -30,6 +30,8 @@ public final class TileData {
     // V0.3 realistic buildings: wall top (eave), wall/roof material (BuildingStyle ordinals) and extra flags.
     public final short[] eaveY;
     public final byte[] wallMat, roofMat, flags2;
+    /** V0.4.1: water surface Y of water columns (0 = old rule: two blocks above the basin floor). */
+    public final short[] waterY;
     public static final byte F2_DOOR = 1, F2_CHIMNEY = 2, F2_LANDMARK = 4;
     /** Interior furniture code (TileGenerator.F_*) of a building column, 0 = none. */
     public int furniture(int sx, int sz) { return (flags2[idx(sx, sz)] >> 4) & 0xF; }
@@ -39,7 +41,7 @@ public final class TileData {
         this.n = key.samples();
         int c = n * n;
         terrainY = new short[c]; surface = new byte[c]; structureTopY = new short[c]; structureKind = new byte[c]; flags = new byte[c];
-        eaveY = new short[c]; wallMat = new byte[c]; roofMat = new byte[c]; flags2 = new byte[c];
+        eaveY = new short[c]; wallMat = new byte[c]; roofMat = new byte[c]; flags2 = new byte[c]; waterY = new short[c];
     }
 
     public int idx(int sx, int sz) { return sz * n + sx; }
@@ -48,7 +50,7 @@ public final class TileData {
     public boolean has2(int sx, int sz, byte f) { return (flags2[idx(sx, sz)] & f) != 0; }
 
     // ---- serialization with checksum (offline cache + save integrity) ----
-    private static final int MAGIC = 0x454C5432; // "ELT2" (V0.3 adds eave/material/flags2; ELT1 cache entries are regenerated)
+    private static final int MAGIC = 0x454C5433; // "ELT3" (V0.4.1 adds waterY; older cache entries are regenerated)
 
     public byte[] toBytes() {
         try {
@@ -63,6 +65,7 @@ public final class TileData {
             out.write(flags);
             for (short x : eaveY) out.writeShort(x);
             out.write(wallMat); out.write(roofMat); out.write(flags2);
+            for (short x : waterY) out.writeShort(x);
             out.flush();
             byte[] body = bo.toByteArray();
             CRC32 crc = new CRC32();
@@ -92,6 +95,7 @@ public final class TileData {
         in.readFully(t.flags);
         for (int i = 0; i < t.eaveY.length; i++) t.eaveY[i] = in.readShort();
         in.readFully(t.wallMat); in.readFully(t.roofMat); in.readFully(t.flags2);
+        for (int i = 0; i < t.waterY.length; i++) t.waterY[i] = in.readShort();
         return t;
     }
 }
