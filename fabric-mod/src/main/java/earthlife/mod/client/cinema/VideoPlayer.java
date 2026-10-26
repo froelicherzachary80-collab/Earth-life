@@ -195,15 +195,15 @@ public final class VideoPlayer implements AutoCloseable {
         cmd.addAll(List.of("-i", in.url(), "-map", "0:v:0", "-vf", filter(), "-f", "rawvideo", "pipe:1"));
         if (hasAudio) {
             audio = new AudioOut();
-            if (audio.ok) {
-                audioServer = new ServerSocket(0, 1, InetAddress.getLoopbackAddress());
-                audioServer.setReceiveBufferSize(64 * 1024);
-                audioServer.setSoTimeout(30_000);
-                cmd.addAll(List.of("-map", in.audioMap() + "?", "-ac", "2", "-ar", String.valueOf(AudioOut.RATE), "-f", "s16le", "tcp://127.0.0.1:" + audioServer.getLocalPort()));
-            } else {
+            if (!audio.ok) {
                 audio.close(); audio = null;
                 cmd.add(cmd.indexOf("-i"), "-re");                                // no sound device: pace by the wall clock
             }
+            // the soundtrack is always decoded: played when there is a sound device, and analysed for 4DX either way
+            audioServer = new ServerSocket(0, 1, InetAddress.getLoopbackAddress());
+            audioServer.setReceiveBufferSize(64 * 1024);
+            audioServer.setSoTimeout(30_000);
+            cmd.addAll(List.of("-map", in.audioMap() + "?", "-ac", "2", "-ar", String.valueOf(AudioOut.RATE), "-f", "s16le", "tcp://127.0.0.1:" + audioServer.getLocalPort()));
         }
         proc = new ProcessBuilder(cmd).start();
         status = "Buffering...";
@@ -215,7 +215,7 @@ public final class VideoPlayer implements AutoCloseable {
         err.setDaemon(true); err.start();
         Thread video = new Thread(this::readVideo, "EarthLife-cinema-video");
         video.setDaemon(true); video.start();
-        if (audio != null) {
+        if (audioServer != null) {
             Thread a = new Thread(this::readAudio, "EarthLife-cinema-audio");
             a.setDaemon(true); a.start();
         }
@@ -296,12 +296,13 @@ public final class VideoPlayer implements AutoCloseable {
                     while (levelLog.size() > 400) levelLog.removeFirst();
                 }
                 audioFrames += (off & ~3) / 4;
-                if (!audio.write(buf, off & ~3)) break;
+                if (audio != null && !audio.write(buf, off & ~3)) break;
                 if (off < buf.length) break;
             }
         } catch (Exception e) {
             if (!closed) EarthLifeMod.LOG.info("cinema sound stream ended: {}", e.toString());
         }
+        if (audio == null) return;                  // analysis only: the wall clock already paces the picture
         audioEnded = true;
         // the sound ran out (or failed): keep the picture going on the wall clock
         wallBaseMs = clockMs();
