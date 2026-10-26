@@ -86,6 +86,7 @@ public final class EarthLifeMod implements ModInitializer {
         PayloadTypeRegistry.clientboundPlay().register(Payloads.OpenScreen.TYPE, Payloads.OpenScreen.CODEC);
         PayloadTypeRegistry.clientboundPlay().register(Payloads.CinemaShow.TYPE, Payloads.CinemaShow.CODEC);
         earthlife.mod.cinema.CinemaContent.init();
+        earthlife.mod.zmf.ZmfCinema.init();
         net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry.register(NPC, earthlife.mod.npc.NpcEntity.attributes());
 
         ServerLifecycleEvents.SERVER_STARTING.register(server -> earthSettings(server).ifPresent(st -> {
@@ -219,7 +220,7 @@ public final class EarthLifeMod implements ModInitializer {
                 long ticks = Math.floorMod((hour - 6) * 1000L + minute * 1000L / 60, 24000L);
                 earthlife.mod.McCompat.setDayTime(server, ticks);
             }
-            earthlife.core.world.AtomicFiles.write(marker, ("{\"version\":\"0.4.1\",\"created\":\"" + java.time.Instant.now() + "\"}").getBytes());
+            earthlife.core.world.AtomicFiles.write(marker, ("{\"version\":\"0.5.0\",\"created\":\"" + java.time.Instant.now() + "\"}").getBytes());
         } catch (Exception e) { LOG.error("EarthLife first start", e); }
     }
 

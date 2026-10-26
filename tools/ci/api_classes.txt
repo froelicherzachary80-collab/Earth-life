@@ -97,3 +97,12 @@ net.minecraft.world.level.block.HorizontalDirectionalBlock
 net.minecraft.world.level.block.state.BlockBehaviour$Properties
 net.minecraft.world.item.Item$Properties
 net.minecraft.world.food.FoodProperties$Builder
+net.minecraft.client.renderer.texture.AbstractTexture
+net.fabricmc.fabric.api.resource.ResourceManagerHelper
+net.minecraft.world.item.MapItem
+net.minecraft.world.level.saveddata.maps.MapItemSavedData
+net.minecraft.world.level.chunk.ChunkGeneratorStructureState
+net.minecraft.world.item.component.CustomData
+net.minecraft.nbt.CompoundTag
+net.minecraft.core.particles.DustParticleOptions
+net.minecraft.server.level.ServerChunkCache

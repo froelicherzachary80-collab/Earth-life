@@ -5,10 +5,14 @@ name: Fabric mod build
 
 on:
   push:
-    branches: [main]
+    branches: [main, 'zmf-*']
   pull_request:
     branches: [main]
   workflow_dispatch:
+    inputs:
+      tests:
+        description: "In-game tests to run: all | zmf | earth"
+        default: all
 
 permissions:
   contents: write
@@ -86,11 +90,13 @@ jobs:
           ls fabric-mod/build/libs >> ci-out/RESULT 2>/dev/null || true
           git config user.name "ci"; git config user.email "ci@users.noreply.github.com"
           cp -r ci-out /tmp/ci-out
+          # main publishes to ci-logs; other branches to ci-logs-<branch prefix> (e.g. ci-logs-zmf)
+          B=ci-logs; [ "${GITHUB_REF_NAME}" != "main" ] && B="ci-logs-${GITHUB_REF_NAME%%-*}"
           git checkout --orphan ci-logs-tmp
           git rm -rfq . ; rm -rf ./* .github 2>/dev/null || true
           cp -r /tmp/ci-out/* .
           git add -A && git commit -qm "CI logs for ${GITHUB_SHA}"
-          git push -f origin ci-logs-tmp:ci-logs
+          git push -f origin ci-logs-tmp:$B
 
       - name: Fail if the mod did not build
         if: steps.build.outcome != 'success'
@@ -100,7 +106,7 @@ jobs:
   # to the ci-tests branch: earthlife-test-report.json, earthlife-test-log.txt, screenshots/*.png, latest.log.
   gametest:
     runs-on: ubuntu-24.04
-    timeout-minutes: 90
+    timeout-minutes: 170
     steps:
       - uses: actions/checkout@v5
       - uses: actions/setup-java@v5
@@ -123,14 +129,28 @@ jobs:
           PY
       - name: Graphics stack (Mesa software rendering + virtual display)
         run: |
+          # the man-db trigger and recommended packages made this step take ~50 min on ubuntu-24.04 runners
+          sudo rm -f /var/lib/man-db/auto-update
+          echo 'path-exclude /usr/share/doc/*' | sudo tee /etc/dpkg/dpkg.cfg.d/01_nodoc >/dev/null
+          echo 'path-exclude /usr/share/man/*' | sudo tee -a /etc/dpkg/dpkg.cfg.d/01_nodoc >/dev/null
           sudo apt-get update -q
-          sudo apt-get install -y -q mesa-vulkan-drivers libgl1-mesa-dri libegl1 xvfb ffmpeg
+          sudo apt-get install -y -q --no-install-recommends mesa-vulkan-drivers libgl1-mesa-dri libegl1 xvfb xauth ffmpeg
           mkdir -p fabric-mod/build/run/clientGameTest/test-films
           # synthetic test films for the cinema checks (FFmpeg's built-in test pattern + tone; no real films)
           F=fabric-mod/build/run/clientGameTest/test-films
           ffmpeg -hide_banner -loglevel error -f lavfi -i "testsrc2=size=960x400:rate=24" -f lavfi -i "sine=frequency=440:sample_rate=48000" -t 60 -c:v libx264 -pix_fmt yuv420p -c:a aac -shortest "$F/test-pattern.mp4"
           ffmpeg -hide_banner -loglevel error -f lavfi -i "testsrc2=size=480x400:rate=24" -f lavfi -i "sine=frequency=220:sample_rate=48000" -filter_complex "[0:v]split[l][r];[r]hue=h=180[r2];[l][r2]hstack[v]" -map "[v]" -map 1:a -t 60 -c:v libx264 -pix_fmt yuv420p -c:a aac -shortest "$F/test-pattern-3d-sbs.mp4"
+          # ZMF Cinema 4DX test clip: 4 s of a dark scene, a half-second orange fireball with a loud low boom, then dark again
+          ffmpeg -hide_banner -loglevel error -f lavfi -i "color=c=0x14161c:s=640x272:r=24:d=8" -f lavfi -i "color=c=0xff8c1a:s=640x272:r=24:d=8" \
+            -f lavfi -i "sine=frequency=220:sample_rate=48000:duration=8" -f lavfi -i "anoisesrc=color=brown:amplitude=0.9:sample_rate=48000:duration=8" \
+            -filter_complex "[0:v][1:v]overlay=enable='between(t,4,4.5)'[v];[2:a]volume=0.02[q];[3:a]volume=enable='not(between(t,4,4.6))':volume=0[b];[q][b]amix=inputs=2:normalize=0[a]" \
+            -map "[v]" -map "[a]" -c:v libx264 -pix_fmt yuv420p -c:a aac -t 8 "$F/explosion-test.mp4"
           ls -la "$F"
+          # optional: MCEF Modern (Chromium for the web-cinema test) from Modrinth into the test instance's mods folder
+          mkdir -p fabric-mod/build/run/clientGameTest/mods
+          URL=$(curl --max-time 60 -fsSL 'https://api.modrinth.com/v2/project/mcef-modern/version?game_versions=%5B%2226.3%22%5D&loaders=%5B%22fabric%22%5D' | python3 -c "import json,sys; v=json.load(sys.stdin); print(v[0]['files'][0]['url'] if v else '')" || true)
+          if [ -n "$URL" ]; then curl --max-time 300 -fsSL -o fabric-mod/build/run/clientGameTest/mods/mcef-modern.jar "$URL" && echo "MCEF Modern: $URL"; else echo "MCEF Modern not found on Modrinth - web cinema test will be BLOCKED"; fi
+          sudo apt-get install -y -q --no-install-recommends libnss3 libatk1.0-0t64 libatk-bridge2.0-0t64 libcups2t64 libxcomposite1 libxdamage1 libxrandr2 libgbm1 libxkbcommon0 libasound2t64 libpango-1.0-0 || true
           echo "eula=true" > fabric-mod/build/run/clientGameTest/eula.txt
           printf 'version:4896\npreferredGraphicsBackend:"vulkan"\nonboardAccessibility:false\n' > fabric-mod/build/run/clientGameTest/options.txt
       - name: Run in-game tests
@@ -138,6 +158,8 @@ jobs:
         continue-on-error: true
         run: |
           set -o pipefail
+          export EARTHLIFE_TESTS="${{ github.event.inputs.tests || (startsWith(github.ref_name, 'zmf-') && 'zmf') || 'all' }}"
+          echo "in-game tests: $EARTHLIFE_TESTS"
           xvfb-run -a -s "-screen 0 1920x1080x24" gradle :fabric-mod:runClientGameTest --no-daemon --stacktrace 2>&1 | tee gametest.log
       - name: Collect in-game results
         if: always()
@@ -147,18 +169,19 @@ jobs:
           cp -r $R/screenshots/* /tmp/out/screenshots/ 2>/dev/null || true
           cp $R/earthlife-test-report.json $R/earthlife-test-log.txt /tmp/out/ 2>/dev/null || true
           cp $R/logs/latest.log /tmp/out/latest.log 2>/dev/null || true
-          grep -E "EARTHLIFE-TEST|ERROR|Exception|at earthlife|Caused by" gametest.log | head -400 > /tmp/out/gametest-highlights.txt || true
+          grep -E "EARTHLIFE-TEST|ERROR|Exception|at earthlife|Caused by|ZMF|MCEF" gametest.log | head -600 > /tmp/out/gametest-highlights.txt || true
           tail -300 gametest.log > /tmp/out/gametest-tail.txt
           echo "${{ steps.gt.outcome }} ${GITHUB_SHA}" > /tmp/out/RESULT
       - name: Publish results to ci-tests branch
         if: always() && github.event_name != 'pull_request'
         run: |
           git config user.name "ci"; git config user.email "ci@users.noreply.github.com"
+          B=ci-tests; [ "${GITHUB_REF_NAME}" != "main" ] && B="ci-tests-${GITHUB_REF_NAME%%-*}"
           git checkout --orphan ci-tests-tmp
           git rm -rfq . ; rm -rf ./* .github 2>/dev/null || true
           cp -r /tmp/out/* .
           git add -A && git commit -qm "In-game test results for ${GITHUB_SHA}"
-          git push -f origin ci-tests-tmp:ci-tests
+          git push -f origin ci-tests-tmp:$B
       - uses: actions/upload-artifact@v4
         if: always()
         with:

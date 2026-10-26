@@ -1,0 +1,19 @@
+{
+ "variants": {
+  "facing=north": {
+   "model": "earthlife:block/snack_shelf"
+  },
+  "facing=east": {
+   "model": "earthlife:block/snack_shelf",
+   "y": 90
+  },
+  "facing=south": {
+   "model": "earthlife:block/snack_shelf",
+   "y": 180
+  },
+  "facing=west": {
+   "model": "earthlife:block/snack_shelf",
+   "y": 270
+  }
+ }
+}

@@ -40,9 +40,25 @@ public final class CinemaService {
     public record Cinema(String id, String name, String brand, double lat, double lon, Blueprint.Placed placed,
                          List<Aud> auds, double[] kiosk, double[] concessions, String address) {}
 
-    /** An auditorium in world coordinates. Screen faces direction (nx, nz). */
+    /**
+     * An auditorium in world coordinates. Screen faces direction (nx, nz). formats: "+"-joined capabilities
+     * ("2D", "3D", "4DX", "IMAX", "ScreenX"); browser: ZMF web-cinema slot 'A'-'D' or '-'; box: interior bounds
+     * {x0,y0,z0,x1,y1,z1} (null for OpenStreetMap theaters, which use distance instead); geom: extra rendering data for
+     * the screen (ScreenX walls, IMAX curve).
+     */
     public record Aud(String key, Cinema cinema, int index, String name, boolean motion, double sx, double sy, double sz,
-                      double nx, double nz, double w, double h, List<BlockPos> seats, double[] door) {}
+                      double nx, double nz, double w, double h, List<BlockPos> seats, double[] door,
+                      String formats, char browser, double[] box, String geom) {
+        public Aud(String key, Cinema cinema, int index, String name, boolean motion, double sx, double sy, double sz,
+                   double nx, double nz, double w, double h, List<BlockPos> seats, double[] door) {
+            this(key, cinema, index, name, motion, sx, sy, sz, nx, nz, w, h, seats, door, motion ? "4DX+3D" : "2D+3D", '-', null, "");
+        }
+        public boolean has(String fmt) { return ("+" + formats + "+").toLowerCase(Locale.ROOT).contains("+" + fmt.toLowerCase(Locale.ROOT) + "+"); }
+        public boolean zmf() { return "ZMF".equals(cinema.brand()); }
+        public boolean inside(double x, double y, double z) {
+            return box != null && x >= box[0] && x <= box[3] && y >= box[1] - 1 && y <= box[4] + 1 && z >= box[2] && z <= box[5];
+        }
+    }
 
     /** A film playing in an auditorium. positionMs at startedAtMs (server clock); pausedAtMs > 0 when paused. */
     public record Showing(String title, String source, String format, long startedAtMs, long pausedAtMs, String ownerName, UUID owner) {
@@ -62,6 +78,24 @@ public final class CinemaService {
     public static Boolean fourDOverride;
 
     public static CinemaService get() { return current; }
+
+    /** Cinemas for an ordinary (non-Earth) world: starts empty, ZMF multiplexes register their auditoriums as they are built. */
+    public static CinemaService startVanilla() { CinemaService c = new CinemaService(); current = c; return c; }
+
+    /** Called when a server stops, so the next world in this session never sees this one's theaters. */
+    public static void reset() { if (current != null) current.clear(); current = null; }
+
+    /** Adds a theater built after the world started (ZMF multiplexes). */
+    public void register(Cinema cin) {
+        cinemas.removeIf(c -> c.id().equals(cin.id()));
+        cinemas.add(cin);
+        for (Aud a : cin.auds()) auds.put(a.key(), a);
+    }
+
+    static boolean earth() { return EarthLifeServices.running(); }
+
+    /** The 4D season only applies to the 4D rooms of real-world (OpenStreetMap) theaters; ZMF 4DX rooms are always open. */
+    static boolean seasonal(Aud a) { return a.motion && !a.zmf(); }
 
     /** Builds the theaters before any tile is generated (their sites level the ground and replace the building). */
     public static CinemaService start(EarthLifeServices s, TileGenerator gen, List<Blueprint.Placed> structures) {
@@ -246,6 +280,7 @@ public final class CinemaService {
                 sc.setPos(a.sx, a.sy - a.h / 2, a.sz);
                 sc.setYRot((float) Math.toDegrees(Math.atan2(-a.nx, a.nz)));
                 sc.configure(a.key, (float) a.w, (float) a.h, a.cinema.name() + " · " + a.name);
+                sc.data(a.geom == null ? "" : a.geom);
                 McCompat.spawnTemporary(level, sc);
                 screens.put(a.key, sc);
             } else if (near > 112 && e != null) { e.discard(); screens.remove(a.key); }
@@ -274,41 +309,61 @@ public final class CinemaService {
 
     int price(Aud a, String format) { return a.motion ? TICKET_4D_LC : "2D".equals(format) ? TICKET_LC : TICKET_3D_LC; }
 
+    /** Price label for menus: LifeCoins in Earth worlds, emeralds (or free) elsewhere. */
+    public String priceLabel(Aud a, String format, ServerPlayer p) {
+        if (earth()) return price(a, format) + " LC";
+        return earthlife.mod.zmf.ZmfEconomy.label(earthlife.mod.zmf.ZmfEconomy.ticketPrice(a, format), p);
+    }
+
+    /** Takes payment for a ticket and returns what was paid ("12 LC", "1 emerald", "free"). */
+    public String charge(ServerPlayer p, Aud a, String format, String ref, String what) throws Exception {
+        if (earth()) {
+            int price = price(a, format);
+            EarthLifeServices.get().ledger.debit(p.getStringUUID(), price, "CINEMA", ref, what, p.level().getGameTime());
+            return price + " LC";
+        }
+        return earthlife.mod.zmf.ZmfEconomy.pay(p, earthlife.mod.zmf.ZmfEconomy.ticketPrice(a, format), what);
+    }
+
+    /** The manual showing of a room, or else its scheduled ZMF screening (if one is running now). */
+    public Showing effective(String key) {
+        Showing sh = showings.get(key);
+        if (sh != null) return sh;
+        var ms = earthlife.mod.zmf.MultiplexService.get();
+        return ms == null ? null : ms.scheduledShowing(key, System.currentTimeMillis()).orElse(null);
+    }
+
     /** Starts a film (the player picked it in their movie picker) and sells them a ticket. */
     public String start(ServerPlayer p, String key, String format, String source, String title) throws Exception {
         Aud a = auds.get(key);
         if (a == null) return "That auditorium doesn't exist.";
-        var s = EarthLifeServices.get();
-        if (a.motion && !fourDOpen(s.time.clock().zone())) return "The 4D motion auditorium " + fourDOpening(s.time.clock().zone()) + ".";
+        if (seasonal(a) && earth() && !fourDOpen(EarthLifeServices.get().time.clock().zone())) return "The 4D motion auditorium " + fourDOpening(EarthLifeServices.get().time.clock().zone()) + ".";
         Showing cur = showings.get(key);
         if (cur != null && cur.positionMs(System.currentTimeMillis()) < 4 * 3600_000L && !Objects.equals(cur.owner(), p.getUUID()) && !McCompat.isOp(p))
             return "\"" + cur.title() + "\" is already playing in " + a.name + ". Join it, or pick another auditorium.";
-        int price = price(a, format);
-        s.ledger.debit(p.getStringUUID(), price, "CINEMA", "ticket#" + key + "#" + p.getStringUUID() + "#" + System.currentTimeMillis() / 1000, "Movie ticket: " + title, p.level().getGameTime());
+        String paid = charge(p, a, format, "ticket#" + key + "#" + p.getStringUUID() + "#" + System.currentTimeMillis() / 1000, "Movie ticket: " + title);
         showings.put(key, new Showing(title, source, format, System.currentTimeMillis(), 0, p.getName().getString(), p.getUUID()));
         giveTicket(p, a, title, format);
         broadcast(p.level().getServer(), key);
         waypoint(p, a);
-        return "Ticket bought (" + price + " LC): \"" + title + "\" in " + a.name + " at " + a.cinema.name() + ". Find your seat - the film is starting!";
+        return "Ticket bought (" + paid + "): \"" + title + "\" in " + a.name + " at " + a.cinema.name() + ". Find your seat - the film is starting!";
     }
 
     /** Buys a ticket for the film already playing. */
     public String join(ServerPlayer p, String key) throws Exception {
         Aud a = auds.get(key);
-        Showing sh = showings.get(key);
+        Showing sh = effective(key);
         if (a == null || sh == null) return "Nothing is playing there right now.";
-        int price = price(a, sh.format());
-        var s = EarthLifeServices.get();
-        s.ledger.debit(p.getStringUUID(), price, "CINEMA", "ticket#" + key + "#" + p.getStringUUID() + "#" + sh.startedAtMs(), "Movie ticket: " + sh.title(), p.level().getGameTime());
+        String paid = charge(p, a, sh.format(), "ticket#" + key + "#" + p.getStringUUID() + "#" + sh.startedAtMs(), "Movie ticket: " + sh.title());
         giveTicket(p, a, sh.title(), sh.format());
         Net.send(p, payload(key));
         waypoint(p, a);
-        return "Ticket bought (" + price + " LC) for \"" + sh.title() + "\" in " + a.name + ".";
+        return "Ticket bought (" + paid + ") for \"" + sh.title() + "\" in " + a.name + ".";
     }
 
     public String control(ServerPlayer p, String key, String what) {
         Showing sh = showings.get(key);
-        if (sh == null) return "Nothing is playing there.";
+        if (sh == null) return effective(key) != null ? "This is a scheduled screening - it can't be paused (start your own showing from the kiosk)." : "Nothing is playing there.";
         if (!Objects.equals(sh.owner(), p.getUUID()) && !McCompat.isOp(p)) return "Only " + sh.ownerName() + " (who started it) or an operator can do that.";
         long now = System.currentTimeMillis();
         switch (what) {
@@ -328,7 +383,7 @@ public final class CinemaService {
 
     Payloads.CinemaShow payload(String key) {
         Aud a = auds.get(key);
-        Showing sh = showings.get(key);
+        Showing sh = effective(key);
         if (a == null || sh == null) return new Payloads.CinemaShow(key, "", "", "", 0, false, a != null && a.motion, "");
         return new Payloads.CinemaShow(key, sh.title(), sh.source(), sh.format(), sh.positionMs(System.currentTimeMillis()), sh.pausedAtMs() > 0, a.motion, sh.ownerName());
     }
@@ -339,13 +394,18 @@ public final class CinemaService {
     }
 
     /** On join: every running showing (clients only play the ones whose screen is near them). */
-    public void sendAll(ServerPlayer p) { for (String k : showings.keySet()) Net.send(p, payload(k)); }
+    public void sendAll(ServerPlayer p) {
+        Set<String> keys = new HashSet<>(showings.keySet());
+        for (Aud a : auds.values()) if (a.zmf()) keys.add(a.key);
+        for (String k : keys) { var pl = payload(k); if (!pl.title().isEmpty() || showings.containsKey(k)) Net.send(p, pl); }
+    }
 
     void giveTicket(ServerPlayer p, Aud a, String title, String format) {
         ItemStack t = new ItemStack(CinemaContent.MOVIE_TICKET);
         t.set(net.minecraft.core.component.DataComponents.CUSTOM_NAME, Component.literal("Ticket: " + title));
         t.set(net.minecraft.core.component.DataComponents.LORE, new net.minecraft.world.item.component.ItemLore(List.of(
                 Component.literal(a.cinema.name() + " · " + a.name), Component.literal(format + (a.motion ? " · 4D motion" : "")))));
+        earthlife.mod.zmf.ZmfEconomy.tagTicket(t, a.key, System.currentTimeMillis() + 4 * 3600_000L);
         p.addItem(t);
         if (!"2D".equals(format) && !hasGlasses(p)) p.addItem(new ItemStack(CinemaContent.GLASSES_3D));
     }
@@ -357,6 +417,7 @@ public final class CinemaService {
     }
 
     void waypoint(ServerPlayer p, Aud a) {
+        if (!earth()) return;
         var s = EarthLifeServices.get();
         var life = s.life.life(p);
         String n = a.cinema.name() + " " + a.name;
@@ -371,6 +432,11 @@ public final class CinemaService {
         Integer price = CinemaContent.PRICES.get(item);
         var it = CinemaContent.byId(item);
         if (price == null || it.isEmpty()) return "We don't sell that here.";
+        if (!earth()) {
+            String paid = earthlife.mod.zmf.ZmfEconomy.pay(p, earthlife.mod.zmf.ZmfConfig.get().snackEmeralds, "Concessions: " + item.replace('_', ' '));
+            p.addItem(new ItemStack(it.get()));
+            return "Enjoy your " + new ItemStack(it.get()).getHoverName().getString() + "! (" + paid + ")";
+        }
         var s = EarthLifeServices.get();
         s.ledger.debit(p.getStringUUID(), price, "CINEMA", "snack#" + item + "#" + p.getStringUUID() + "#" + System.nanoTime(), "Concessions: " + item.replace('_', ' '), p.level().getGameTime());
         p.addItem(new ItemStack(it.get()));
@@ -380,7 +446,11 @@ public final class CinemaService {
 
     /** Kiosk / concession counter / popcorn machine clicked. */
     public static void openMenu(ServerPlayer p, String menu, BlockPos at) {
-        if (!EarthLifeServices.running()) { p.sendOverlayMessage(Component.literal("Cinemas work in Earth worlds.")); return; }
+        if (!EarthLifeServices.running() || (earthlife.mod.zmf.MultiplexService.get() != null && earthlife.mod.zmf.MultiplexService.get().nearestBuilt(p.getX(), p.getZ(), 200) != null)) {
+            if (earthlife.mod.zmf.MultiplexService.get() != null) earthlife.mod.zmf.MultiplexService.get().openHub(p, menu);
+            else p.sendOverlayMessage(Component.literal("No cinema here."));
+            return;
+        }
         earthlife.mod.ui.UiLists.send(p, "cinema");
         Net.send(p, new Payloads.OpenScreen("menu:cinema"));
     }

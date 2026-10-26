@@ -32,7 +32,7 @@ public final class EarthLifeClient implements ClientModInitializer {
     public static volatile long telemetryAtMs;
     public static volatile Payloads.HudStatus hud;
 
-    public static KeyMapping MAP, MENU, JOBS, WALLET, NEARBY;
+    public static KeyMapping MAP, MENU, JOBS, WALLET, NEARBY, ZMF, FX_STOP;
     static long welcomeUntilMs;
 
     public static void command(String c) {
@@ -54,6 +54,10 @@ public final class EarthLifeClient implements ClientModInitializer {
         ClientPlayNetworking.registerGlobalReceiver(Payloads.WalletStatus.TYPE, (p, ctx) -> wallet = p);
         ClientPlayNetworking.registerGlobalReceiver(Payloads.CinemaShow.TYPE, (p, ctx) -> earthlife.mod.client.cinema.CinemaClient.receive(p));
         earthlife.mod.client.cinema.CinemaConfig.load();
+        // optional "ZMF Cinema HD" textures (with LabPBR maps for shader packs); off unless the player enables it
+        net.fabricmc.loader.api.FabricLoader.getInstance().getModContainer("earthlife").ifPresent(c ->
+                net.fabricmc.fabric.api.resource.ResourceManagerHelper.registerBuiltinResourcePack(EarthLifeMod.id("zmf_hd"), c,
+                        net.minecraft.network.chat.Component.literal("ZMF Cinema HD (+ PBR maps)"), net.fabricmc.fabric.api.resource.ResourcePackActivationType.NORMAL));
         EntityRendererRegistry.register(earthlife.mod.cinema.CinemaContent.SEAT, NoopRenderer::new);
         EntityRendererRegistry.register(earthlife.mod.cinema.CinemaContent.SCREEN, earthlife.mod.client.cinema.CinemaScreenRenderer::new);
         ClientTickEvents.END_CLIENT_TICK.register(earthlife.mod.client.cinema.CinemaClient::tick);
@@ -65,11 +69,17 @@ public final class EarthLifeClient implements ClientModInitializer {
             if (p.welcome()) welcomeUntilMs = System.currentTimeMillis() + 45_000;
         });
         ClientPlayNetworking.registerGlobalReceiver(Payloads.LifeState.TYPE, (p, ctx) -> { ClientState.life = p; ClientState.lifeAtMs = System.currentTimeMillis(); });
-        ClientPlayNetworking.registerGlobalReceiver(Payloads.UiList.TYPE, (p, ctx) -> { ClientState.lists.put(p.tab(), p); EarthMenuScreen.listVersion++; });
+        ClientPlayNetworking.registerGlobalReceiver(Payloads.UiList.TYPE, (p, ctx) -> { ClientState.lists.put(p.tab(), p); EarthMenuScreen.listVersion++; earthlife.mod.client.zmf.ZmfScreen.listVersion++; });
+        ClientPlayNetworking.registerGlobalReceiver(earthlife.mod.zmf.ZmfPayloads.Schedule.TYPE, (p, ctx) -> earthlife.mod.client.zmf.ZmfState.receive(p));
+        ClientPlayNetworking.registerGlobalReceiver(earthlife.mod.zmf.ZmfPayloads.Nearest.TYPE, (p, ctx) -> { earthlife.mod.client.zmf.ZmfState.nearest = p; earthlife.mod.client.zmf.ZmfState.nearestAtMs = System.currentTimeMillis(); });
+        ClientPlayConnectionEvents.JOIN.register((h, sender, mc) -> mc.execute(earthlife.mod.client.zmf.LibraryShare::onJoin));
+        ClientTickEvents.END_CLIENT_TICK.register(mc -> earthlife.mod.client.cinema.Haptics.tick());
+        HudElementRegistry.addLast(EarthLifeMod.id("zmf_locator"), (g, delta) -> earthlife.mod.client.zmf.LocatorHud.draw(g, Minecraft.getInstance()));
         ClientPlayNetworking.registerGlobalReceiver(Payloads.MapPlayers.TYPE, (p, ctx) -> ClientState.sharedPlayers = p.players());
         ClientPlayNetworking.registerGlobalReceiver(Payloads.Dialogue.TYPE, (p, ctx) -> ctx.client().gui.setScreen(new DialogueScreen(p)));
         ClientPlayNetworking.registerGlobalReceiver(Payloads.OpenScreen.TYPE, (p, ctx) -> open(ctx.client(), p.screen()));
-        ClientPlayConnectionEvents.DISCONNECT.register((h, mc) -> { ClientState.reset(); ClientMapData.unload(); welcomeUntilMs = 0; earthlife.mod.client.cinema.CinemaClient.reset(); earthlife.mod.client.cinema.Haptics.close(); });
+        ClientPlayConnectionEvents.DISCONNECT.register((h, mc) -> { ClientState.reset(); ClientMapData.unload(); welcomeUntilMs = 0; earthlife.mod.client.cinema.CinemaClient.reset(); earthlife.mod.client.cinema.Haptics.close();
+            earthlife.mod.client.zmf.ZmfState.reset(); earthlife.mod.client.zmf.Posters.reset(); });
 
         KeyMapping.Category cat = KeyMapping.Category.register(EarthLifeMod.id("earthlife"));
         MAP = KeyMappingHelper.registerKeyMapping(new KeyMapping("key.earthlife.map", InputConstants.KEY_M, cat));
@@ -77,6 +87,8 @@ public final class EarthLifeClient implements ClientModInitializer {
         JOBS = KeyMappingHelper.registerKeyMapping(new KeyMapping("key.earthlife.jobs", InputConstants.KEY_J, cat));
         WALLET = KeyMappingHelper.registerKeyMapping(new KeyMapping("key.earthlife.wallet", InputConstants.KEY_L, cat));
         NEARBY = KeyMappingHelper.registerKeyMapping(new KeyMapping("key.earthlife.nearby", InputConstants.KEY_N, cat));
+        ZMF = KeyMappingHelper.registerKeyMapping(new KeyMapping("key.earthlife.zmf", InputConstants.KEY_B, cat));
+        FX_STOP = KeyMappingHelper.registerKeyMapping(new KeyMapping("key.earthlife.fx_stop", InputConstants.KEY_END, cat));
         ClientTickEvents.END_CLIENT_TICK.register(mc -> {
             while (MAP.consumeClick()) {
                 boolean flying = telemetry != null && System.currentTimeMillis() - telemetryAtMs < 5000 && mc.player != null
@@ -87,6 +99,17 @@ public final class EarthLifeClient implements ClientModInitializer {
             while (JOBS.consumeClick()) openKey(mc, "menu:jobs");
             while (WALLET.consumeClick()) openKey(mc, "menu:wallet");
             while (NEARBY.consumeClick()) openKey(mc, "menu:nearby");
+            while (ZMF.consumeClick()) {
+                // inside a web cinema: the browser controls; elsewhere the ZMF Cinema menu
+                if (earthlife.mod.client.cinema.BrowserScreens.current() != null) mc.gui.setScreen(new earthlife.mod.client.cinema.BrowserControlScreen());
+                else { command("zmfcinema ui showtimes"); mc.gui.setScreen(new earthlife.mod.client.zmf.ZmfScreen("showtimes")); }
+            }
+            while (FX_STOP.consumeClick()) {
+                earthlife.mod.client.cinema.FourD.stopped = !earthlife.mod.client.cinema.FourD.stopped;
+                if (earthlife.mod.client.cinema.FourD.stopped) earthlife.mod.client.cinema.Haptics.emergencyStop();
+                if (mc.player != null) mc.player.sendOverlayMessage(net.minecraft.network.chat.Component.literal(earthlife.mod.client.cinema.FourD.stopped
+                        ? "4DX STOPPED - seat motion, effects and TactSuit off (END to resume)" : "4DX resumed"));
+            }
         });
         // A key can be shared with a vanilla binding (L = Advancements by default). Both get the press; if vanilla opened
         // its screen after ours, put ours back on the next tick (in Earth worlds; elsewhere vanilla keeps the key).
@@ -112,7 +135,8 @@ public final class EarthLifeClient implements ClientModInitializer {
     /** Opens a client screen by name: map, map:route:x:z:label, map:clear, menu:<tab>, seatback. */
     public static void open(Minecraft mc, String screen) {
         if (welcomeUntilMs > 0) { welcomeUntilMs = 0; command("earthlife ui welcomed"); }
-        if (!ClientState.earth() && !screen.equals("seatback")) {
+        if (screen.startsWith("zmf:")) { mc.gui.setScreen(new earthlife.mod.client.zmf.ZmfScreen(screen.substring(4))); return; }
+        if (!ClientState.earth() && !screen.equals("seatback") && !screen.startsWith("cinema:")) {
             if (mc.player != null) mc.player.sendOverlayMessage(net.minecraft.network.chat.Component.literal("EarthLife screens work in Earth worlds (World Type: Earth - 1:1 Real World)."));
             return;
         }
@@ -126,7 +150,11 @@ public final class EarthLifeClient implements ClientModInitializer {
         else if (screen.equals("seatback")) mc.gui.setScreen(new SeatbackScreen());
         else if (screen.startsWith("cinema:pick:")) {
             String[] a = screen.split(":", 5);              // cinema:pick:<aud>:<4d|std>:<label>
-            if (a.length >= 4) mc.gui.setScreen(new earthlife.mod.client.cinema.MoviePickerScreen(a[2], a[3].equals("4d"), a.length > 4 ? a[4] : "Cinema"));
+            if (a.length >= 4) {
+                var picker = new earthlife.mod.client.cinema.MoviePickerScreen(a[2], a[3].startsWith("4d"), a.length > 4 ? a[4] : "Cinema");
+                picker.room3d = a[3].endsWith("3d");
+                mc.gui.setScreen(picker);
+            }
         }
     }
 

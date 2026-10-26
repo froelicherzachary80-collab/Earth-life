@@ -80,7 +80,7 @@ public final class Ffmpeg {
             try {
                 Files.createDirectories(home());
                 HttpClient http = HttpClient.newBuilder().followRedirects(HttpClient.Redirect.ALWAYS).connectTimeout(Duration.ofSeconds(20)).build();
-                HttpResponse<InputStream> r = http.send(HttpRequest.newBuilder(URI.create(url)).header("User-Agent", "EarthLife/0.4.1 (Minecraft mod)").GET().build(),
+                HttpResponse<InputStream> r = http.send(HttpRequest.newBuilder(URI.create(url)).header("User-Agent", "EarthLife/0.5.0 (Minecraft mod)").GET().build(),
                         HttpResponse.BodyHandlers.ofInputStream());
                 if (r.statusCode() / 100 != 2) throw new IOException("HTTP " + r.statusCode() + " from " + url);
                 long total = r.headers().firstValueAsLong("content-length").orElse(-1);

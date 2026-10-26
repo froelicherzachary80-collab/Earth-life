@@ -134,6 +134,10 @@ public final class EarthLifeClientGameTest implements FabricClientGameTest {
                     && EarthLifeClient.WALLET != null && EarthLifeClient.NEARBY != null, "M/K/J/L/N key mappings exist in category earthlife");
         });
         ctx.takeScreenshot("01_title_screen");
+        String only = Objects.requireNonNullElse(System.getenv("EARTHLIFE_TESTS"), "all");
+        // ZMF Cinema v0.1 (ordinary worlds): multiplexes, schedules, 3D, 4DX, web cinema, TactSuit protocol
+        if (!only.equals("earth")) new ZmfCinemaGameTest(this).run(ctx);
+        if (only.equals("zmf")) { finish(); return; }
 
         worldTypeUi(ctx);
         TestWorldSave earthSave = earthWorld(ctx);
@@ -141,6 +145,10 @@ public final class EarthLifeClientGameTest implements FabricClientGameTest {
         else record("Test 12 - Save and reload", "reload", "BLOCKED", "Earth world could not be created");
         separation(ctx);
         dedicated(ctx);
+        finish();
+    }
+
+    void finish() {
         save();
         long failed = report.values().stream().flatMap(m -> m.values().stream()).filter(v -> v.toString().startsWith("FAILED")).count();
         System.out.println("EARTHLIFE-TEST SUMMARY: " + failed + " failed checks");

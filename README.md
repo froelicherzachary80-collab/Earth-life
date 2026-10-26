@@ -1,9 +1,14 @@
-# EarthLife 0.4.1 — "First Playable Life", now 1:1 across New York, Pennsylvania, New Jersey and Vermont
+# EarthLife 0.5.0 — 1:1 Earth life sim + ZMF Cinema multiplexes
 
-A Fabric mod for **Minecraft Java Edition 26.3** that adds a new world type, **Earth — 1:1 Real World**: a
-block-for-metre copy of the real place, starting in **Williamson, New York**, built from real map and terrain data,
-with a life to live in it — residents to talk to, jobs with shifts and wages, LifeCoins, cars you can get into,
-airports and flights, movie theaters, real-time events (Halloween week is on now), and a full-screen map on **M**.
+A Fabric mod for **Minecraft Java Edition 26.3** with two parts:
+
+- **Earth — 1:1 Real World** world type: a block-for-metre copy of the real place, starting in **Williamson, New York**,
+  built from real map and terrain data, with a life to live in it — residents, jobs, LifeCoins, cars, airports and
+  flights, real movie theaters, real-time events, and a full-screen map on **M**.
+- **ZMF Cinema v0.1** (new in 0.5.0, works in **every** world): 12- to 32-screen multiplex cinemas generate while you
+  explore ordinary worlds — lobbies, concessions, restrooms, 2D / 3D / 4DX / IMAX / ScreenX rooms and four web cinemas —
+  showing films from **your own Jellyfin servers or video folders**, with automatic **red/cyan 3D**, automatic **virtual
+  4DX** and optional **bHaptics TactSuit**. Player guide: **[ZMF-CINEMA.md](ZMF-CINEMA.md)** (key **B** in game).
 
 **New in 0.4.1** (details in [CHANGELOG.md](CHANGELOG.md)):
 - **1:1 New York, Pennsylvania, New Jersey and Vermont** — the whole of the four states from OpenStreetMap and USGS
@@ -27,8 +32,9 @@ touched. **Read [STATUS.md](STATUS.md)** for exactly what is tested, how, and wh
 1. Minecraft Java Edition 26.3 (the official launcher).
 2. Fabric Loader for 26.3: run the installer from https://fabricmc.net/use/installer/ and pick 26.3.
 3. Put two files in your `.minecraft/mods` folder:
-   - `earthlife-0.4.1.jar` (from a successful *Fabric mod build* GitHub Actions run with the **earthlife-mod** artifact, or build it yourself below)
+   - `earthlife-0.5.0.jar` (from a successful *Fabric mod build* GitHub Actions run with the **earthlife-mod** artifact, or build it yourself below)
    - Fabric API for 26.3 (0.165.0+26.3 or newer) from https://modrinth.com/mod/fabric-api
+   - optional, for ZMF web cinemas: MCEF Modern for 26.3 from https://modrinth.com/mod/mcef-modern
 4. Start the "fabric-loader-26.3" profile in the Minecraft Launcher.
 
 New worlds use the **Northeast map** (NY, PA, NJ, VT), which is downloaded in packs of half a degree (1–60 MB; New York

@@ -6,7 +6,7 @@ import java.util.*;
 /** Tiny zero-dependency test runner: runs every public static void test*() in the given classes. */
 public final class T {
     public static void main(String[] args) throws Exception {
-        Class<?>[] suites = {GeoTest.class, WorldTest.class, EconomyTest.class, AviationTest.class, V02WorldTest.class, V02LifeTest.class, V03Test.class, V04Test.class, V041Test.class};
+        Class<?>[] suites = {GeoTest.class, WorldTest.class, EconomyTest.class, AviationTest.class, V02WorldTest.class, V02LifeTest.class, V03Test.class, V04Test.class, V041Test.class, ZmfCinemaTest.class, ZmfMediaTest.class};
         int pass = 0, fail = 0;
         for (Class<?> c : suites) {
             for (Method m : Arrays.stream(c.getDeclaredMethods()).sorted(Comparator.comparing(Method::getName)).toList()) {
