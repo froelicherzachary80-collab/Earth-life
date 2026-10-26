@@ -132,8 +132,8 @@ jobs:
         run: |
           set -o pipefail
           xvfb-run -a -s "-screen 0 1920x1080x24" gradle :fabric-mod:runClientGameTest --no-daemon --stacktrace 2>&1 | tee gametest.log
-      - name: Publish results to ci-tests branch
-        if: always() && github.event_name != 'pull_request'
+      - name: Collect in-game results
+        if: always()
         run: |
           R=fabric-mod/build/run/clientGameTest
           mkdir -p /tmp/out/screenshots
@@ -143,6 +143,9 @@ jobs:
           grep -E "EARTHLIFE-TEST|ERROR|Exception|at earthlife|Caused by" gametest.log | head -400 > /tmp/out/gametest-highlights.txt || true
           tail -300 gametest.log > /tmp/out/gametest-tail.txt
           echo "${{ steps.gt.outcome }} ${GITHUB_SHA}" > /tmp/out/RESULT
+      - name: Publish results to ci-tests branch
+        if: always() && github.event_name != 'pull_request'
+        run: |
           git config user.name "ci"; git config user.email "ci@users.noreply.github.com"
           git checkout --orphan ci-tests-tmp
           git rm -rfq . ; rm -rf ./* .github 2>/dev/null || true
