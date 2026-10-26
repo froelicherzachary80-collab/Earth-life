@@ -29,6 +29,7 @@ public final class DialogueService {
             "work", "What do you do for work?",
             "jobs", "Where can I find a job around here?",
             "directions", "How do I get to the town centre?",
+            "town", "Tell me about this town",
             "trick", "Trick or treat!",
             "gift", "Give a gift (held item)",
             "bye", "Goodbye");
@@ -36,7 +37,7 @@ public final class DialogueService {
     /** Opens (or continues) a conversation. */
     public static void open(ServerPlayer p, NpcEntity e, Npc npc, String line) {
         var s = EarthLifeServices.get();
-        List<String> actions = new ArrayList<>(List.of("chat", "work", "jobs", "directions"));
+        List<String> actions = new ArrayList<>(List.of("chat", "work", "jobs", "directions", "town"));
         if (Halloween.isSeason(s.time.clock().zone())) actions.add(0, "trick");
         if (!p.getMainHandItem().isEmpty()) actions.add("gift");
         actions.add("bye");
@@ -83,6 +84,19 @@ public final class DialogueService {
                 double d = Math.hypot(b.x() - p.getX(), b.z() - p.getZ());
                 yield String.format("%s centre is about %.0f m %s of here. I've marked it on your map [M].", t.name(), d,
                         compass(Math.toDegrees(Math.atan2(b.x() - p.getX(), -(b.z() - p.getZ())))));
+            }
+            case "town" -> {
+                var here = s.projection.fromBlock(p.getX(), p.getZ());
+                var t = s.towns.isEmpty() ? null : earthlife.core.world.Towns.nearest(s.towns, here);
+                if (t == null) yield "It's a quiet place.";
+                String size = t.population() > 0 ? String.format("about %,d people", t.population()) : "a small community";
+                var lm = s.landmarks.values().stream().min(java.util.Comparator.comparingDouble(l -> l.landmark().pos().distanceTo(here)));
+                String sight = lm.map(l -> String.format(" If you're exploring, %s is %.0f km away.", l.landmark().name(), l.landmark().pos().distanceTo(here) / 1000)).orElse("");
+                String shop = s.shops.nearest(p.getX(), p.getZ()).map(st -> " For shopping there's " + st.name() + ".").orElse("");
+                String season = Halloween.isSeason(s.time.clock().zone()) ? " And it's Halloween week - kids trick-or-treat every evening!" : "";
+                String county = earthlife.core.geo.Counties.of(t.centre().lat(), t.centre().lon());
+                String lake = t.centre().lat() > 43.15 ? ", near the Lake Ontario shore" : "";
+                yield t.name() + " is a " + t.kind().name().toLowerCase(Locale.ROOT) + " of " + size + (county.isEmpty() ? "" : " in " + county) + lake + "." + shop + sight + season;
             }
             case "trick" -> Halloween.trickOrTreat(p, npc);
             case "gift" -> {

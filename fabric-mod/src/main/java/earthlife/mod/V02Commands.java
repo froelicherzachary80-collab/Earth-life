@@ -81,7 +81,10 @@ public final class V02Commands {
                 .then(Commands.literal("quit").executes(c -> run(c, (p, x) -> EarthLifeServices.get().jobs.quit(p.getStringUUID(), earthlife.mod.McCompat.dayTime(p.level()), p.level().getGameTime())
                         .map(ps -> JobHooks.payslip(ps) + " You quit.").orElse("You quit your job."))))
                 .then(Commands.literal("clockin").executes(c -> run(c, (p, x) -> JobHooks.clockIn(p))))
-                .then(Commands.literal("clockout").executes(c -> run(c, (p, x) -> JobHooks.payslip(EarthLifeServices.get().jobs.clockOut(p.getStringUUID(), earthlife.mod.McCompat.dayTime(p.level()), p.level().getGameTime())))))
+                .then(Commands.literal("clockout").executes(c -> run(c, (p, x) -> {
+                    var ps = EarthLifeServices.get().jobs.clockOut(p.getStringUUID(), earthlife.mod.McCompat.dayTime(p.level()), p.level().getGameTime());
+                    if (ps.total() > 0) EarthLifeServices.get().life.complete(p, "paid");
+                    return JobHooks.payslip(ps); })))
                 .then(Commands.literal("status").executes(c -> run(c, (p, x) -> {
                     var s = EarthLifeServices.get();
                     return s.jobs.employment(p.getStringUUID()).map(e -> e.job().title + " at " + e.employer() + s.jobs.shift(p.getStringUUID())

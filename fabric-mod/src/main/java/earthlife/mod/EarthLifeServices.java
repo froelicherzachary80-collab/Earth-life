@@ -70,6 +70,7 @@ public final class EarthLifeServices implements AutoCloseable {
     /** Server option (config/earthlife/earthlife.json "allowLocationSharing", default true): players may opt in to appear on others' LifeMaps. */
     public final boolean allowLocationSharing;
     public final earthlife.mod.life.LifeService life;
+    public final earthlife.mod.life.ShopService shops;
 
     private EarthLifeServices(MinecraftServer server, earthlife.mod.world.EarthSettings settings) throws IOException {
         this.settings = settings;
@@ -102,6 +103,8 @@ public final class EarthLifeServices implements AutoCloseable {
             centres.add(new ProceduralInfill.Centre(t.name(), b.x(), b.z(), t.kind().radiusM(), t.kind() == Towns.Kind.CITY));
         }
         if (settings.options().estimatedBuildings() && !Boolean.FALSE.equals(cfg.get("estimatedInfill"))) features.buildings.addAll(ProceduralInfill.infill(features, centres, 0xEA27L));
+
+        shops = new earthlife.mod.life.ShopService(features);
 
         // Elevation: bundled/override DEM grid when available; otherwise gentle estimated hills. "Real terrain" off = flat land.
         ElevationSource fallback = new ElevationSource.Procedural(bundledData ? 110 : 95, 20, 0xEA27L);

@@ -99,6 +99,12 @@ public final class EarthSettingsScreen extends Screen {
                 addRenderableWidget(b);
                 if (n % 2 == 1) y += gap;
             }
+            if (page == 2) {
+                if (idx.length % 2 == 1) y += gap;
+                addRenderableWidget(btn(lx, y, col, "Resident density: " + EarthSettings.pretty(settings.npcDensityEnum()), x -> {
+                    settings = settings.withNpcDensity(next(List.of(EarthSettings.NpcDensity.values()), settings.npcDensityEnum())); rebuildWidgets(); }))
+                        .setTooltip(Tooltip.create(Component.literal("How many residents walk around near each player: Low 15, Normal 40, High 80.")));
+            }
         }
         addRenderableWidget(Button.builder(Component.translatable("gui.done"), b -> done()).bounds(width / 2 - 155, height - 26, 150, 20).build());
         addRenderableWidget(Button.builder(Component.translatable("gui.cancel"), b -> onClose()).bounds(width / 2 + 5, height - 26, 150, 20).build());

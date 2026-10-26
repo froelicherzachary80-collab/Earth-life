@@ -24,11 +24,17 @@ public final class Objectives {
     static final Objective FLIGHTS = new Objective("view_flights", "Look at today's flights (/earthlife flights)", 10);
     static final Objective BOOK = new Objective("book_flight", "Book a flight", 50);
     static final Objective LANDMARK = new Objective("waypoint", "Add a waypoint on the LifeMap", 25);
+    static final Objective TOWN_CENTRE = new Objective("town_centre", "Locate the nearest town centre (walk there)", 10);
+    static final Objective BUSINESS = new Objective("business", "Walk into a local business", 10);
+    static final Objective PAID = new Objective("paid", "Earn your first wages (clock out after working)", 25);
+    static final Objective PURCHASE = new Objective("purchase", "Buy something in a store ([K] > Shop)", 25);
+    static final Objective SLEEP = new Objective("sleep", "Find a place to sleep (use a bed)", 25);
 
     public static List<Objective> forScenario(String scenario) {
         return switch (scenario) {
-            case "NEW_LIFE" -> List.of(MENU, MAP, TALK, NEARBY, JOB, SHIFT, WALLET, HOME, EVENT);
-            case "CAREER_STARTER" -> List.of(MENU, JOB, SHIFT, TASK, WALLET, HOME);
+            // DAY ONE - A NEW BEGINNING
+            case "NEW_LIFE" -> List.of(MAP, TOWN_CENTRE, BUSINESS, TALK, JOB, TASK, PAID, PURCHASE, SLEEP, HOME, EVENT);
+            case "CAREER_STARTER" -> List.of(MENU, JOB, SHIFT, TASK, PAID, PURCHASE, HOME);
             case "TRAVELER" -> List.of(MAP, FLIGHTS, BOOK, LANDMARK, TALK, EVENT);
             default -> List.of();
         };

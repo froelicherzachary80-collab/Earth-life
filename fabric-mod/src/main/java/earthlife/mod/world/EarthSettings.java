@@ -12,12 +12,14 @@ import java.util.Locale;
  * other worlds (Default/Superflat worlds never see them).
  */
 public record EarthSettings(String country, String state, String town, double lat, double lon, String quality,
-                            Options options, String startTime, String scenario, String dayLength) {
+                            Options options, String startTime, String scenario, String dayLength, String npcDensity) {
 
     public enum Quality { PERFORMANCE, BALANCED, DETAILED, ULTRA }
     public enum StartTime { REAL_TIME, MORNING, NOON, EVENING, NIGHT }
     public enum Scenario { NORMAL_SURVIVAL, NEW_LIFE, TRAVELER, CAREER_STARTER }
     public enum DayLength { VANILLA, REAL_TIME, TWO_HOURS, ONE_HOUR }
+    /** Residents shown as entities around each player: Low 15, Normal 40, High 80. */
+    public enum NpcDensity { LOW, NORMAL, HIGH; public int cap() { return switch (this) { case LOW -> 15; case NORMAL -> 40; case HIGH -> 80; }; } }
 
     /** Every toggle here changes what is generated or simulated (no placeholders). */
     public record Options(boolean mappedBuildings, boolean estimatedBuildings, boolean interiors, boolean roads, boolean streetDetails,
@@ -76,7 +78,7 @@ public record EarthSettings(String country, String state, String town, double la
             new Place("Australia", "New South Wales", "Sydney", -33.8688, 151.2093, false));
 
     public static final EarthSettings DEFAULT = new EarthSettings("United States", "New York", "Williamson", 43.2237, -77.1861,
-            "DETAILED", Options.ALL, "REAL_TIME", "NEW_LIFE", "VANILLA");
+            "DETAILED", Options.ALL, "REAL_TIME", "NEW_LIFE", "VANILLA", "NORMAL");
 
     public static final Codec<EarthSettings> CODEC = RecordCodecBuilder.create(i -> i.group(
             Codec.STRING.optionalFieldOf("country", DEFAULT.country).forGetter(EarthSettings::country),
@@ -88,7 +90,8 @@ public record EarthSettings(String country, String state, String town, double la
             Options.CODEC.optionalFieldOf("options", Options.ALL).forGetter(EarthSettings::options),
             Codec.STRING.optionalFieldOf("start_time", DEFAULT.startTime).forGetter(EarthSettings::startTime),
             Codec.STRING.optionalFieldOf("scenario", DEFAULT.scenario).forGetter(EarthSettings::scenario),
-            Codec.STRING.optionalFieldOf("day_length", DEFAULT.dayLength).forGetter(EarthSettings::dayLength)
+            Codec.STRING.optionalFieldOf("day_length", DEFAULT.dayLength).forGetter(EarthSettings::dayLength),
+            Codec.STRING.optionalFieldOf("npc_density", DEFAULT.npcDensity).forGetter(EarthSettings::npcDensity)
     ).apply(i, EarthSettings::new));
 
     public Quality qualityEnum() {
@@ -100,6 +103,7 @@ public record EarthSettings(String country, String state, String town, double la
     public StartTime startTimeEnum() { return parse(StartTime.class, startTime, StartTime.REAL_TIME); }
     public Scenario scenarioEnum() { return parse(Scenario.class, scenario, Scenario.NEW_LIFE); }
     public DayLength dayLengthEnum() { return parse(DayLength.class, dayLength, DayLength.VANILLA); }
+    public NpcDensity npcDensityEnum() { return parse(NpcDensity.class, npcDensity, NpcDensity.NORMAL); }
 
     // Shorthands used by the generator and services.
     public boolean buildings() { return options.mappedBuildings() || options.estimatedBuildings(); }
@@ -113,12 +117,14 @@ public record EarthSettings(String country, String state, String town, double la
     /** True when the start town lies in the Western NY region (bundled terrain; roads/buildings inside the starter box). */
     public boolean inWesternNy() { return lat > 42.6 && lat < 43.5 && lon > -78.3 && lon < -76.6; }
 
-    public EarthSettings withPlace(Place p) { return new EarthSettings(p.country(), p.state(), p.town(), p.lat(), p.lon(), quality, options, startTime, scenario, dayLength); }
-    public EarthSettings withQuality(Quality q) { return new EarthSettings(country, state, town, lat, lon, q.name(), options, startTime, scenario, dayLength); }
-    public EarthSettings withOptions(Options o) { return new EarthSettings(country, state, town, lat, lon, quality, o, startTime, scenario, dayLength); }
-    public EarthSettings withStartTime(StartTime s) { return new EarthSettings(country, state, town, lat, lon, quality, options, s.name(), scenario, dayLength); }
-    public EarthSettings withScenario(Scenario s) { return new EarthSettings(country, state, town, lat, lon, quality, options, startTime, s.name(), dayLength); }
-    public EarthSettings withDayLength(DayLength d) { return new EarthSettings(country, state, town, lat, lon, quality, options, startTime, scenario, d.name()); }
+    public EarthSettings withPlace(Place p) { return new EarthSettings(p.country(), p.state(), p.town(), p.lat(), p.lon(), quality, options, startTime, scenario, dayLength, npcDensity); }
+    public EarthSettings withQuality(Quality q) { return new EarthSettings(country, state, town, lat, lon, q.name(), options, startTime, scenario, dayLength, npcDensity); }
+    public EarthSettings withOptions(Options o) { return new EarthSettings(country, state, town, lat, lon, quality, o, startTime, scenario, dayLength, npcDensity); }
+    public EarthSettings withStartTime(StartTime s) { return new EarthSettings(country, state, town, lat, lon, quality, options, s.name(), scenario, dayLength, npcDensity); }
+    public EarthSettings withScenario(Scenario s) { return new EarthSettings(country, state, town, lat, lon, quality, options, startTime, s.name(), dayLength, npcDensity); }
+    public EarthSettings withDayLength(DayLength d) { return new EarthSettings(country, state, town, lat, lon, quality, options, startTime, scenario, d.name(), npcDensity); }
+
+    public EarthSettings withNpcDensity(NpcDensity d) { return new EarthSettings(country, state, town, lat, lon, quality, options, startTime, scenario, dayLength, d.name()); }
 
     static <E extends Enum<E>> E parse(Class<E> c, String s, E def) {
         try { return Enum.valueOf(c, s.toUpperCase(Locale.ROOT)); } catch (Exception e) { return def; }

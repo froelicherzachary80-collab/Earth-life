@@ -56,7 +56,10 @@ public final class LifeMapScreen extends Screen {
 
     @Override public boolean isPauseScreen() { return false; }
 
+    static boolean configApplied;
+
     @Override protected void init() {
+        if (!configApplied) { layers.satellite = earthlife.mod.client.ClientConfig.satelliteMap; configApplied = true; }
         var p = minecraft.player;
         if (p != null && (follow || !initialized)) { centerX = p.getX(); centerZ = p.getZ(); initialized = true; }
         int bx = width - 6;
@@ -359,7 +362,7 @@ public final class LifeMapScreen extends Screen {
     private void drawInfo(GuiGraphicsExtractor g, ClientMapData data, int mx, int my) {
         var p = minecraft.player;
         List<String> lines = new ArrayList<>();
-        if (p != null) {
+        if (p != null && earthlife.mod.client.ClientConfig.showCoordinates) {
             lines.add(String.format("XYZ %.0f / %.0f / %.0f", p.getX(), p.getY(), p.getZ()));
             if (data != null) {
                 GeoPoint gp = data.projection.fromBlock(p.getX(), p.getZ());
@@ -407,13 +410,7 @@ public final class LifeMapScreen extends Screen {
     }
 
     /** County for the Western NY region (approximate borders, from latitude/longitude). */
-    static String county(double lat, double lon) {
-        if (lat < 42.6 || lat > 43.5 || lon < -78.3 || lon > -76.6) return "";
-        if (lon < -77.375 && lat > 42.95) return "Monroe County";
-        if (lon >= -77.375 && lon <= -76.70 && lat >= 42.97) return "Wayne County";
-        if (lat < 42.97 && lon > -77.37 && lon < -76.95) return "Ontario County";
-        return "";
-    }
+    static String county(double lat, double lon) { return earthlife.core.geo.Counties.of(lat, lon); }
 
     @Override public void onClose() { super.onClose(); }
 }

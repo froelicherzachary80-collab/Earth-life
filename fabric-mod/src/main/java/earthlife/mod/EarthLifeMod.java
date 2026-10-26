@@ -180,6 +180,7 @@ public final class EarthLifeMod implements ModInitializer {
                 s.life.sendState(p, clock, job, onShift, eventLine, halloween);
             }
             if (now % 40 == 0) s.life.sendSharedPlayers(server);
+            s.life.tickObjectives(server);
         }
         if (now % 600 == 0) s.life.store.saveDirty();
         if (now % 6000 == 0) { try { s.rewards.save(); s.tiles.edits().flush(); } catch (Exception e) { LOG.error("EarthLife autosave failed", e); } }

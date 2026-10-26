@@ -11,6 +11,7 @@ import earthlife.core.world.Features;
 import earthlife.core.world.TileData;
 import earthlife.core.world.TileGenerator;
 import earthlife.core.world.TileKey;
+import earthlife.core.world.TileData.Surface;
 
 import java.io.*;
 import java.nio.file.*;
@@ -49,10 +50,12 @@ public final class V04Test {
 
     public static void testObjectivesPerScenario() {
         check(Objectives.forScenario("NORMAL_SURVIVAL").isEmpty(), "normal survival has no guided objectives");
-        check(Objectives.forScenario("NEW_LIFE").size() >= 8, "new life is a full tutorial");
+        check(Objectives.forScenario("NEW_LIFE").size() >= 10, "new life follows the Day One list");
+        check(Objectives.forScenario("NEW_LIFE").stream().map(Objectives.Objective::id).toList().containsAll(java.util.List.of("open_map", "town_centre", "business", "talk", "get_job", "work_task", "paid", "purchase", "sleep")),
+                "day-one objectives: map, town centre, business, talk, job, task, wages, purchase, sleep");
         check(Objectives.byId("NEW_LIFE", "get_job").isPresent() && Objectives.byId("TRAVELER", "get_job").isEmpty(), "ids are per scenario");
         PlayerLife p = new PlayerLife("u");
-        p.objectivesDone.add("open_menu");
+        p.objectivesDone.add("open_map");
         var lines = Objectives.lines(p);
         check(lines.get(0).startsWith("✔") && lines.get(1).startsWith("•"), "done objectives are ticked");
         long total = Objectives.forScenario("NEW_LIFE").stream().mapToLong(Objectives.Objective::rewardLC).sum();
@@ -133,5 +136,26 @@ public final class V04Test {
             if (t.structureTopY[t.idx(x, z)] > 0) building++;
         }
         check(road > 500 && building > 500, "tile 0,0 (Williamson) has " + road + " road columns and " + building + " building columns");
+    }
+
+    public static void testHouseInteriorMarkersAndRoadPriority() {
+        String json = "{\"attribution\":\"t\",\"roads\":["
+                + "{\"id\":\"main\",\"class\":\"PRIMARY\",\"width\":10,\"line\":[[-100,-40],[200,-40]]},"
+                + "{\"id\":\"walk\",\"class\":\"PATH\",\"width\":2,\"line\":[[50,-80],[50,0]]}],"
+                + "\"buildings\":[{\"id\":\"h\",\"kind\":\"house\",\"levels\":2,\"footprint\":[[10,0],[26,0],[26,10],[10,10]]},"
+                + "{\"id\":\"s\",\"kind\":\"retail\",\"levels\":1,\"footprint\":[[60,0],[84,0],[84,14],[60,14]]}],\"areas\":[],\"water\":[]}";
+        TileData t = new TileGenerator(new FeatureIndex(Features.parse(json)), new ElevationSource.Procedural(100, 0, 1), P, 1).generate(new TileKey("r", 0, 0, 0));
+        java.util.Set<Integer> house = new java.util.HashSet<>(), store = new java.util.HashSet<>();
+        for (int z = 0; z <= 14; z++) for (int x = 10; x <= 84; x++) { int f = t.furniture(x, z); if (f != 0) (x < 40 ? house : store).add(f); }
+        check(house.containsAll(java.util.List.of(TileGenerator.F_CRAFTING, TileGenerator.F_FURNACE, TileGenerator.F_CHEST, TileGenerator.F_BED_FOOT, TileGenerator.F_BED_HEAD, TileGenerator.F_TABLE)),
+                "house furnished: " + house);
+        check(store.contains(TileGenerator.F_SHELF) && store.contains(TileGenerator.F_COUNTER), "store has shelves + counter: " + store);
+        for (int z = 0; z <= 14; z++) for (int x = 10; x <= 84; x++) if (t.furniture(x, z) != 0) check(!t.has(x, z, TileData.FLAG_BUILDING_WALL), "furniture never in a wall");
+        // the footpath crosses the primary road at x=50: the crossing stays asphalt/marking, not dirt path
+        Surface s = t.surfaceAt(50, 216);   // tile 0,0 covers z 0..255; road at z=-40 is in tile (0,-1)
+        TileData n = new TileGenerator(new FeatureIndex(Features.parse(json)), new ElevationSource.Procedural(100, 0, 1), P, 1).generate(new TileKey("r", 0, -1, 0));
+        Surface cross = n.surfaceAt(50, 256 - 40);
+        check(cross == Surface.ASPHALT || cross == Surface.ROAD_MARKING, "major road wins over a crossing footpath: " + cross);
+        check(n.surfaceAt(50, 256 - 70) == Surface.GRAVEL_PATH, "footpath itself is a path");
     }
 }

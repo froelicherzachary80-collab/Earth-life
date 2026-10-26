@@ -41,6 +41,7 @@ public final class EarthLifeClient implements ClientModInitializer {
     }
 
     @Override public void onInitializeClient() {
+        ClientConfig.load();
         EntityRendererRegistry.register(EarthLifeMod.AIRPLANE, NoopRenderer::new);
         EntityRendererRegistry.register(EarthLifeMod.VEHICLE, NoopRenderer::new);        // models are block displays
         EntityRendererRegistry.register(EarthLifeMod.NPC, NpcRenderer::new);
@@ -116,11 +117,12 @@ public final class EarthLifeClient implements ClientModInitializer {
     static void drawHud(GuiGraphicsExtractor g) {
         Minecraft mc = Minecraft.getInstance();
         if (mc.gui.hud.isHidden() || mc.player == null || !ClientState.earth()) return;
+        boolean welcomeOnly = !ClientConfig.showHud;
         var font = mc.font;
         int sw = mc.getWindow().getGuiScaledWidth(), sh = mc.getWindow().getGuiScaledHeight();
         var life = ClientState.life;
         int y = 6;
-        if (life != null) {
+        if (life != null && !welcomeOnly) {
             String money = String.format("%,d LC", life.balance()) + (life.hourlyReady() ? "  ★ hourly reward [L]" : "") + (life.dailyReady() ? "  ★ daily" : "");
             g.text(font, money, sw - font.width(money) - 6, y, 0xFFFFD54F, true); y += 11;
             g.text(font, life.clock(), sw - font.width(life.clock()) - 6, y, 0xFFB3E5FC, true); y += 11;
@@ -130,6 +132,7 @@ public final class EarthLifeClient implements ClientModInitializer {
             // next objectives
             int shown = 0;
             for (String o : life.objectives()) {
+                if (!ClientConfig.showObjectives) break;
                 if (o.startsWith("✔") || shown >= 3) continue;
                 if (shown == 0) { y += 4; g.text(font, "Objectives", sw - font.width("Objectives") - 6, y, 0xFFFFFFFF, true); y += 11; }
                 g.text(font, o, sw - font.width(o) - 6, y, 0xFFE0E0E0, true); y += 10; shown++;

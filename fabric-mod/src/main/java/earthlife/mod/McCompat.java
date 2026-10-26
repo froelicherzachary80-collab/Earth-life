@@ -53,6 +53,13 @@ public final class McCompat {
 
     public static Identifier id(String path) { return Identifier.fromNamespaceAndPath("earthlife", path); }
 
+    /** Item by registry id (for dyed/colour-collection items such as "minecraft:red_bed"). */
+    public static net.minecraft.world.item.Item item(String id) {
+        Identifier rl = Identifier.tryParse(id);
+        var it = rl == null ? null : BuiltInRegistries.ITEM.getValue(rl);
+        return it == null ? net.minecraft.world.item.Items.STICK : it;
+    }
+
     private static final Map<String, BlockState> BLOCKS = new ConcurrentHashMap<>();
 
     /** Block by registry id ("minecraft:light_gray_concrete"); unknown ids fall back to stone and are logged once. */

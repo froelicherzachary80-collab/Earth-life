@@ -151,6 +151,18 @@ public final class LifeService {
             p.sendSystemMessage(Component.literal("§6You've settled into your new life! Keep working, exploring and joining events."));
     }
 
+    /** Every second: objectives that are about being somewhere or doing something (no automatic completion). */
+    public void tickObjectives(MinecraftServer server) {
+        for (ServerPlayer p : server.getPlayerList().getPlayers()) {
+            PlayerLife life = life(p);
+            if (Objectives.forScenario(life.scenario).isEmpty()) continue;
+            GeoPoint g = s.projection.fromBlock(p.getX(), p.getZ());
+            if (!life.objectivesDone.contains("town_centre") && !s.towns.isEmpty() && Towns.nearest(s.towns, g).centre().distanceTo(g) < 60) complete(p, "town_centre");
+            if (!life.objectivesDone.contains("business") && s.shops.at(p.getX(), p.getZ()).isPresent()) complete(p, "business");
+            if (!life.objectivesDone.contains("sleep") && p.isSleeping()) complete(p, "sleep");
+        }
+    }
+
     // ------------------------------------------------------------------ packets
 
     public void sendWorldInfo(ServerPlayer p) {

@@ -1,5 +1,6 @@
 package earthlife.mod.client.screen;
 
+import earthlife.mod.client.ClientConfig;
 import earthlife.mod.client.ClientState;
 import earthlife.mod.client.EarthLifeClient;
 import earthlife.mod.net.Payloads;
@@ -17,8 +18,8 @@ import java.util.*;
  * /earthlife command so the server validates everything (money, distance, permissions).
  */
 public final class EarthMenuScreen extends Screen {
-    public static final String[] TABS = {"life", "jobs", "wallet", "nearby", "events", "travel", "vehicles", "help"};
-    static final String[] LABELS = {"Life", "Jobs", "Wallet", "Nearby", "Events", "Travel", "Vehicles", "Help"};
+    public static final String[] TABS = {"life", "jobs", "wallet", "shop", "nearby", "events", "travel", "vehicles", "settings", "help"};
+    static final String[] LABELS = {"Profile", "Jobs", "Wallet", "Shop", "Nearby", "Events", "Travel", "Vehicles", "Settings", "Help"};
     public static volatile int listVersion;
 
     private String tab;
@@ -41,6 +42,7 @@ public final class EarthMenuScreen extends Screen {
         }
         if (seenVersion == -1) request();
         seenVersion = listVersion;
+        if (tab.equals("settings")) { settingsButtons(); return; }
         Payloads.UiList list = ClientState.lists.get(tab);
         int top = contentTop(), rowH = 22, y = top - scroll;
         if (list != null && !tab.equals("help")) for (Payloads.Row r : list.rows()) {
@@ -64,6 +66,25 @@ public final class EarthMenuScreen extends Screen {
     int objectivesHeight() {
         var l = ClientState.life;
         return l == null || l.objectives().isEmpty() ? 0 : 16 + l.objectives().size() * 11 + 6;
+    }
+
+    private void settingsButtons() {
+        int x = width / 2 - 155, y = 62;
+        Object[][] toggles = {{"HUD (coins, clock, job)", ClientConfig.showHud}, {"Objectives tracker", ClientConfig.showObjectives},
+                {"Coordinates on the LifeMap", ClientConfig.showCoordinates}, {"Satellite-style map colours", ClientConfig.satelliteMap}};
+        for (int i = 0; i < toggles.length; i++) {
+            final int k = i;
+            boolean on = (Boolean) toggles[i][1];
+            addRenderableWidget(Button.builder(Component.literal(toggles[i][0] + ": " + (on ? "ON" : "OFF")), b -> {
+                switch (k) { case 0 -> ClientConfig.showHud = !on; case 1 -> ClientConfig.showObjectives = !on; case 2 -> ClientConfig.showCoordinates = !on; default -> ClientConfig.satelliteMap = !on; }
+                ClientConfig.save(); rebuildWidgets(); }).bounds(x + (i % 2) * 160, y + (i / 2) * 22, 150, 20).build());
+        }
+        var life = ClientState.life;
+        boolean sharing = life != null && life.sharingLocation();
+        addRenderableWidget(Button.builder(Component.literal("Share my location: " + (sharing ? "ON" : "OFF")), b -> {
+            EarthLifeClient.command("earthlife map share " + (sharing ? "off" : "on")); }).bounds(x, y + 48, 150, 20).build());
+        addRenderableWidget(Button.builder(Component.literal("Controls (key binds)"), b -> minecraft.gui.setScreen(
+                new net.minecraft.client.gui.screens.options.controls.KeyBindsScreen(this, minecraft.options))).bounds(x + 160, y + 48, 150, 20).build());
     }
 
     void switchTab(String t) {
@@ -107,6 +128,12 @@ public final class EarthMenuScreen extends Screen {
         super.extractRenderState(g, mx, my, d);
         int y = 56;
         if (tab.equals("help")) { help(g, x0, y); return; }
+        if (tab.equals("settings")) {
+            var w = ClientState.world;
+            g.textWithWordWrap(font, Component.literal("This world (set when it was created): " + (w == null ? "?" : w.settingsSummary())), x0, 140, pw, 0xFFB0BEC5);
+            g.text(font, "Client options are saved in config/earthlife-client.json and apply to every world.", x0, height - 42, 0xFF9E9E9E, false);
+            return;
+        }
         if (tab.equals("life") && life != null && !life.objectives().isEmpty()) {
             g.text(font, String.format("Objectives (%d/%d)", life.objectivesDone(), life.objectives().size()), x0, y, 0xFFFFFFFF, true);
             y += 14;

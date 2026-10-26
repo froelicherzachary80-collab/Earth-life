@@ -54,6 +54,8 @@ public final class TileGenerator {
         java.util.Map<Long, Integer> m = new java.util.HashMap<>();
         if (o == null || o.halfU() < 3 || o.halfV() < 2.5) return m;
         String k = bd.kind() == null ? "" : bd.kind();
+        double area = o.halfU() * o.halfV() * 4;
+        if (k.equals("yes") && area >= 50 && area <= 260) k = "house";     // most small untagged buildings in Western NY are houses
         java.util.function.BiConsumer<double[], Integer> put = (uv, code) -> {
             double x = o.cx() + uv[0] * o.ux() - uv[1] * o.uz(), z = o.cz() + uv[0] * o.uz() + uv[1] * o.ux();
             if (Features.pointInRing(bd.footprint(), x, z)) m.putIfAbsent(((long) (int) Math.floor(x) << 32) ^ ((int) Math.floor(z) & 0xffffffffL), code);

@@ -26,7 +26,7 @@ import java.util.*;
 public final class UiLists {
     private UiLists() {}
 
-    public static final List<String> TABS = List.of("life", "jobs", "wallet", "nearby", "events", "travel", "vehicles");
+    public static final List<String> TABS = List.of("life", "jobs", "wallet", "shop", "nearby", "events", "travel", "vehicles");
 
     public static void send(ServerPlayer p, String tab) {
         List<Row> rows = new ArrayList<>();
@@ -37,6 +37,7 @@ public final class UiLists {
             case "events" -> events(p, rows);
             case "travel" -> travel(p, rows);
             case "vehicles" -> vehicles(p, rows);
+            case "shop" -> shop(p, rows);
             default -> life(p, rows);
         };
         Net.send(p, new Payloads.UiList(tab, title, rows));
@@ -97,6 +98,11 @@ public final class UiLists {
         if (s.rewards.dailyAvailable(id, System.currentTimeMillis())) rows.add(new Row("Daily reward ready", "+700 LC", "Claim", "earthlife claim daily"));
         rows.add(new Row("Weekly bonus", "Once per real week", "Claim", "earthlife claim weekly"));
         var hist = s.ledger.history(id);
+        long earned = hist.stream().filter(e -> e.amount() > 0).mapToLong(e -> e.amount()).sum();
+        long spent = -hist.stream().filter(e -> e.amount() < 0).mapToLong(e -> e.amount()).sum();
+        long wages = hist.stream().filter(e -> "WAGE".equals(e.type())).mapToLong(e -> e.amount()).sum();
+        long shifts = hist.stream().filter(e -> "WAGE".equals(e.type())).count();
+        rows.add(new Row(String.format("Earned %,d LC · spent %,d LC", earned, spent), String.format("Job earnings %,d LC over %d paid shifts · %d transactions", wages, shifts, hist.size()), "", ""));
         for (int i = hist.size() - 1; i >= Math.max(0, hist.size() - 15); i--) {
             var e = hist.get(i);
             rows.add(new Row((e.amount() >= 0 ? "+" : "") + e.amount() + " LC · " + e.memo(), e.type().toLowerCase(Locale.ROOT) + " · balance " + e.balanceAfter() + " LC", "", ""));
@@ -136,9 +142,9 @@ public final class UiLists {
         if (Halloween.isSeason(z)) {
             int year = Halloween.today(z).getYear();
             rows.add(new Row(Halloween.countdown(z), "Candy collected: " + life.candy + " · trick-or-treat residents in the evening (talk → Trick or treat!)", "", ""));
-            rows.add(new Row("Costume contest", life.contests.contains(year + ":costume") ? "Entered ✔" : "Evening, at a town centre · your costume scores " + Halloween.costumeScore(p),
+            rows.add(new Row("Costume contest (EarthLife activity)", life.contests.contains(year + ":costume") ? "Entered ✔" : "Evening, at a town centre · your costume scores " + Halloween.costumeScore(p),
                     life.contests.contains(year + ":costume") ? "" : "Enter", "earthlife event costume"));
-            rows.add(new Row("Pumpkin-carving contest", life.contests.contains(year + ":carving") ? "Entered ✔" : "Place carved pumpkins within 12 blocks of your home",
+            rows.add(new Row("Pumpkin-carving contest (EarthLife activity)", life.contests.contains(year + ":carving") ? "Entered ✔" : "Place carved pumpkins within 12 blocks of your home",
                     life.contests.contains(year + ":carving") ? "" : "Judge my home", "earthlife event carving"));
         } else {
             String c = Halloween.countdown(z);
@@ -154,12 +160,23 @@ public final class UiLists {
                     : pl.town() != null ? pl.town() : "region-wide";
             long price = EventManager.price(e);
             boolean has = s.ledger.hasReference(p.getStringUUID(), "eventticket#" + e.id());
-            rows.add(new Row((e.activeAt(now) ? "[LIVE] " : "") + e.title(), where + " · " + e.start().atZone(z).format(f) + (price > 0 ? " · " + price + " LC" : " · free"),
+            rows.add(new Row((e.activeAt(now) ? "[LIVE] " : "") + e.title(), where + " · " + e.start().atZone(z).format(f) + (price > 0 ? " · " + price + " LC" : " · free") + " · " + sourceLabel(e.source()),
                     price > 0 && !has ? "Buy ticket" : (Double.isNaN(pl.lat()) ? "" : "Route"),
                     price > 0 && !has ? "earthlife events buy " + (i + 1) : (Double.isNaN(pl.lat()) ? "" : String.format(Locale.ROOT, "earthlife map route geo %.5f %.5f", pl.lat(), pl.lon()))));
         }
         if (list.isEmpty()) rows.add(new Row("No other events found for the next 7 days", "Holidays work offline; sports/concert feeds need internet", "", ""));
         return "Events";
+    }
+
+    /** Real-world feeds vs calendar-computed holidays vs EarthLife's own (fictional) activities. */
+    static String sourceLabel(String src) {
+        if (src == null) return "EarthLife";
+        String s = src.toLowerCase(Locale.ROOT);
+        if (s.contains("holiday")) return "calendar holiday";
+        if (s.contains("mlb")) return "real game (MLB Stats API)";
+        if (s.contains("ticketmaster")) return "real event (Ticketmaster)";
+        if (s.contains("ics") || s.contains("ical")) return "real event (calendar feed)";
+        return src;
     }
 
     static String travel(ServerPlayer p, List<Row> rows) {
@@ -176,6 +193,23 @@ public final class UiLists {
         }
         if (n == 0) rows.add(new Row("No flights scheduled", s.settings.transport() ? "Flights start at airports with terminals" : "Transport is off for this world", "", ""));
         return "Flights";
+    }
+
+    static String shop(ServerPlayer p, List<Row> rows) {
+        var s = EarthLifeServices.get();
+        var here = s.shops.at(p.getX(), p.getZ());
+        if (here.isEmpty()) {
+            var n = s.shops.nearest(p.getX(), p.getZ());
+            if (n.isEmpty()) { rows.add(new Row("No stores in this area", "", "", "")); return "Shop"; }
+            var st = n.get();
+            rows.add(new Row("Walk into a store to shop", String.format("Nearest: %s (%s), %.0f m away", st.name(), st.type(), Math.hypot(st.x() - p.getX(), st.z() - p.getZ())),
+                    "Route", String.format(Locale.ROOT, "earthlife map route xz %.1f %.1f", st.x(), st.z())));
+            return "Shop";
+        }
+        var st = here.get();
+        for (var w : earthlife.mod.life.ShopService.wares(st))
+            rows.add(new Row(w.label(), w.price() + " LC", "Buy", "earthlife buy " + w.id()));
+        return st.name() + " (" + st.type() + ") · balance " + s.ledger.balance(p.getStringUUID()) + " LC";
     }
 
     static String vehicles(ServerPlayer p, List<Row> rows) {

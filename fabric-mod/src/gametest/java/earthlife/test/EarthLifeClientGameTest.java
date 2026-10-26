@@ -286,6 +286,25 @@ public final class EarthLifeClientGameTest implements FabricClientGameTest {
             });
             check(T, "building footprint", r.endsWith("|true"), r.substring(0, r.lastIndexOf('|')));
         });
+        attempt(T, "furnished interior", () -> {
+            String r = onServer(sp, s -> {
+                var es = EarthLifeServices.get();
+                ServerLevel lvl = s.overworld();
+                for (int rad = 32; rad <= 400; rad += 32) for (int a = 0; a < 16; a++) {
+                    int x = (int) (es.spawnX + rad * Math.cos(a * Math.PI / 8)), z = (int) (es.spawnZ + rad * Math.sin(a * Math.PI / 8));
+                    TileData t = es.tiles.request(TileKey.containing(es.region, x, z, 0)).join();
+                    for (int dz = -16; dz <= 16; dz++) for (int dx = -16; dx <= 16; dx++) {
+                        int bx = x + dx, bz = z + dz, sx = bx - t.key.minX(), sz = bz - t.key.minZ();
+                        if (sx < 0 || sz < 0 || sx >= t.n || sz >= t.n || t.furniture(sx, sz) != earthlife.core.world.TileGenerator.F_CRAFTING) continue;
+                        lvl.getChunk(bx >> 4, bz >> 4);
+                        var st = lvl.getBlockState(new BlockPos(bx, t.terrainY[t.idx(sx, sz)] + 1, bz));
+                        return "house kitchen marker at " + bx + "," + bz + " -> block " + st.getBlock().getDescriptionId() + "|" + st.is(Blocks.CRAFTING_TABLE);
+                    }
+                }
+                return "no furnished house found within 400 m|false";
+            });
+            check(T, "furnished interior", r.endsWith("|true"), r.substring(0, r.lastIndexOf('|')));
+        });
         attempt(T, "road on the ground", () -> {
             String r = onServer(sp, s -> {
                 var es = EarthLifeServices.get();
@@ -383,6 +402,20 @@ public final class EarthLifeClientGameTest implements FabricClientGameTest {
             });
             check(T, "missing data handled", r.endsWith("|true"), r.substring(0, r.lastIndexOf('|')));
         });
+        attempt(T, "chunk generation benchmark", () -> {
+            String r = onServer(sp, s -> {
+                Runtime rt = Runtime.getRuntime();
+                long mem0 = rt.totalMemory() - rt.freeMemory();
+                long t0 = System.nanoTime();
+                int n = 0;
+                for (int cx = 0; cx < 8; cx++) for (int cz = 0; cz < 8; cz++) { s.overworld().getChunk(250 + cx, -120 + cz); n++; }   // ~4 km east, never visited
+                double ms = (System.nanoTime() - t0) / 1e6;
+                long mem1 = rt.totalMemory() - rt.freeMemory();
+                return String.format("%d new chunks (in Williamson/Sodus data) in %.0f ms = %.1f ms/chunk on the CI runner (2-4 vCPU, software rendering); heap %d -> %d MB (max %d MB)",
+                        n, ms, ms / n, mem0 >> 20, mem1 >> 20, rt.maxMemory() >> 20);
+            });
+            record(T, "chunk generation benchmark", "PASSED", r);
+        });
         attempt(T, "offline startup", () -> {
             String r = onServer(sp, s -> "events loaded " + EarthLifeServices.get().events.all().size() + ", feed errors: " + EarthLifeServices.get().events.errors()
                     + ", map data source: " + EarthLifeServices.get().attribution);
@@ -454,6 +487,27 @@ public final class EarthLifeClientGameTest implements FabricClientGameTest {
                 return "1 oak log -> " + out.getCount() + " x " + out.getItem() + " via the game's recipe manager|" + (out.getItem() == Items.OAK_PLANKS && out.getCount() == 4);
             });
             check(T, "crafting", r.endsWith("|true"), r.substring(0, r.lastIndexOf('|')));
+        });
+        attempt(T, "caves and ores", () -> {
+            String r = onServer(sp, s -> {
+                ServerLevel lvl = s.overworld();
+                ServerPlayer p = s.getPlayerList().getPlayers().get(0);
+                int cave = 0, ores = 0, diamonds = 0;
+                for (int cx = -3; cx <= 3; cx++) for (int cz = -3; cz <= 3; cz++) {
+                    var ch = lvl.getChunk((p.getBlockX() >> 4) + cx, (p.getBlockZ() >> 4) + cz);
+                    for (int x = 0; x < 16; x++) for (int z = 0; z < 16; z++) for (int y = -60; y < 100; y++) {
+                        var st = ch.getBlockState(new BlockPos(ch.getPos().getMinBlockX() + x, y, ch.getPos().getMinBlockZ() + z));
+                        if (st.is(Blocks.CAVE_AIR)) cave++;
+                        String id = st.getBlock().getDescriptionId();
+                        if (id.endsWith("_ore")) ores++;
+                        if (id.contains("diamond_ore")) diamonds++;
+                    }
+                }
+                var monsters = lvl.getChunkSource().getGenerator().getMobsAt(lvl, lvl.structureManager(), net.minecraft.world.entity.MobCategory.MONSTER, p.blockPosition());
+                return String.format("7x7 chunks under the player: %d cave blocks, %d ore blocks (%d diamond); biome monster spawn list has %d entries",
+                        cave, ores, diamonds, monsters.unwrap().size()) + "|" + (cave > 100 && ores > 100 && !monsters.isEmpty());
+            });
+            check(T, "caves and ores", r.endsWith("|true"), r.substring(0, r.lastIndexOf('|')));
         });
         attempt(T, "hunger", () -> {
             int before = onServer(sp, s -> { var p = s.getPlayerList().getPlayers().get(0); p.getFoodData().setFoodLevel(20); p.getFoodData().setSaturation(0); p.getFoodData().addExhaustion(8f); return 20; });

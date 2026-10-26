@@ -84,6 +84,11 @@ public final class V04Commands {
                     .then(lit("xz").then(Commands.argument("x", DoubleArgumentType.doubleArg()).then(Commands.argument("z", DoubleArgumentType.doubleArg())
                         .executes(c -> run(c, (p, x) -> route(p, new double[]{DoubleArgumentType.getDouble(x, "x"), DoubleArgumentType.getDouble(x, "z")}, "map point")))))))
             )
+            .then(lit("shop").executes(c -> run(c, (p, x) -> { UiLists.send(p, "shop"); open(p, "menu:shop");
+                return Net.hasClientMod(p) ? null : EarthLifeServices.get().shops.at(p.getX(), p.getZ()).map(st -> "You're in " + st.name()
+                        + ". Items: " + earthlife.mod.life.ShopService.wares(st).stream().map(w -> w.id() + " " + w.price() + " LC").toList()).orElse("You're not in a store."); })))
+            .then(lit("buy").then(Commands.argument("item", StringArgumentType.word()).executes(c -> run(c, (p, x) ->
+                    EarthLifeServices.get().shops.buy(p, StringArgumentType.getString(x, "item"))))))
             .then(lit("location").executes(c -> run(c, (p, x) -> location(p))))
             .then(lit("coordinates").executes(c -> run(c, (p, x) -> location(p))))
             .then(lit("town").then(Commands.argument("name", StringArgumentType.greedyString()).executes(c -> run(c, (p, x) -> {

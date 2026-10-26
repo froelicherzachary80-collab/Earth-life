@@ -32,7 +32,7 @@ public final class NpcManager {
         for (ServerPlayer p : server.getPlayerList().getPlayers()) {
             if (p.level() != level) continue;
             for (var pop : s.populations)
-                for (Npc n : pop.nearby(p.getX(), p.getZ(), RADIUS, time, CAP)) { wanted.add(n.id()); byId.put(n.id(), n); }
+                for (Npc n : pop.nearby(p.getX(), p.getZ(), RADIUS, time, s.settings.npcDensityEnum().cap())) { wanted.add(n.id()); byId.put(n.id(), n); }
         }
         boolean halloween = earthlife.mod.events.Halloween.isSeason(s.time.clock().zone());
         for (var e : live.entrySet()) earthlife.mod.events.Halloween.dress(e.getValue(), e.getKey(), halloween);

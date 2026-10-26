@@ -200,7 +200,7 @@ public final class JobHooks {
         try {
             for (var e : s.jobs.autoClockOut(earthlife.mod.McCompat.dayTime(server.overworld()), server.overworld().getGameTime()).entrySet()) {
                 var p = server.getPlayerList().getPlayer(UUID.fromString(e.getKey()));
-                if (p != null) p.sendSystemMessage(Component.literal(payslip(e.getValue())));
+                if (p != null) { p.sendSystemMessage(Component.literal(payslip(e.getValue()))); if (e.getValue().total() > 0) s.life.complete(p, "paid"); }
             }
         } catch (Exception ex) { EarthLifeMod.LOG.warn("autoClockOut", ex); }
     }
