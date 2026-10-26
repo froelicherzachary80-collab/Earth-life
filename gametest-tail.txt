@@ -1,0 +1,300 @@
+[11:42:11] [Server thread/INFO] (Minecraft) System chat: Player0 joined the game
+[11:42:11] [Server thread/INFO] (Minecraft) Changing view distance to 5, from 10
+[11:42:11] [Server thread/INFO] (Minecraft) Changing simulation distance to 12, from 0
+[11:42:11] [Render thread/INFO] (Minecraft) Loaded 2 advancements
+[11:42:11] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: ClientLevel screen: net.minecraft.client.gui.screens.LevelLoadingScreen@52a616d6
+[11:42:11] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: ClientLevel screen: net.minecraft.client.gui.screens.LevelLoadingScreen@52a616d6
+[11:42:11] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: ClientLevel screen: net.minecraft.client.gui.screens.LevelLoadingScreen@52a616d6
+[11:42:11] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: ClientLevel screen: net.minecraft.client.gui.screens.LevelLoadingScreen@52a616d6
+[11:42:12] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: ClientLevel screen: net.minecraft.client.gui.screens.LevelLoadingScreen@52a616d6
+[11:42:12] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: ClientLevel screen: net.minecraft.client.gui.screens.LevelLoadingScreen@52a616d6
+[11:42:12] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: ClientLevel screen: net.minecraft.client.gui.screens.LevelLoadingScreen@52a616d6
+[11:42:12] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: ClientLevel screen: net.minecraft.client.gui.screens.LevelLoadingScreen@52a616d6
+[11:42:12] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: ClientLevel screen: null
+[11:42:12] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST [Test 13 - World separation] default world unaffected: PASSED - generator=NoiseBasedChunkGenerator, EarthLife services running=false, earthlife folder in save=false, height=384
+[11:42:13] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST [Test 13 - World separation] EarthLife screens stay off: PASSED - pressed M in a Default world: LifeMap opened=false (expected false), HUD hidden
+[11:42:13] [Server thread/INFO] (Minecraft) Player0 lost connection: Disconnected
+[11:42:13] [Server thread/INFO] (Minecraft) System chat: Player0 left the game
+[11:42:13] [Server thread/INFO] (Minecraft) Stopping singleplayer server as player logged out
+[11:42:14] [Server thread/INFO] (Minecraft) Stopping server
+[11:42:14] [Server thread/INFO] (Minecraft) Saving players
+[11:42:14] [Server thread/INFO] (Minecraft) Saving worlds
+[11:42:14] [Server thread/INFO] (Minecraft) Saving chunks for level 'ServerLevel[Plain Default World]'/minecraft:overworld
+[11:42:14] [Server thread/INFO] (Minecraft) Saving chunks for level 'ServerLevel[Plain Default World]'/minecraft:the_end
+[11:42:14] [Server thread/INFO] (Minecraft) Saving chunks for level 'ServerLevel[Plain Default World]'/minecraft:the_nether
+[11:42:15] [Worker-Main-1/INFO] (Minecraft) Loaded 1866 advancements
+[11:42:15] [Thread-2/INFO] (Minecraft) Environment: Environment[discoveryUrl=https://discovery.minecraftservices.com/minecraft/client, name=PROD]
+[11:42:16] [Worker-Main-2/INFO] (Minecraft) Loaded 1866 advancements
+[11:42:16] [Thread-2/INFO] (BiomeModificationImpl) Applied 0 biome modifications to 0 of 67 new biomes in 189.9 μs
+[11:42:16] [Server thread/INFO] (EarthLife) EarthLife: Northeast map around Williamson ready in 10 ms (map data: p_86_-157.zip ready)
+[11:42:16] [Server thread/INFO] (EarthLife) EarthLife cinemas: 612 listed in NY/PA/NJ/VT; each is built when its map area loads
+[11:42:16] [Server thread/INFO] (EarthLife) EarthLife: Earth world detected (Williamson, New York), services started
+[11:42:16] [Server thread/INFO] (Minecraft) Starting minecraft server version 26.3
+[11:42:16] [Server thread/INFO] (Minecraft) Loading properties
+[11:42:16] [Server thread/INFO] (Minecraft) Default game type: SURVIVAL
+[11:42:16] [Server thread/INFO] (Minecraft) Generating keypair
+[11:42:16] [Server thread/INFO] (Minecraft) Starting Minecraft server on *:25565
+[11:42:16] [Server thread/WARN] (Minecraft) **** SERVER IS RUNNING IN OFFLINE/INSECURE MODE!
+[11:42:16] [Server thread/WARN] (Minecraft) The server will make no attempt to authenticate usernames. Beware.
+[11:42:16] [Server thread/WARN] (Minecraft) While this makes the game possible to play without internet access, it also opens up the ability for hackers to connect with any username they choose.
+[11:42:16] [Server thread/WARN] (Minecraft) To change this, set "online-mode" to "true" in the server.properties file.
+[11:42:16] [Server thread/INFO] (Minecraft) Preparing level "earthlife-dedicated"
+[11:42:16] [Server thread/INFO] (Minecraft) Selecting global world spawn...
+[11:42:17] [Server thread/INFO] (Minecraft) Loading 0 persistent chunks...
+[11:42:17] [Server thread/INFO] (Minecraft) Preparing spawn area: 100%
+[11:42:17] [Server thread/INFO] (Minecraft) Time elapsed: 513 ms
+[11:42:17] [Server thread/INFO] (Minecraft) Done (0.515s)! For help, type "help"
+[11:42:17] [Server thread/INFO] (Minecraft) Saving chunks for level 'ServerLevel[New World]'/minecraft:overworld
+[11:42:17] [Server thread/INFO] (Minecraft) Saving chunks for level 'ServerLevel[New World]'/minecraft:the_end
+[11:42:17] [Server thread/INFO] (Minecraft) Saving chunks for level 'ServerLevel[New World]'/minecraft:the_nether
+[11:42:17] [Server thread/INFO] (EarthLife) EarthLife ready: 4 airports, 0 bookings restored from ledger
+[11:42:17] [Server thread/INFO] (EarthLife) EarthLife: world spawn set to 0, 125, 0 in Williamson
+[11:42:17] [Server thread/INFO] (EarthLife) EarthLife: 21865 towns, 0 residents, 0 buildings (0 estimated), 4 airports with terminals
+[11:42:17] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST [Test 14 - Dedicated server] server boots with Earth: PASSED - dedicated=true, generator=VoxelEarthChunkGenerator, services=true
+[11:42:17] [Render thread/INFO] (Minecraft) Connecting to localhost, 25565
+[11:42:17] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: null screen: net.minecraft.client.gui.screens.ConnectScreen@f744766
+[11:42:17] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: null screen: net.minecraft.client.gui.screens.ConnectScreen@f744766
+[11:42:18] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: null screen: net.minecraft.client.gui.screens.ConnectScreen@f744766
+[11:42:18] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: null screen: net.minecraft.client.gui.screens.ConnectScreen@f744766
+[11:42:18] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: null screen: net.minecraft.client.gui.screens.ConnectScreen@f744766
+[11:42:18] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: null screen: net.minecraft.client.gui.screens.ConnectScreen@f744766
+[11:42:18] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: null screen: net.minecraft.client.gui.screens.ConnectScreen@f744766
+[11:42:18] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: null screen: net.minecraft.client.gui.screens.ConnectScreen@f744766
+[11:42:18] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: null screen: net.minecraft.client.gui.screens.ConnectScreen@f744766
+[11:42:18] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: null screen: net.minecraft.client.gui.screens.ConnectScreen@f744766
+[11:42:18] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: null screen: net.minecraft.client.gui.screens.ConnectScreen@f744766
+[11:42:19] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: null screen: net.minecraft.client.gui.screens.ConnectScreen@f744766
+[11:42:19] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: null screen: net.minecraft.client.gui.screens.ConnectScreen@f744766
+[11:42:19] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: null screen: net.minecraft.client.gui.screens.ConnectScreen@f744766
+[11:42:19] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: null screen: net.minecraft.client.gui.screens.ConnectScreen@f744766
+[11:42:19] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: null screen: net.minecraft.client.gui.screens.ConnectScreen@f744766
+[11:42:19] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: null screen: net.minecraft.client.gui.screens.ConnectScreen@f744766
+[11:42:19] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: null screen: net.minecraft.client.gui.screens.ConnectScreen@f744766
+[11:42:19] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: null screen: net.minecraft.client.gui.screens.ConnectScreen@f744766
+[11:42:20] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: null screen: net.minecraft.client.gui.screens.ConnectScreen@f744766
+[11:42:20] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: null screen: net.minecraft.client.gui.screens.ConnectScreen@f744766
+[11:42:20] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: null screen: net.minecraft.client.gui.screens.ConnectScreen@f744766
+[11:42:20] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: null screen: net.minecraft.client.gui.screens.ConnectScreen@f744766
+[11:42:20] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: null screen: net.minecraft.client.gui.screens.ConnectScreen@f744766
+[11:42:20] [Server thread/WARN] (Minecraft) Can't keep up! Is the server overloaded? Running 2011ms or 40 ticks behind
+[11:42:20] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: null screen: net.minecraft.client.gui.screens.ConnectScreen@f744766
+[11:42:20] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: null screen: net.minecraft.client.gui.screens.ConnectScreen@f744766
+[11:42:20] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: null screen: net.minecraft.client.gui.screens.ConnectScreen@f744766
+[11:42:20] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: null screen: net.minecraft.client.gui.screens.ConnectScreen@f744766
+[11:42:20] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: null screen: net.minecraft.client.gui.screens.ConnectScreen@f744766
+[11:42:20] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: null screen: net.minecraft.client.gui.screens.ConnectScreen@f744766
+[11:42:20] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: null screen: net.minecraft.client.gui.screens.ConnectScreen@f744766
+[11:42:20] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: null screen: net.minecraft.client.gui.screens.ConnectScreen@f744766
+[11:42:20] [Server thread/INFO] (Minecraft) Player0[/127.0.0.1:55824] logged in with entity id 7100 at (0.5, 125.0, 0.5)
+[11:42:21] [Server thread/INFO] (EarthLife) EarthLife: Player0 arrived in Williamson at 0, 125, 0 (NEW_LIFE)
+[11:42:21] [Server thread/INFO] (Minecraft) System chat: Player0 joined the game
+[11:42:21] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: null screen: net.minecraft.client.gui.screens.ConnectScreen@f744766
+[11:42:21] [Render thread/INFO] (Minecraft) [System] [CHAT] §6EarthLife§r · New Life: you just moved to Williamson with 250 LifeCoins. Follow the objectives on the right - press [K] for the EarthLife menu.
+[11:42:21] [Render thread/INFO] (Minecraft) Loaded 3 advancements
+[11:42:21] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: ClientLevel screen: net.minecraft.client.gui.screens.LevelLoadingScreen@476517b0
+[11:42:21] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: ClientLevel screen: net.minecraft.client.gui.screens.LevelLoadingScreen@476517b0
+[11:42:21] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: ClientLevel screen: net.minecraft.client.gui.screens.LevelLoadingScreen@476517b0
+[11:42:21] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: ClientLevel screen: net.minecraft.client.gui.screens.LevelLoadingScreen@476517b0
+[11:42:22] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: ClientLevel screen: net.minecraft.client.gui.screens.LevelLoadingScreen@476517b0
+[11:42:22] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: ClientLevel screen: net.minecraft.client.gui.screens.LevelLoadingScreen@476517b0
+[11:42:22] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: ClientLevel screen: null
+[11:42:22] [ForkJoinPool.commonPool-worker-3/INFO] (EarthLife) EarthLife map (Northeast 1:1): 21865 places, 399815 major roads; streets and buildings load per area
+[11:42:22] [Render thread/INFO] (Minecraft) [System] [CHAT] §a✔ Objective complete:§r Locate the nearest town centre (walk there) §6+10 LC
+[11:42:25] [Server thread/INFO] (EarthLife) EarthLife: map window 1 cells, 5554 buildings, 1386 roads, 25 stores, 1 populations
+[11:42:25] [Render thread/INFO] (Minecraft) [System] [CHAT] §a✔ Objective complete:§r Walk into a local business §6+10 LC
+[11:42:25] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST [Test 14 - Dedicated server] client connects: PASSED - client joined; WorldInfo received=true, start town Williamson
+[11:42:25] [Server thread/INFO] (Minecraft) Player0 lost connection: Disconnected
+[11:42:25] [Server thread/INFO] (Minecraft) System chat: Player0 left the game
+[11:42:25] [Server thread/INFO] (Minecraft) Stopping server
+[11:42:25] [Server thread/INFO] (Minecraft) Saving players
+[11:42:25] [Server thread/INFO] (Minecraft) Saving worlds
+[11:42:26] [Server thread/INFO] (Minecraft) Saving chunks for level 'ServerLevel[New World]'/minecraft:overworld
+[11:42:27] [Server thread/INFO] (Minecraft) Saving chunks for level 'ServerLevel[New World]'/minecraft:the_end
+[11:42:27] [Server thread/INFO] (Minecraft) Saving chunks for level 'ServerLevel[New World]'/minecraft:the_nether
+[11:42:27] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST SUMMARY: 1 failed checks
+[11:42:27] [Test thread/ERROR] (fabric-client-gametest-api-v1) Client gametests failed with an exception
+
+java.lang.AssertionError: 1 EarthLife in-game checks failed - see earthlife-test-report.json
+	at knot//earthlife.test.EarthLifeClientGameTest.runTest(EarthLifeClientGameTest.java:147)
+	at knot//net.fabricmc.fabric.impl.client.gametest.FabricClientGameTestRunner.lambda$start$0(FabricClientGameTestRunner.java:54)
+	at knot//net.fabricmc.fabric.impl.client.gametest.threading.ThreadingImpl.lambda$runTestThread$0(ThreadingImpl.java:139)
+	at java.base/java.lang.Thread.run(Thread.java:1474)
+[11:42:27] [Render thread/ERROR] (FabricLoader) Minecraft has crashed!
+
+net.fabricmc.loader.impl.FormattedException: java.lang.AssertionError: 1 EarthLife in-game checks failed - see earthlife-test-report.json
+	at net.fabricmc.loader.impl.FormattedException.ofLocalized(FormattedException.java:63)
+	at net.fabricmc.loader.impl.game.minecraft.MinecraftGameProvider.launch(MinecraftGameProvider.java:519)
+	at net.fabricmc.loader.impl.launch.knot.Knot.launch(Knot.java:72)
+	at net.fabricmc.loader.impl.launch.knot.KnotClient.main(KnotClient.java:23)
+	at net.fabricmc.devlaunchinjector.Main.main(Main.java:86)
+Caused by: java.lang.AssertionError: 1 EarthLife in-game checks failed - see earthlife-test-report.json
+	at knot//earthlife.test.EarthLifeClientGameTest.runTest(EarthLifeClientGameTest.java:147)
+	at knot//net.fabricmc.fabric.impl.client.gametest.FabricClientGameTestRunner.lambda$start$0(FabricClientGameTestRunner.java:54)
+	at knot//net.fabricmc.fabric.impl.client.gametest.threading.ThreadingImpl.lambda$runTestThread$0(ThreadingImpl.java:139)
+	at java.base/java.lang.Thread.run(Thread.java:1474)
+
+> Task :fabric-mod:runClientGameTest FAILED
+gradle/actions: Writing build results to /home/runner/work/_temp/.gradle-actions/build-results/gt-1793013466766.json
+
+[Incubating] Problems report is available at: file:///home/runner/work/Earth-life/Earth-life/build/reports/problems/problems-report.html
+
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Execution failed for task ':fabric-mod:runClientGameTest' (registered by plugin 'fabric-loom').
+> Process 'command 'xvfb-run'' finished with non-zero exit value 1
+
+* Try:
+> Run with --info or --debug option to get more log output.
+> Run with --scan to get full insights from a Build Scan (powered by Develocity).
+> Get more help at https://help.gradle.org.
+
+* Exception is:
+org.gradle.api.tasks.TaskExecutionException: Execution failed for task ':fabric-mod:runClientGameTest' (registered by plugin 'fabric-loom').
+	at org.gradle.api.internal.tasks.execution.DefaultTaskNodeExecutor.lambda$doExecute$1(DefaultTaskNodeExecutor.java:367)
+	at org.gradle.internal.Try$Failure.ifSuccessfulOrElse(Try.java:288)
+	at org.gradle.api.internal.tasks.execution.DefaultTaskNodeExecutor.doExecute(DefaultTaskNodeExecutor.java:365)
+	at org.gradle.api.internal.tasks.execution.DefaultTaskNodeExecutor.executeTrackingTaskIdentity(DefaultTaskNodeExecutor.java:332)
+	at org.gradle.api.internal.tasks.execution.DefaultTaskNodeExecutor.executeFinalizingProperties(DefaultTaskNodeExecutor.java:318)
+	at org.gradle.api.internal.tasks.execution.DefaultTaskNodeExecutor.executeSkippingWithNoActions(DefaultTaskNodeExecutor.java:289)
+	at org.gradle.api.internal.tasks.execution.DefaultTaskNodeExecutor.executeSkippingOnlyIf(DefaultTaskNodeExecutor.java:272)
+	at org.gradle.api.internal.tasks.execution.DefaultTaskNodeExecutor.executeCatchingFailures(DefaultTaskNodeExecutor.java:228)
+	at org.gradle.api.internal.tasks.execution.DefaultTaskNodeExecutor.executeWithFallbackOperationId(DefaultTaskNodeExecutor.java:197)
+	at org.gradle.api.internal.tasks.execution.DefaultTaskNodeExecutor.executeWithLifecycle(DefaultTaskNodeExecutor.java:171)
+	at org.gradle.api.internal.tasks.execution.DefaultTaskNodeExecutor.access$000(DefaultTaskNodeExecutor.java:67)
+	at org.gradle.api.internal.tasks.execution.DefaultTaskNodeExecutor$1.run(DefaultTaskNodeExecutor.java:136)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner$1.execute(DefaultBuildOperationRunner.java:30)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner$1.execute(DefaultBuildOperationRunner.java:27)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner$2.execute(DefaultBuildOperationRunner.java:67)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner$2.execute(DefaultBuildOperationRunner.java:60)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner.execute(DefaultBuildOperationRunner.java:167)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner.execute(DefaultBuildOperationRunner.java:60)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner.run(DefaultBuildOperationRunner.java:48)
+	at org.gradle.api.internal.tasks.execution.DefaultTaskNodeExecutor.execute(DefaultTaskNodeExecutor.java:133)
+	at org.gradle.execution.plan.LocalTaskNode.execute(LocalTaskNode.java:229)
+	at org.gradle.execution.DefaultBuildWorkExecutor.lambda$executePlan$0(DefaultBuildWorkExecutor.java:153)
+	at org.gradle.execution.plan.DefaultPlanExecutor$ExecutorWorker.lambda$execute$0(DefaultPlanExecutor.java:476)
+	at org.gradle.internal.operations.CurrentBuildOperationRef.with(CurrentBuildOperationRef.java:85)
+	at org.gradle.execution.plan.DefaultPlanExecutor$ExecutorWorker.execute(DefaultPlanExecutor.java:475)
+	at org.gradle.execution.plan.DefaultPlanExecutor$ExecutorWorker.run(DefaultPlanExecutor.java:392)
+	at org.gradle.internal.concurrent.ExecutorPolicy$CatchAndRecordFailures.onExecute(ExecutorPolicy.java:65)
+	at org.gradle.internal.concurrent.AbstractManagedExecutor$1.run(AbstractManagedExecutor.java:47)
+Caused by: org.gradle.process.ProcessExecutionException: Process 'command 'xvfb-run'' finished with non-zero exit value 1
+	at org.gradle.process.internal.DefaultExecHandle$ExecResultImpl.assertNormalExitValue(DefaultExecHandle.java:461)
+	at org.gradle.process.internal.DefaultExecAction.execute(DefaultExecAction.java:57)
+	at org.gradle.process.internal.DefaultExecActionFactory.exec(DefaultExecActionFactory.java:228)
+	at org.gradle.process.internal.DefaultExecOperations.exec(DefaultExecOperations.java:37)
+	at net.fabricmc.loom.task.AbstractRunTask.execWithXvfb(AbstractRunTask.java:305)
+	at net.fabricmc.loom.task.AbstractRunTask.execInternal(AbstractRunTask.java:281)
+	at net.fabricmc.loom.task.AbstractRunTask.exec(AbstractRunTask.java:254)
+	at org.gradle.internal.reflect.JavaMethod.invoke(JavaMethod.java:125)
+	at org.gradle.api.internal.project.taskfactory.StandardTaskAction.doExecute(StandardTaskAction.java:58)
+	at org.gradle.api.internal.project.taskfactory.StandardTaskAction.execute(StandardTaskAction.java:51)
+	at org.gradle.api.internal.project.taskfactory.StandardTaskAction.execute(StandardTaskAction.java:29)
+	at org.gradle.api.internal.tasks.execution.TaskExecution$3.run(TaskExecution.java:268)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner$1.execute(DefaultBuildOperationRunner.java:30)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner$1.execute(DefaultBuildOperationRunner.java:27)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner$2.execute(DefaultBuildOperationRunner.java:67)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner$2.execute(DefaultBuildOperationRunner.java:60)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner.execute(DefaultBuildOperationRunner.java:167)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner.execute(DefaultBuildOperationRunner.java:60)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner.run(DefaultBuildOperationRunner.java:48)
+	at org.gradle.api.internal.tasks.execution.TaskExecution.executeAction(TaskExecution.java:253)
+	at org.gradle.api.internal.tasks.execution.TaskExecution.executeActions(TaskExecution.java:236)
+	at org.gradle.api.internal.tasks.execution.TaskExecution.executeWithPreviousOutputFiles(TaskExecution.java:219)
+	at org.gradle.api.internal.tasks.execution.TaskExecution.execute(TaskExecution.java:185)
+	at org.gradle.internal.execution.steps.ExecuteStep.executeInternal(ExecuteStep.java:167)
+	at org.gradle.internal.execution.steps.ExecuteStep.access$000(ExecuteStep.java:47)
+	at org.gradle.internal.execution.steps.ExecuteStep$1.call(ExecuteStep.java:137)
+	at org.gradle.internal.execution.steps.ExecuteStep$1.call(ExecuteStep.java:134)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner$CallableBuildOperationWorker.execute(DefaultBuildOperationRunner.java:210)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner$CallableBuildOperationWorker.execute(DefaultBuildOperationRunner.java:205)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner$2.execute(DefaultBuildOperationRunner.java:67)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner$2.execute(DefaultBuildOperationRunner.java:60)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner.execute(DefaultBuildOperationRunner.java:167)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner.execute(DefaultBuildOperationRunner.java:60)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner.call(DefaultBuildOperationRunner.java:54)
+	at org.gradle.internal.execution.steps.ExecuteStep.execute(ExecuteStep.java:134)
+	at org.gradle.internal.execution.steps.ExecuteStep$Mutable.execute(ExecuteStep.java:80)
+	at org.gradle.internal.execution.steps.CancelExecutionStep.execute(CancelExecutionStep.java:42)
+	at org.gradle.internal.execution.steps.TimeoutStep.executeWithoutTimeout(TimeoutStep.java:75)
+	at org.gradle.internal.execution.steps.TimeoutStep.execute(TimeoutStep.java:55)
+	at org.gradle.internal.execution.steps.PreCreateOutputParentsStep.execute(PreCreateOutputParentsStep.java:51)
+	at org.gradle.internal.execution.steps.PreCreateOutputParentsStep.execute(PreCreateOutputParentsStep.java:29)
+	at org.gradle.internal.execution.steps.RemovePreviousOutputsStep.executeMutable(RemovePreviousOutputsStep.java:67)
+	at org.gradle.internal.execution.steps.RemovePreviousOutputsStep.executeMutable(RemovePreviousOutputsStep.java:39)
+	at org.gradle.internal.execution.steps.MutableStep.execute(MutableStep.java:26)
+	at org.gradle.internal.execution.steps.BroadcastChangingOutputsStep.execute(BroadcastChangingOutputsStep.java:42)
+	at org.gradle.internal.execution.steps.BroadcastChangingOutputsStep.execute(BroadcastChangingOutputsStep.java:24)
+	at org.gradle.internal.execution.steps.CaptureOutputsAfterExecutionStep.execute(CaptureOutputsAfterExecutionStep.java:69)
+	at org.gradle.internal.execution.steps.CaptureOutputsAfterExecutionStep.execute(CaptureOutputsAfterExecutionStep.java:46)
+	at org.gradle.internal.execution.steps.ResolveInputChangesStep.executeMutable(ResolveInputChangesStep.java:39)
+	at org.gradle.internal.execution.steps.ResolveInputChangesStep.executeMutable(ResolveInputChangesStep.java:28)
+	at org.gradle.internal.execution.steps.MutableStep.execute(MutableStep.java:26)
+	at org.gradle.internal.execution.steps.BuildCacheStep.executeWithoutCache(BuildCacheStep.java:189)
+	at org.gradle.internal.execution.steps.BuildCacheStep.lambda$execute$1(BuildCacheStep.java:76)
+	at org.gradle.internal.Either$Right.fold(Either.java:176)
+	at org.gradle.internal.execution.caching.CachingState.fold(CachingState.java:62)
+	at org.gradle.internal.execution.steps.BuildCacheStep.execute(BuildCacheStep.java:74)
+	at org.gradle.internal.execution.steps.BuildCacheStep.execute(BuildCacheStep.java:49)
+	at org.gradle.internal.execution.steps.StoreExecutionStateStep.executeMutable(StoreExecutionStateStep.java:46)
+	at org.gradle.internal.execution.steps.StoreExecutionStateStep.executeMutable(StoreExecutionStateStep.java:35)
+	at org.gradle.internal.execution.steps.MutableStep.execute(MutableStep.java:26)
+	at org.gradle.internal.execution.steps.SkipUpToDateStep.executeBecause(SkipUpToDateStep.java:75)
+	at org.gradle.internal.execution.steps.SkipUpToDateStep.lambda$execute$2(SkipUpToDateStep.java:53)
+	at org.gradle.internal.execution.steps.SkipUpToDateStep.execute(SkipUpToDateStep.java:53)
+	at org.gradle.internal.execution.steps.SkipUpToDateStep.execute(SkipUpToDateStep.java:35)
+	at org.gradle.internal.execution.steps.legacy.MarkSnapshottingInputsFinishedStep.execute(MarkSnapshottingInputsFinishedStep.java:37)
+	at org.gradle.internal.execution.steps.legacy.MarkSnapshottingInputsFinishedStep.execute(MarkSnapshottingInputsFinishedStep.java:27)
+	at org.gradle.internal.execution.steps.ResolveMutableCachingStateStep.executeDelegate(ResolveMutableCachingStateStep.java:70)
+	at org.gradle.internal.execution.steps.ResolveMutableCachingStateStep.executeDelegate(ResolveMutableCachingStateStep.java:32)
+	at org.gradle.internal.execution.steps.AbstractResolveCachingStateStep.execute(AbstractResolveCachingStateStep.java:69)
+	at org.gradle.internal.execution.steps.AbstractResolveCachingStateStep.execute(AbstractResolveCachingStateStep.java:37)
+	at org.gradle.internal.execution.steps.ResolveChangesStep.executeMutable(ResolveChangesStep.java:63)
+	at org.gradle.internal.execution.steps.ResolveChangesStep.executeMutable(ResolveChangesStep.java:34)
+	at org.gradle.internal.execution.steps.MutableStep.execute(MutableStep.java:26)
+	at org.gradle.internal.execution.steps.ValidateStep$Mutable.executeDelegate(ValidateStep.java:79)
+	at org.gradle.internal.execution.steps.ValidateStep$Mutable.executeDelegate(ValidateStep.java:65)
+	at org.gradle.internal.execution.steps.ValidateStep.execute(ValidateStep.java:105)
+	at org.gradle.internal.execution.steps.ValidateStep$Mutable.execute(ValidateStep.java:65)
+	at org.gradle.internal.execution.steps.CaptureMutableStateBeforeExecutionStep.executeMutable(CaptureMutableStateBeforeExecutionStep.java:86)
+	at org.gradle.internal.execution.steps.CaptureMutableStateBeforeExecutionStep.execute(CaptureMutableStateBeforeExecutionStep.java:65)
+	at org.gradle.internal.execution.steps.CaptureMutableStateBeforeExecutionStep.execute(CaptureMutableStateBeforeExecutionStep.java:45)
+	at org.gradle.internal.execution.steps.SkipEmptyMutableWorkStep.executeWithNonEmptySources(SkipEmptyMutableWorkStep.java:210)
+	at org.gradle.internal.execution.steps.SkipEmptyMutableWorkStep.executeMutable(SkipEmptyMutableWorkStep.java:85)
+	at org.gradle.internal.execution.steps.SkipEmptyMutableWorkStep.executeMutable(SkipEmptyMutableWorkStep.java:53)
+	at org.gradle.internal.execution.steps.MutableStep.execute(MutableStep.java:26)
+	at org.gradle.internal.execution.steps.legacy.MarkSnapshottingInputsStartedStep.execute(MarkSnapshottingInputsStartedStep.java:38)
+	at org.gradle.internal.execution.steps.LoadPreviousExecutionStateStep.executeMutable(LoadPreviousExecutionStateStep.java:36)
+	at org.gradle.internal.execution.steps.LoadPreviousExecutionStateStep.executeMutable(LoadPreviousExecutionStateStep.java:23)
+	at org.gradle.internal.execution.steps.MutableStep.execute(MutableStep.java:26)
+	at org.gradle.internal.execution.steps.HandleStaleOutputsStep.executeMutable(HandleStaleOutputsStep.java:77)
+	at org.gradle.internal.execution.steps.HandleStaleOutputsStep.executeMutable(HandleStaleOutputsStep.java:43)
+	at org.gradle.internal.execution.steps.MutableStep.execute(MutableStep.java:26)
+	at org.gradle.internal.execution.steps.AssignMutableWorkspaceStep.lambda$executeMutable$0(AssignMutableWorkspaceStep.java:34)
+	at org.gradle.api.internal.tasks.execution.TaskExecution$4.withWorkspace(TaskExecution.java:314)
+	at org.gradle.internal.execution.steps.AssignMutableWorkspaceStep.executeMutable(AssignMutableWorkspaceStep.java:30)
+	at org.gradle.internal.execution.steps.AssignMutableWorkspaceStep.executeMutable(AssignMutableWorkspaceStep.java:21)
+	at org.gradle.internal.execution.steps.MutableStep.execute(MutableStep.java:26)
+	at org.gradle.internal.execution.steps.ChoosePipelineStep.execute(ChoosePipelineStep.java:40)
+	at org.gradle.internal.execution.steps.ChoosePipelineStep.execute(ChoosePipelineStep.java:23)
+	at org.gradle.internal.execution.steps.ExecuteWorkBuildOperationFiringStep.lambda$execute$2(ExecuteWorkBuildOperationFiringStep.java:67)
+	at org.gradle.internal.execution.steps.ExecuteWorkBuildOperationFiringStep.execute(ExecuteWorkBuildOperationFiringStep.java:67)
+	at org.gradle.internal.execution.steps.ExecuteWorkBuildOperationFiringStep.execute(ExecuteWorkBuildOperationFiringStep.java:39)
+	at org.gradle.internal.execution.steps.IdentityCacheStep.execute(IdentityCacheStep.java:46)
+	at org.gradle.internal.execution.steps.IdentityCacheStep.execute(IdentityCacheStep.java:34)
+	at org.gradle.internal.execution.steps.IdentifyStep.execute(IdentifyStep.java:56)
+	at org.gradle.internal.execution.steps.IdentifyStep.execute(IdentifyStep.java:38)
+	at org.gradle.internal.execution.impl.DefaultExecutionEngine$1.execute(DefaultExecutionEngine.java:68)
+	at org.gradle.api.internal.tasks.execution.DefaultTaskNodeExecutor.doExecute(DefaultTaskNodeExecutor.java:364)
+	... 25 more
+
+
+Deprecated Gradle features were used in this build, making it incompatible with Gradle 10.
+
+You can use '--warning-mode all' to show the individual deprecation warnings and determine if they come from your own scripts or plugins.
+
+For more on this, please refer to https://docs.gradle.org/9.8.2/userguide/command_line_interface.html#sec:command_line_warnings in the Gradle documentation.
+
+BUILD FAILED in 24m 44s
+11 actionable tasks: 11 executed

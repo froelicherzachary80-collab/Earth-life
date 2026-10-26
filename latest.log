@@ -1,0 +1,1129 @@
+[11:18:03] [main/INFO] (FabricLoader/GameProvider) Loading Minecraft 26.3 with Fabric Loader 0.20.1
+[11:18:03] [main/INFO] (FabricLoader/Mappings) Mappings not present!
+[11:18:03] [main/INFO] (FabricLoader) Loading 53 mods:
+	- earthlife 0.4.1
+	- earthlife-gametest 0.4.1
+	- fabric-advancement-api-v1 1.0.1+38c7a2d55d
+	- fabric-api 0.165.0+26.3
+	- fabric-api-base 2.0.6+fcdff87f5d
+	- fabric-api-lookup-api-v1 2.0.24+3434d6d95d
+	- fabric-biome-api-v1 20.1.1+85210bca5d
+	- fabric-block-api-v1 3.1.0+0ae6f9115d
+	- fabric-block-getter-api-v2 2.0.9+3434d6d95d
+	- fabric-client-gametest-api-v1 6.0.11+131f8d475d
+	- fabric-command-api-v2 3.1.2+fcdff87f5d
+	- fabric-content-registries-v0 15.0.6+74ed1ea55d
+	- fabric-convention-tags-v2 4.10.5+187b64905d
+	- fabric-crash-report-info-v1 1.0.7+fcdff87f5d
+	- fabric-creative-tab-api-v1 5.0.22+fcdff87f5d
+	- fabric-data-attachment-api-v1 2.2.33+b9b88df45d
+	- fabric-data-generation-api-v1 27.4.2+187b64905d
+	- fabric-debug-api-v1 1.0.5+5af7744b5d
+	- fabric-dimensions-v1 5.1.20+5af7744b5d
+	- fabric-entity-events-v1 6.0.4+3434d6d95d
+	- fabric-events-interaction-v0 5.3.9+b9b88df45d
+	- fabric-game-rule-api-v1 4.0.10+3434d6d95d
+	- fabric-gametest-api-v1 4.0.35+3434d6d95d
+	- fabric-item-api-v1 14.8.0+d1c0d72b5d
+	- fabric-key-mapping-api-v1 2.0.8+3434d6d95d
+	- fabric-lifecycle-events-v1 4.1.9+ffef5f675d
+	- fabric-loot-api-v3 4.0.9+4068fd645d
+	- fabric-menu-api-v1 2.0.30+ed66f0a35d
+	- fabric-message-api-v1 7.0.10+3434d6d95d
+	- fabric-model-loading-api-v1 8.0.37+fcdff87f5d
+	- fabric-networking-api-v1 6.4.0+a21c9eb65d
+	- fabric-object-builder-api-v1 24.1.12+e2f63d3e5d
+	- fabric-particles-v1 5.0.27+3434d6d95d
+	- fabric-permission-api-v1 1.0.8+fcdff87f5d
+	- fabric-recipe-api-v1 10.0.11+b9b88df45d
+	- fabric-registry-sync-v0 8.0.4+1ca9f6365d
+	- fabric-renderer-api-v1 17.0.17+79385d0b5d
+	- fabric-renderer-indigo 9.1.25+b9d63e335d
+	- fabric-rendering-fluids-v1 6.0.6+3434d6d95d
+	- fabric-rendering-v1 27.2.0+eb9fe70b5d
+	- fabric-resource-conditions-api-v1 6.2.0+0d124ae85d
+	- fabric-resource-loader-v0 3.3.27+4fc5413f5d
+	- fabric-resource-loader-v1 3.1.0+5af7744b5d
+	- fabric-screen-api-v1 5.2.4+48607d035d
+	- fabric-serialization-api-v1 2.0.7+74ed1ea55d
+	- fabric-sound-api-v1 2.0.7+3434d6d95d
+	- fabric-tag-api-v1 2.1.11+fcdff87f5d
+	- fabric-transfer-api-v1 8.0.25+fcdff87f5d
+	- fabric-transitive-access-wideners-v1 8.1.17+e2f63d3e5d
+	- fabricloader 0.20.1
+	- java 25
+	- minecraft 26.3
+	- mixinextras 0.5.5
+[11:18:03] [main/INFO] (FabricLoader/Mixin) SpongePowered MIXIN Subsystem Version=0.8.7 Source=file:/home/runner/.gradle/caches/modules-2/files-2.1/net.fabricmc/sponge-mixin/0.17.5+mixin.0.8.7/cef8519a91129d0c21fa03bb9378f0e8ca810e5/sponge-mixin-0.17.5+mixin.0.8.7.jar Service=Knot/Fabric Env=CLIENT
+[11:18:05] [main/INFO] (FabricLoader/MixinExtras|Service) Initializing MixinExtras via com.llamalad7.mixinextras.service.MixinExtrasServiceImpl(version=0.5.5).
+[11:18:06] [Datafixer Bootstrap #0/INFO] (Minecraft) 307 Datafixer optimizations took 469 milliseconds
+[11:18:12] [Render thread/INFO] (Minecraft) Environment: Environment[discoveryUrl=https://discovery.minecraftservices.com/minecraft/client, name=PROD]
+[11:18:12] [Render thread/INFO] (Minecraft) Setting user: Player0
+[11:18:12] [Render thread/INFO] (EarthLife) EarthLife cinema: 22 items, 15 concession products
+[11:18:12] [Render thread/INFO] (Indigo) [Indigo] Registering Indigo renderer!
+[11:18:12] [Download-2/ERROR] (Minecraft) Failed to fetch user properties
+com.mojang.authlib.exceptions.InvalidCredentialsException: Status: 401
+	at knot//com.mojang.authlib.exceptions.MinecraftClientHttpException.toAuthenticationException(MinecraftClientHttpException.java:70)
+	at knot//com.mojang.authlib.services.MinecraftServicesUserApiService.fetchProperties(MinecraftServicesUserApiService.java:168)
+	at knot//net.minecraft.client.Minecraft.lambda$new$1(Minecraft.java:451)
+	at java.base/java.util.concurrent.CompletableFuture$AsyncSupply.run(CompletableFuture.java:1789)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1090)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:614)
+	at java.base/java.lang.Thread.run(Thread.java:1474)
+Caused by: MinecraftClientHttpException[type=HTTP_ERROR, status=401, response=ErrorResponse[path=/player/attributes, error=null, errorMessage=null, details=null]]
+	at knot//com.mojang.authlib.minecraft.client.MinecraftClient.buildHttpException(MinecraftClient.java:170)
+	at knot//com.mojang.authlib.minecraft.client.MinecraftClient.readServiceResponse(MinecraftClient.java:147)
+	at knot//com.mojang.authlib.minecraft.client.MinecraftClient.getWithEtag(MinecraftClient.java:81)
+	at knot//com.mojang.authlib.minecraft.client.MinecraftClient.get(MinecraftClient.java:65)
+	at knot//com.mojang.authlib.services.MinecraftServicesUserApiService.fetchProperties(MinecraftServicesUserApiService.java:118)
+	... 5 more
+[11:18:13] [Render thread/ERROR] (Minecraft) Illegal option value 0 for Anisotropic Filtering
+[11:18:13] [Render thread/INFO] (Minecraft) Backend library: LWJGL version 3.4.3-snapshot
+[11:18:13] [Render thread/INFO] (Minecraft) SDL [SYSTEM]: App name: Minecraft
+[11:18:13] [Render thread/INFO] (Minecraft) SDL [SYSTEM]: App version: 26.3
+[11:18:13] [Render thread/INFO] (Minecraft) SDL [SYSTEM]: App ID: com.mojang.minecraft
+[11:18:13] [Render thread/INFO] (Minecraft) SDL [SYSTEM]: SDL revision: SDL-3.4.14--128-NOTFOUND
+[11:18:13] [Render thread/INFO] (Minecraft) Enabling optional FeatureSet [EXT MultiDraw]
+[11:18:13] [Render thread/INFO] (Minecraft) Optional FeatureSet [AMD Buffer Marker] not supported
+[11:18:13] [Render thread/INFO] (Minecraft) Enabling optional FeatureSet [Calibrated Timestamps]
+[11:18:13] [Render thread/INFO] (Minecraft) Enabling optional FeatureSet [Wireframe]
+[11:18:13] [Render thread/INFO] (Minecraft) Optional FeatureSet [NV Diagnostic Checkpoint] not supported
+[11:18:14] [Render thread/INFO] (Minecraft) Using graphics backend Vulkan, using drivers: 1.4.318 llvmpipe Mesa 25.2.8-0ubuntu0.24.04.4 (LLVM 20.1.2)
+[11:18:14] [Render thread/INFO] (Minecraft) Using graphics device: llvmpipe (LLVM 20.1.2, 256 bits) (0x10005)
+[11:18:14] [Render thread/INFO] (Minecraft) Using graphics device extensions: VK_EXT_calibrated_timestamps (D), VK_KHR_synchronization2 (D), VK_EXT_multi_draw (D), VK_EXT_vertex_attribute_divisor (D), VK_KHR_swapchain (D), VK_KHR_surface (I), VK_KHR_push_descriptor (D), VK_KHR_xlib_surface (I), VK_EXT_debug_utils (I), VK_KHR_dynamic_rendering (D)
+[11:18:14] [Render thread/INFO] (Minecraft) Created window using SDL video driver: x11
+[11:18:14] [Download-2/INFO] (Minecraft) Could not authorize you against Realms server: java.lang.RuntimeException: Failed to parse into SignedJWT: FabricMC
+[11:18:14] [Download-2/ERROR] (Minecraft) Failed to fetch Realms feature flags
+com.mojang.realmsclient.exception.RealmsServiceException: Realms authentication error with message 'java.lang.RuntimeException: Failed to parse into SignedJWT: FabricMC'
+	at knot//com.mojang.realmsclient.client.RealmsClient.execute(RealmsClient.java:625)
+	at knot//com.mojang.realmsclient.client.RealmsClient.fetchFeatureFlags(RealmsClient.java:204)
+	at java.base/java.util.concurrent.CompletableFuture$AsyncSupply.run(CompletableFuture.java:1789)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1090)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:614)
+	at java.base/java.lang.Thread.run(Thread.java:1474)
+[11:18:14] [Render thread/INFO] (Minecraft) Reloading ResourceManager: vanilla, vanilla, earthlife, fabric-advancement-api-v1, fabric-api, fabric-api-base, fabric-api-lookup-api-v1, fabric-biome-api-v1, fabric-block-api-v1, fabric-block-getter-api-v2, fabric-client-gametest-api-v1, fabric-command-api-v2, fabric-content-registries-v0, fabric-convention-tags-v2, fabric-crash-report-info-v1, fabric-creative-tab-api-v1, fabric-data-attachment-api-v1, fabric-data-generation-api-v1, fabric-debug-api-v1, fabric-dimensions-v1, fabric-entity-events-v1, fabric-events-interaction-v0, fabric-game-rule-api-v1, fabric-gametest-api-v1, fabric-item-api-v1, fabric-key-mapping-api-v1, fabric-lifecycle-events-v1, fabric-loot-api-v3, fabric-menu-api-v1, fabric-message-api-v1, fabric-model-loading-api-v1, fabric-networking-api-v1, fabric-object-builder-api-v1, fabric-particles-v1, fabric-permission-api-v1, fabric-recipe-api-v1, fabric-registry-sync-v0, fabric-renderer-api-v1, fabric-renderer-indigo, fabric-rendering-fluids-v1, fabric-rendering-v1, fabric-resource-conditions-api-v1, fabric-resource-loader-v0, fabric-resource-loader-v1, fabric-screen-api-v1, fabric-serialization-api-v1, fabric-sound-api-v1, fabric-tag-api-v1, fabric-transfer-api-v1, fabric-transitive-access-wideners-v1, fabricloader
+[11:18:15] [Worker-Main-2/INFO] (Minecraft) Found unifont_all_no_pua-17.0.01.hex, loading
+[11:18:15] [Worker-Main-3/INFO] (Minecraft) Found unifont_pua-17.0.01.hex, loading
+[11:18:15] [Worker-Main-2/INFO] (Minecraft) Found unifont_jp_patch-17.0.01.hex, loading
+[11:18:18] [Render thread/ERROR] (Minecraft) Error starting SoundSystem. Turning off sounds & music
+java.lang.IllegalStateException: Failed to open OpenAL device
+	at knot//com.mojang.blaze3d.audio.Library.openDeviceOrFallback(Library.java:274)
+	at knot//com.mojang.blaze3d.audio.Library.init(Library.java:149)
+	at knot//net.minecraft.client.sounds.SoundEngine.loadLibrary(SoundEngine.java:121)
+	at knot//net.minecraft.client.sounds.SoundEngine.reload(SoundEngine.java:110)
+	at knot//net.minecraft.client.sounds.SoundManager.apply(SoundManager.java:122)
+	at knot//net.minecraft.client.sounds.SoundManager.apply(SoundManager.java:41)
+	at knot//net.minecraft.server.packs.resources.SimplePreparableReloadListener.lambda$reload$1(SimplePreparableReloadListener.java:15)
+	at java.base/java.util.concurrent.CompletableFuture$UniAccept.tryFire(CompletableFuture.java:739)
+	at java.base/java.util.concurrent.CompletableFuture$Completion.run(CompletableFuture.java:503)
+	at knot//net.minecraft.server.packs.resources.SimpleReloadInstance.lambda$prepareTasks$3(SimpleReloadInstance.java:59)
+	at knot//net.minecraft.util.thread.BlockableEventLoop.doRunTask(BlockableEventLoop.java:173)
+	at knot//net.minecraft.util.thread.ReentrantBlockableEventLoop.doRunTask(ReentrantBlockableEventLoop.java:23)
+	at knot//net.minecraft.util.thread.BlockableEventLoop.pollTask(BlockableEventLoop.java:147)
+	at knot//net.minecraft.util.thread.BlockableEventLoop.runAllTasks(BlockableEventLoop.java:127)
+	at knot//net.minecraft.client.Minecraft.runTick(Minecraft.java:1240)
+	at knot//net.minecraft.client.Minecraft.run$mixinextras$wrapped$270(Minecraft.java:967)
+	at knot//net.minecraft.client.Minecraft.mixinextras$bridge$run$mixinextras$wrapped$270$271(Minecraft.java)
+	at knot//net.minecraft.client.Minecraft.wrapMethod$zdi000$fabric-client-gametest-api-v1$onRun(Minecraft.java:4228)
+	at knot//net.minecraft.client.Minecraft.run(Minecraft.java)
+	at knot//net.minecraft.client.main.Main.main(Main.java:292)
+	at net.fabricmc.loader.impl.game.minecraft.MinecraftGameProvider.launch(MinecraftGameProvider.java:517)
+	at net.fabricmc.loader.impl.launch.knot.Knot.launch(Knot.java:72)
+	at net.fabricmc.loader.impl.launch.knot.KnotClient.main(KnotClient.java:23)
+	at net.fabricmc.devlaunchinjector.Main.main(Main.java:86)
+[11:18:18] [Render thread/INFO] (Minecraft) Created: 512x256x0 minecraft:textures/atlas/particles.png-atlas
+[11:18:18] [Render thread/INFO] (Minecraft) Created: 256x128x0 minecraft:textures/atlas/celestials.png-atlas
+[11:18:18] [Render thread/INFO] (Minecraft) Created: 128x128x0 minecraft:textures/atlas/decorated_pot.png-atlas
+[11:18:18] [Render thread/INFO] (Minecraft) Created: 512x256x0 minecraft:textures/atlas/paintings.png-atlas
+[11:18:18] [Render thread/INFO] (Minecraft) Created: 1024x512x0 minecraft:textures/atlas/shield_patterns.png-atlas
+[11:18:18] [Render thread/INFO] (Minecraft) Created: 1024x512x0 minecraft:textures/atlas/banner_patterns.png-atlas
+[11:18:18] [Render thread/INFO] (Minecraft) Created: 2048x2048x4 minecraft:textures/atlas/blocks.png-atlas
+[11:18:18] [Render thread/INFO] (Minecraft) Created: 1024x512x0 minecraft:textures/atlas/items.png-atlas
+[11:18:18] [Render thread/INFO] (Minecraft) Created: 1024x1024x0 minecraft:textures/atlas/gui.png-atlas
+[11:18:18] [Render thread/INFO] (Minecraft) Created: 128x64x0 minecraft:textures/atlas/map_decorations.png-atlas
+[11:18:18] [Render thread/INFO] (Minecraft) Created: 512x512x0 minecraft:textures/atlas/chest.png-atlas
+[11:18:18] [Render thread/INFO] (Minecraft) Created: 512x512x0 minecraft:textures/atlas/shulker_boxes.png-atlas
+[11:18:19] [Download-1/INFO] (Minecraft) Could not authorize you against Realms server: java.lang.RuntimeException: Failed to parse into SignedJWT: FabricMC
+[11:18:19] [Download-1/ERROR] (Minecraft) Couldn't connect to realms
+com.mojang.realmsclient.exception.RealmsServiceException: Realms authentication error with message 'java.lang.RuntimeException: Failed to parse into SignedJWT: FabricMC'
+	at knot//com.mojang.realmsclient.client.RealmsClient.execute(RealmsClient.java:625)
+	at knot//com.mojang.realmsclient.client.RealmsClient.clientCompatible(RealmsClient.java:354)
+	at knot//com.mojang.realmsclient.RealmsAvailability.lambda$check$0(RealmsAvailability.java:48)
+	at java.base/java.util.concurrent.CompletableFuture$AsyncSupply.run(CompletableFuture.java:1789)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1090)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:614)
+	at java.base/java.lang.Thread.run(Thread.java:1474)
+[11:18:21] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST [Test 1 - Compilation] jar built: PASSED - this test runs inside the compiled mod (Gradle :fabric-mod:build succeeded before the run)
+[11:18:23] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST [Test 2 - Mod loading] mod loaded: PASSED - FabricLoader reports earthlife 0.4.1 loaded in Minecraft 26.3
+[11:18:23] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST [Test 2 - Mod loading] keybinds registered: PASSED - M/K/J/L/N key mappings exist in category earthlife
+[11:18:23] [Render thread/INFO] (Minecraft) Resizing Dynamic Transforms UBO, capacity limit of 2 reached during a single frame. New capacity will be 4.
+[11:18:25] [Worker-Main-3/INFO] (Minecraft) Loaded 1866 advancements
+[11:18:25] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST [Test 3 - World type] Earth listed in Create New World: PASSED - world type list entry: Earth — 1:1 Real World
+[11:18:26] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST [Test 3 - World type] Customize available: PASSED - WorldCreationUiState.getPresetEditor() for Earth is non-null (mixin)
+[11:18:26] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST [Test 3 - World type] settings screen opens: PASSED - clicked the Customize button
+[11:18:26] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST [Test 3 - World type] settings saved into the world's generator: PASSED - overworld generator settings after Done: Sodus/TRAVELER
+[11:18:27] [Worker-Main-3/INFO] (Minecraft) Loaded 1866 advancements
+[11:18:27] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: null screen: net.minecraft.client.gui.screens.GenericMessageScreen@2afb3510
+[11:18:27] [Render thread/INFO] (BiomeModificationImpl) Applied 0 biome modifications to 0 of 67 new biomes in 1.326 ms
+[11:18:29] [Server thread/INFO] (EarthLife) EarthLife: Northeast map around Williamson ready in 471 ms (map data: p_86_-155.zip ready)
+[11:18:30] [Server thread/INFO] (EarthLife) EarthLife cinemas: 612 listed in NY/PA/NJ/VT; each is built when its map area loads
+[11:18:30] [Server thread/INFO] (EarthLife) EarthLife: Earth world detected (Williamson, New York), services started
+[11:18:30] [Server thread/INFO] (Minecraft) Starting integrated minecraft server version 26.3
+[11:18:30] [Server thread/INFO] (Minecraft) Generating keypair
+[11:18:30] [Server thread/INFO] (Minecraft) Selecting global world spawn...
+[11:18:32] [Server thread/INFO] (Minecraft) Loading 0 persistent chunks...
+[11:18:32] [Server thread/INFO] (Minecraft) Preparing spawn area: 16%
+[11:18:32] [Server thread/INFO] (Minecraft) Saving chunks for level 'ServerLevel[EarthLife Test Williamson]'/minecraft:overworld
+[11:18:32] [Server thread/INFO] (Minecraft) Saving chunks for level 'ServerLevel[EarthLife Test Williamson]'/minecraft:the_end
+[11:18:32] [Server thread/INFO] (Minecraft) Saving chunks for level 'ServerLevel[EarthLife Test Williamson]'/minecraft:the_nether
+[11:18:32] [Server thread/INFO] (EarthLife) EarthLife ready: 4 airports, 0 bookings restored from ledger
+[11:18:32] [Server thread/INFO] (EarthLife) EarthLife: world spawn set to 0, 125, 0 in Williamson
+[11:18:32] [Server thread/INFO] (EarthLife) EarthLife: 21865 towns, 0 residents, 0 buildings (0 estimated), 4 airports with terminals
+[11:18:32] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: null screen: net.minecraft.client.gui.screens.LevelLoadingScreen@3c1c4a16
+[11:18:32] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: null screen: net.minecraft.client.gui.screens.LevelLoadingScreen@3c1c4a16
+[11:18:32] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: null screen: net.minecraft.client.gui.screens.LevelLoadingScreen@3c1c4a16
+[11:18:32] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: null screen: net.minecraft.client.gui.screens.LevelLoadingScreen@3c1c4a16
+[11:18:32] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: null screen: net.minecraft.client.gui.screens.LevelLoadingScreen@3c1c4a16
+[11:18:32] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: null screen: net.minecraft.client.gui.screens.LevelLoadingScreen@3c1c4a16
+[11:18:32] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: null screen: net.minecraft.client.gui.screens.LevelLoadingScreen@3c1c4a16
+[11:18:32] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: null screen: net.minecraft.client.gui.screens.LevelLoadingScreen@3c1c4a16
+[11:18:32] [Server thread/INFO] (Minecraft) Loading 48 chunks for player spawn...
+[11:18:32] [Server thread/INFO] (Minecraft) Preparing spawn area: 16%
+[11:18:33] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: null screen: net.minecraft.client.gui.screens.LevelLoadingScreen@3c1c4a16
+[11:18:33] [Server thread/INFO] (Minecraft) Preparing spawn area: 16%
+[11:18:33] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: null screen: net.minecraft.client.gui.screens.LevelLoadingScreen@3c1c4a16
+[11:18:33] [Server thread/INFO] (Minecraft) Preparing spawn area: 16%
+[11:18:33] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: null screen: net.minecraft.client.gui.screens.LevelLoadingScreen@3c1c4a16
+[11:18:33] [Server thread/INFO] (Minecraft) Preparing spawn area: 16%
+[11:18:33] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: null screen: net.minecraft.client.gui.screens.LevelLoadingScreen@3c1c4a16
+[11:18:33] [Server thread/INFO] (Minecraft) Preparing spawn area: 16%
+[11:18:33] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: null screen: net.minecraft.client.gui.screens.LevelLoadingScreen@3c1c4a16
+[11:18:33] [Server thread/INFO] (Minecraft) Preparing spawn area: 16%
+[11:18:33] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: null screen: net.minecraft.client.gui.screens.LevelLoadingScreen@3c1c4a16
+[11:18:34] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: null screen: net.minecraft.client.gui.screens.LevelLoadingScreen@3c1c4a16
+[11:18:34] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: null screen: net.minecraft.client.gui.screens.LevelLoadingScreen@3c1c4a16
+[11:18:34] [Server thread/INFO] (Minecraft) Preparing spawn area: 32%
+[11:18:34] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: null screen: net.minecraft.client.gui.screens.LevelLoadingScreen@3c1c4a16
+[11:18:34] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: null screen: net.minecraft.client.gui.screens.LevelLoadingScreen@3c1c4a16
+[11:18:34] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: null screen: net.minecraft.client.gui.screens.LevelLoadingScreen@3c1c4a16
+[11:18:34] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: null screen: net.minecraft.client.gui.screens.LevelLoadingScreen@3c1c4a16
+[11:18:34] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: null screen: net.minecraft.client.gui.screens.LevelLoadingScreen@3c1c4a16
+[11:18:34] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: null screen: net.minecraft.client.gui.screens.LevelLoadingScreen@3c1c4a16
+[11:18:34] [Server thread/INFO] (Minecraft) Preparing spawn area: 100%
+[11:18:34] [Server thread/INFO] (Minecraft) Time elapsed: 4035 ms
+[11:18:34] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: null screen: net.minecraft.client.gui.screens.LevelLoadingScreen@3c1c4a16
+[11:18:34] [Server thread/INFO] (Minecraft) Player0[local:E:c57cd1d0] logged in with entity id 1 at (0.5, 125.0, 0.5)
+[11:18:34] [Server thread/INFO] (EarthLife) EarthLife: Player0 arrived in Williamson at 0, 125, 0 (NEW_LIFE)
+[11:18:35] [Server thread/INFO] (Minecraft) System chat: Player0 joined the game
+[11:18:36] [Server thread/INFO] (Minecraft) Changing view distance to 5, from 10
+[11:18:36] [Server thread/INFO] (Minecraft) Changing simulation distance to 12, from 0
+[11:18:36] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: null screen: net.minecraft.client.gui.screens.LevelLoadingScreen@3c1c4a16
+[11:18:36] [Server thread/WARN] (Minecraft) Can't keep up! Is the server overloaded? Running 2889ms or 57 ticks behind
+[11:18:36] [Render thread/INFO] (Minecraft) [System] [CHAT] §6EarthLife§r · New Life: you just moved to Williamson with 250 LifeCoins. Follow the objectives on the right - press [K] for the EarthLife menu.
+[11:18:36] [Render thread/INFO] (Minecraft) Loaded 3 advancements
+[11:18:36] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: ClientLevel screen: net.minecraft.client.gui.screens.LevelLoadingScreen@3c1c4a16
+[11:18:36] [Render thread/WARN] (Minecraft) Requested post effect does not exist: minecraft:end_of_frame
+[11:18:36] [Render thread/INFO] (Minecraft) Resizing Dynamic Transforms UBO, capacity limit of 4 reached during a single frame. New capacity will be 8.
+[11:18:37] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: ClientLevel screen: net.minecraft.client.gui.screens.LevelLoadingScreen@3c1c4a16
+[11:18:37] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: ClientLevel screen: net.minecraft.client.gui.screens.LevelLoadingScreen@3c1c4a16
+[11:18:37] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: ClientLevel screen: net.minecraft.client.gui.screens.LevelLoadingScreen@3c1c4a16
+[11:18:37] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: ClientLevel screen: net.minecraft.client.gui.screens.LevelLoadingScreen@3c1c4a16
+[11:18:38] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: ClientLevel screen: net.minecraft.client.gui.screens.LevelLoadingScreen@3c1c4a16
+[11:18:38] [Render thread/INFO] (Minecraft) Resizing Chunk Sections Command Buffer, capacity limit of 2 reached during a single frame. New capacity will be 16.
+[11:18:38] [Render thread/INFO] (Minecraft) Resizing Chunk Sections Instanced, capacity limit of 2 reached during a single frame. New capacity will be 8.
+[11:18:38] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: ClientLevel screen: net.minecraft.client.gui.screens.LevelLoadingScreen@3c1c4a16
+[11:18:38] [ForkJoinPool.commonPool-worker-1/INFO] (EarthLife) EarthLife map (Northeast 1:1): 21865 places, 399815 major roads; streets and buildings load per area
+[11:18:38] [Render thread/INFO] (Minecraft) Resizing Chunk Sections Command Buffer, capacity limit of 16 reached during a single frame. New capacity will be 32.
+[11:18:38] [Render thread/INFO] (Minecraft) Resizing Chunk Sections Instanced, capacity limit of 8 reached during a single frame. New capacity will be 16.
+[11:18:38] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: ClientLevel screen: net.minecraft.client.gui.screens.LevelLoadingScreen@3c1c4a16
+[11:18:38] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: ClientLevel screen: net.minecraft.client.gui.screens.LevelLoadingScreen@3c1c4a16
+[11:18:39] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: ClientLevel screen: null
+[11:18:39] [Render thread/INFO] (Minecraft) Resizing Chunk Sections Command Buffer, capacity limit of 32 reached during a single frame. New capacity will be 64.
+[11:18:39] [Render thread/INFO] (Minecraft) Resizing Chunk Sections Instanced, capacity limit of 16 reached during a single frame. New capacity will be 32.
+[11:18:40] [Render thread/INFO] (Minecraft) [System] [CHAT] §a✔ Objective complete:§r Locate the nearest town centre (walk there) §6+10 LC
+[11:18:41] [Render thread/INFO] (Minecraft) Resizing Chunk Sections Command Buffer, capacity limit of 64 reached during a single frame. New capacity will be 128.
+[11:18:41] [Render thread/INFO] (Minecraft) Resizing Chunk Sections Instanced, capacity limit of 32 reached during a single frame. New capacity will be 64.
+[11:18:43] [Render thread/INFO] (Minecraft) Resizing Chunk Sections Command Buffer, capacity limit of 128 reached during a single frame. New capacity will be 256.
+[11:18:43] [Render thread/INFO] (Minecraft) Resizing Chunk Sections Instanced, capacity limit of 64 reached during a single frame. New capacity will be 128.
+[11:18:43] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST [Test 4 - World creation] world loads: PASSED - Earth world created and chunks rendered in 4 s
+[11:18:43] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST [Test 4 - World creation] Earth generator + services active: PASSED - VoxelEarthChunkGenerator services=true height=1024 minY=-64
+[11:18:43] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST [Test 4 - World creation] tall world (1024 blocks): PASSED - VoxelEarthChunkGenerator services=true height=1024 minY=-64
+[11:18:43] [EarthLife-TileGen/INFO] (EarthLife) cinema placed: Rochester Movies 10 (6 auditoriums)
+[11:18:45] [Server thread/INFO] (EarthLife) EarthLife: map window 1 cells, 5554 buildings, 1386 roads, 25 stores, 1 populations
+[11:18:45] [Render thread/INFO] (Minecraft) [System] [CHAT] §a✔ Objective complete:§r Walk into a local business §6+10 LC
+[11:18:46] [Render thread/INFO] (Minecraft) Resizing Chunk Sections Command Buffer, capacity limit of 256 reached during a single frame. New capacity will be 512.
+[11:18:46] [Render thread/INFO] (Minecraft) Resizing Chunk Sections Instanced, capacity limit of 128 reached during a single frame. New capacity will be 256.
+[11:18:46] [Render thread/INFO] (Minecraft) Resizing Dynamic Transforms UBO, capacity limit of 8 reached during a single frame. New capacity will be 16.
+[11:18:46] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST [Test 4 - World creation] safe spawn in Williamson: PASSED - 1 m from Williamson centre (43.22370, -77.18609); standing on block.minecraft.dirt, feet in block.minecraft.dirt_path, place=Williamson, scenario=NEW_LIFE
+[11:18:48] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST [Test 4 - World creation] welcome overlay / world info received: PASSED - client received WorldInfo for Williamson welcome=true
+[11:18:48] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST [Test 5 - Geographic scale] distances: PASSED - Williamson->Sodus 10234.4 blocks vs 10207.7 m geodesic (0.262%)
+[11:18:48] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST [Test 5 - Geographic scale] building footprint: PASSED - OSM way w828631081: polygon area 122 m2, 121 block columns inside, 121 with the roof block present (4 m from spawn)
+[11:18:48] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST [Test 5 - Geographic scale] furnished interior: PASSED - house kitchen marker at -5,41 -> block block.minecraft.crafting_table
+[11:18:48] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST [Test 5 - Geographic scale] road on the ground: PASSED - OSM way w20634262 (PRIMARY, 10.0 m wide): 5 of 5 samples along a 9 m segment are road surface blocks
+[11:18:48] [Render thread/INFO] (Minecraft) [System] [CHAT] §a✔ Objective complete:§r Open your LifeMap [M] and find your town §6+10 LC
+[11:18:51] [Render thread/INFO] (Minecraft) Resizing Dynamic Transforms UBO, capacity limit of 16 reached during a single frame. New capacity will be 32.
+[11:18:51] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST [Test 6 - Map keybind] M opens LifeMap: PASSED - pressed M -> LifeMapScreen open; map data: 0 roads, 0 buildings
+[11:18:51] [Render thread/INFO] (Minecraft) [System] [CHAT] 🚌 Bus 1 to Sodus is at the Williamson stop (5 LC).
+[11:18:56] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST [Test 6 - Map keybind] zoom and layers: PASSED - scrolled out/in; screenshots 07/08
+[11:18:57] [Server thread/WARN] (Minecraft) Can't keep up! Is the server overloaded? Running 6152ms or 123 ticks behind
+[11:18:59] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST [Test 7 - Player location] position updates: PASSED - player moved 361 blocks; lat/lon 43.22370,-77.18609 -> 43.22550,-77.18240; LifeMap follows the player (screenshot 09)
+[11:19:01] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST [Test 7 - Player location] walking moves the player: PASSED - held W for 40 ticks: moved 8.4 blocks
+[11:19:01] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST [Test 8 - Data loading] tile cache on disk: PASSED - 248 cached tiles in /home/runner/work/Earth-life/Earth-life/fabric-mod/build/run/clientGameTest/saves/EarthLife Test Williamson/./earthlife/tilecache
+[11:19:03] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST [Test 8 - Data loading] missing data handled: PASSED - chunk at 50000,50000 generated, surface Y 313, flagged estimated=true
+[11:19:04] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST [Test 8 - Data loading] chunk generation benchmark: PASSED - 64 new chunks (in Williamson/Sodus data) in 1561 ms = 24.4 ms/chunk on the CI runner (2-4 vCPU, software rendering); heap 1690 -> 1187 MB (max 4096 MB)
+[11:19:04] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST [Test 8 - Data loading] offline startup: PASSED - event feeds are not contacted (-Dearthlife.offline=true); Northeast worlds fetch map packs (cached afterwards), starter worlds read the jar: events loaded 66, feed errors: [mlb: offline mode (earthlife.offline) - using cached/holiday events only], map data source: Map data (c) OpenStreetMap contributors, ODbL 1.0, Northeast packs: map data: p_85_-154.zip ready
+[11:19:04] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST [Test 9 - Survival] survival mode: PASSED - game mode survival
+[11:19:09] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST [Test 9 - Survival] mining by hand: PASSED - block at 300, 121, -191 broken=true, dirt in inventory=0, dirt item dropped nearby=2 (held left mouse for 3 s)
+[11:19:09] [Render thread/INFO] (Minecraft) Loaded 14 advancements
+[11:19:11] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST [Test 9 - Survival] building: PASSED - oak planks placed at 300, 122, -190 next to the stone at 300, 121, -189 (right-clicked with planks)
+[11:19:11] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST [Test 9 - Survival] crafting: PASSED - 1 oak log -> 4 x minecraft:oak_planks via the game's recipe manager
+[11:19:11] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST [Test 9 - Survival] caves and ores: PASSED - 7x7 chunks under the player: 11785 cave blocks, 11246 ore blocks (188 diamond); biome monster spawn list has 9 entries
+[11:19:12] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST [Test 9 - Survival] hunger: PASSED - food level 20 -> 18 after exhaustion (vanilla hunger still active)
+[11:19:14] [Render thread/INFO] (Minecraft) [System] [CHAT] §a✔ Objective complete:§r Talk to a resident (right-click them) §6+25 LC
+[11:19:16] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST [Test 10 - Life systems] residents spawn and talk: PASSED - right-clicked resident Silas Olsen -> dialogue screen with choices; chose "How's your day going?" and got a reply (screenshots 10-11)
+[11:19:16] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST [Test 10 - Life systems] job: apply, clock in, task, wages: PASSED - hired=Janitor, on shift=true, messes cleaned=6, tasks recorded=6, balance 305 -> 523 LC
+[11:19:16] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST [Test 10 - Life systems] wallet transactions: PASSED - 9 ledger entries ([STARTER, OBJECTIVE, WAGE]), balances chain correctly=true
+[11:19:16] [Render thread/INFO] (Minecraft) [System] [CHAT] §a✔ Objective complete:§r Get a job [J] §6+25 LC
+[11:19:16] [Render thread/INFO] (Minecraft) [System] [CHAT] Hired! You're now a Janitor at Williamson. Clock in with /earthlife job clockin during your shift.
+[11:19:16] [Render thread/INFO] (Minecraft) [System] [CHAT] 6 messes to clean nearby (brown stains). Break them.
+[11:19:16] [Render thread/INFO] (Minecraft) [System] [CHAT] Clocked in as Janitor. Shift ends 23:00.
+[11:19:16] [Render thread/INFO] (Minecraft) [System] [CHAT] §a✔ Objective complete:§r Finish a work task §6+50 LC
+[11:19:16] [Render thread/INFO] (Minecraft) [System] [CHAT] §a✔ Objective complete:§r Earn your first wages (clock out after working) §6+25 LC
+[11:19:16] [Render thread/INFO] (Minecraft) [System] [CHAT] Shift over: 2.0 h, 6 tasks → 118 LC
+[11:19:18] [Server thread/WARN] (Minecraft) Can't keep up! Is the server overloaded? Running 6031ms or 120 ticks behind
+[11:19:20] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST [Test 10 - Life systems] L key opens wallet: PASSED - pressed the L mapping -> screen EarthMenuScreen
+[11:19:24] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST [Test 10 - Life systems] J key opens jobs: PASSED - pressed the J mapping -> screen EarthMenuScreen
+[11:19:27] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST [Test 10 - Life systems] N key opens nearby: PASSED - pressed the N mapping -> screen EarthMenuScreen
+[11:19:31] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST [Test 10 - Life systems] K key opens life: PASSED - pressed the K mapping -> screen EarthMenuScreen
+[11:19:33] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST [Test 10 - Life systems] events tab: PASSED - 6 rows, first: Halloween in 5 days - trick-or-treat and contests are on
+[11:19:33] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST [Test 10 - Life systems] vehicle ownership: PASSED - owned [CAR:red], summoned vehicles nearby: 1
+[11:19:33] [Render thread/INFO] (Minecraft) [System] [CHAT] Operator grant: +50000 LC (recorded in the ledger as ADMIN).
+[11:19:33] [Render thread/INFO] (Minecraft) [System] [CHAT] Bought a red Car for 250 LC. Use /earthlife vehicle summon car
+[11:19:33] [Render thread/INFO] (Minecraft) [System] [CHAT] Your Car is here. Right-click to drive.
+[11:19:34] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST [Test 10 - Life systems] get in through the driver's door: PASSED - interact=Success[swingSource=PREDICTED, itemContext=ItemContext[wasItemInteraction=true, heldItemTransformedTo=null]] seated=true seat=0 driverDoorOpen=true type=CAR
+[11:19:34] [Render thread/WARN] (Minecraft) Received passengers for unknown entity
+[11:19:37] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST [Test 10 - Life systems] door closes after you sit down: PASSED - flags=64
+[11:19:39] [Server thread/WARN] (Minecraft) Can't keep up! Is the server overloaded? Running 6196ms or 123 ticks behind
+[11:19:41] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST [Test 10 - Life systems] in-car GPS: PASSED - action='Turn right' onto='Arrowbend Drive' toTurn=450 m remaining=1052 m street='Lake Avenue' gpsTexture=earthlife:gps_screen
+[11:19:44] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST [Test 10 - Life systems] driving moves the car: PASSED - moved 6.8 m in 2 s, top speed 5.6 m/s (drove)
+[11:19:44] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST [Test 10 - Life systems] get out beside the door: PASSED - riding=false doorFlags=1 distance from car centre=1.9 m
+[11:19:44] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST [Test 10 - Life systems] Halloween trick-or-treat: PASSED - Grace Kim said: "Happy Halloween! Here's 4 pieces of candy. (4 collected so far)"; candy=4; residents in costume nearby=true
+[11:19:44] [Render thread/INFO] (Minecraft) [System] [CHAT] Halloween forced ON (any date, any hour).
+[11:19:44] [Render thread/INFO] (Minecraft) [System] [CHAT] §a✔ Objective complete:§r Join a live event (Halloween: trick-or-treat a resident) §6+50 LC
+[11:19:49] [Server thread/INFO] (EarthLife) EarthLife: map window 2 cells, 7052 buildings, 1804 roads, 25 stores, 1 populations
+[11:19:51] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST [Test 10 - Life systems] Halloween haunted house: PASSED - haunted house in Williamson at -35, -494; 6 hidden pumpkins, found 3/3, candy now 7
+[11:19:51] [Server thread/INFO] (EarthLife) cinema placed: AMC Webster 12 (8 auditoriums)
+[11:19:51] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST [Test 15 - Cinema] real cinemas placed: PASSED - 2 theaters from OpenStreetMap in this world; nearest: AMC Webster 12 (8 auditoriums, one 4D) - its kiosk maps back to 43.20221, -77.49438 vs OSM 43.20204, -77.49411
+[11:19:54] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST [Test 15 - Cinema] theater interior generated: PASSED - Auditorium 2: 58 of 63 seats are recliners, 10 popcorn machines / soda fountains / kiosks in the lobby
+[11:19:54] [Render thread/INFO] (Minecraft) [System] [CHAT] §6A hidden pumpkin! (1/3) Keep searching the haunted house...
+[11:19:54] [Render thread/INFO] (Minecraft) [System] [CHAT] §6A hidden pumpkin! (2/3) Keep searching the haunted house...
+[11:19:54] [Render thread/INFO] (Minecraft) [System] [CHAT] §6You found all the hidden pumpkins in the haunted house! +30 LC and 3 candy.
+[11:19:57] [Server thread/INFO] (EarthLife) EarthLife: map window 2 cells, 13302 buildings, 35813 roads, 491 stores, 3 populations
+[11:19:57] [Server thread/WARN] (Minecraft) Can't keep up! Is the server overloaded? Running 3476ms or 69 ticks behind
+[11:19:58] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST [Test 15 - Cinema] concessions: buy and eat popcorn: PASSED - 3 purchases in the ledger: 3; popcorn 1, cola 1, gummy bears 1; popcorn/cola are food/drink: true
+[11:19:58] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST [Test 15 - Cinema] eating popcorn fills hunger: PASSED - hunger 10 -> 15 after eating popcorn
+[11:19:58] [Render thread/INFO] (Minecraft) [System] [CHAT] Operator grant: +500 LC (recorded in the ledger as ADMIN).
+[11:19:58] [Render thread/INFO] (Minecraft) [System] [CHAT] §a✔ Objective complete:§r Buy something in a store ([K] > Shop) §6+25 LC
+[11:19:58] [Render thread/INFO] (Minecraft) [System] [CHAT] Enjoy your Popcorn! (8 LC)
+[11:19:58] [Render thread/INFO] (Minecraft) [System] [CHAT] Enjoy your Cola! (6 LC)
+[11:19:58] [Render thread/INFO] (Minecraft) [System] [CHAT] Enjoy your Gummy Bears! (5 LC)
+[11:19:58] [Render thread/INFO] (Minecraft) [System] [CHAT] Ticket bought (12 LC): "Test Pattern" in Auditorium 2 at AMC Webster 12. Find your seat - the film is starting!
+[11:19:58] [Render thread/INFO] (Minecraft) [System] [CHAT] You sit down in Auditorium 2.
+[11:19:58] [Render thread/INFO] (Minecraft) Loaded 36 advancements
+[11:19:58] [EarthLife-cinema-start/INFO] (EarthLife) Cinema sound unavailable (java.lang.ExceptionInInitializerError); films play silently
+[11:20:09] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST [Test 15 - Cinema] film plays on the screen: PASSED - show=Test Pattern, seated=true, status=Playing, 1152x480, clock 10.5 s, picture=earthlife:cinema/266-1_3a79d1ca, sound=yes
+[11:20:09] [Render thread/INFO] (Minecraft) [System] [CHAT] Ticket bought (15 LC): "Test Pattern 3D" in Auditorium 2 at AMC Webster 12. Find your seat - the film is starting!
+[11:20:09] [EarthLife-cinema-start/INFO] (EarthLife) Cinema sound unavailable (java.lang.NoClassDefFoundError: Could not initialize class org.lwjgl.openal.AL$ICDStatic$WriteOnce); films play silently
+[11:20:20] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST [Test 15 - Cinema] 3D with red/cyan glasses: PASSED - format=SBS anaglyph=true status=Playing picture=earthlife:cinema/266-1_25b9c2f0 glasses=true
+[11:20:20] [Render thread/INFO] (Minecraft) [System] [CHAT] 4D auditoriums: open
+[11:20:20] [Render thread/INFO] (Minecraft) [System] [CHAT] Ticket bought (20 LC): "Test Pattern 4D" in 4D Auditorium 1 at AMC Webster 12. Find your seat - the film is starting!
+[11:20:20] [Render thread/INFO] (Minecraft) [System] [CHAT] You sit down in 4D Auditorium 1.
+[11:20:20] [EarthLife-cinema-start/INFO] (EarthLife) Cinema sound unavailable (java.lang.NoClassDefFoundError: Could not initialize class org.lwjgl.openal.AL$ICDStatic$WriteOnce); films play silently
+[11:20:20] [EarthLife-cinema-start/INFO] (EarthLife) Cinema sound unavailable (java.lang.NoClassDefFoundError: Could not initialize class org.lwjgl.openal.AL$ICDStatic$WriteOnce); films play silently
+[11:20:31] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST [Test 15 - Cinema] 4D motion seat effects: PASSED - 4D season open today (Oct 29 - Nov 3): false; forced on for the test; motion seat=true, 4D active=true, effects: rumble 0%, picture=earthlife:cinema/266-0_30d5e66c, TactSuit: TactSuit: not connected
+[11:20:35] [EarthLife-TileGen/INFO] (EarthLife) cinema placed: Angelika Film Center (4 auditoriums)
+[11:20:35] [EarthLife-TileGen/INFO] (EarthLife) cinema placed: AMC Loews 19th St. East 6 (2 auditoriums)
+[11:20:35] [EarthLife-TileGen/INFO] (EarthLife) cinema placed: AMC Kips Bay 15 (9 auditoriums)
+[11:20:35] [EarthLife-TileGen/INFO] (EarthLife) cinema placed: Anthology Film Archives (2 auditoriums)
+[11:20:35] [EarthLife-TileGen/INFO] (EarthLife) cinema placed: Williamsburg Cinemas (2 auditoriums)
+[11:20:35] [EarthLife-TileGen/INFO] (EarthLife) cinema placed: Regal Union Square Stadium 14 (8 auditoriums)
+[11:20:35] [EarthLife-TileGen/INFO] (EarthLife) cinema placed: Syndicated Bar Theater Kitchen (2 auditoriums)
+[11:20:35] [EarthLife-TileGen/INFO] (EarthLife) cinema placed: Nitehawk Cinema (1 auditoriums)
+[11:20:35] [EarthLife-TileGen/INFO] (EarthLife) cinema placed: Stuart Cinema & Cafe (2 auditoriums)
+[11:20:35] [EarthLife-TileGen/INFO] (EarthLife) cinema placed: AMC Loews Village 7 (2 auditoriums)
+[11:20:35] [EarthLife-TileGen/INFO] (EarthLife) cinema placed: Alamo Drafthouse Cinema (16 auditoriums)
+[11:20:35] [EarthLife-TileGen/INFO] (EarthLife) cinema placed: Quad Cinema (1 auditoriums)
+[11:20:35] [EarthLife-TileGen/INFO] (EarthLife) cinema placed: Spectacle Theater (1 auditoriums)
+[11:20:35] [EarthLife-TileGen/INFO] (EarthLife) cinema placed: Soapbox Gallery (1 auditoriums)
+[11:20:35] [EarthLife-TileGen/INFO] (EarthLife) cinema placed: Regal Essex 14 & RPX (5 auditoriums)
+[11:20:35] [EarthLife-TileGen/INFO] (EarthLife) cinema placed: Film Noir Cinema (1 auditoriums)
+[11:20:35] [EarthLife-TileGen/INFO] (EarthLife) cinema placed: BAM Rose Cinemas (4 auditoriums)
+[11:20:35] [EarthLife-TileGen/INFO] (EarthLife) cinema placed: The Metrograph (1 auditoriums)
+[11:20:35] [EarthLife-TileGen/INFO] (EarthLife) cinema placed: Low Cinema (2 auditoriums)
+[11:20:35] [EarthLife-TileGen/INFO] (EarthLife) cinema placed: BAM Rose Cinemas at BAM KBH (1 auditoriums)
+[11:20:35] [EarthLife-TileGen/INFO] (EarthLife) cinema placed: Cobble Hill Cinemas (1 auditoriums)
+[11:20:35] [EarthLife-TileGen/INFO] (EarthLife) cinema placed: Village East Cinema (2 auditoriums)
+[11:20:35] [EarthLife-TileGen/INFO] (EarthLife) cinema placed: Cinema Village (1 auditoriums)
+[11:20:35] [EarthLife-TileGen/INFO] (EarthLife) cinema placed: Nitehawk (3 auditoriums)
+[11:20:35] [EarthLife-TileGen/INFO] (EarthLife) cinema placed: Kent Theater (2 auditoriums)
+[11:20:35] [EarthLife-TileGen/INFO] (EarthLife) cinema placed: SVA Theater (2 auditoriums)
+[11:20:36] [EarthLife-TileGen/INFO] (EarthLife) cinema placed: IPIC Theaters (8 auditoriums)
+[11:20:36] [EarthLife-TileGen/INFO] (EarthLife) cinema placed: AMC Loews Lincoln Square 13 (8 auditoriums)
+[11:20:36] [EarthLife-TileGen/INFO] (EarthLife) cinema placed: Walter Reade Theater (1 auditoriums)
+[11:20:36] [EarthLife-TileGen/INFO] (EarthLife) cinema placed: Elinor Bunin Munroe Film Center (1 auditoriums)
+[11:20:36] [EarthLife-TileGen/INFO] (EarthLife) cinema placed: AMC 34th Street 14 (6 auditoriums)
+[11:20:36] [EarthLife-TileGen/INFO] (EarthLife) cinema placed: AMC Magic Johnson Harlem 9 (9 auditoriums)
+[11:20:36] [EarthLife-TileGen/INFO] (EarthLife) cinema placed: Ziegfeld Ballroom (1 auditoriums)
+[11:20:36] [EarthLife-TileGen/INFO] (EarthLife) cinema placed: Producers Club Theaters and Bar (2 auditoriums)
+[11:20:36] [EarthLife-TileGen/INFO] (EarthLife) cinema placed: Regal E-Walk Stadium 13 & RPX (5 auditoriums)
+[11:20:36] [EarthLife-TileGen/INFO] (EarthLife) cinema placed: AMC Loews 84th Street 6 (4 auditoriums)
+[11:20:36] [EarthLife-TileGen/INFO] (EarthLife) cinema placed: Museum of Modern Art (MoMA) films (10 auditoriums)
+[11:20:36] [EarthLife-TileGen/INFO] (EarthLife) cinema placed: AMC Loews Orpheum 7 (5 auditoriums)
+[11:20:36] [EarthLife-TileGen/INFO] (EarthLife) cinema placed: Concourse Plaza Multiplex (6 auditoriums)
+[11:20:36] [EarthLife-TileGen/INFO] (EarthLife) cinema placed: LOOK Dine-in Cinemas (8 auditoriums)
+[11:20:36] [EarthLife-TileGen/INFO] (EarthLife) cinema placed: Paris Theatre (1 auditoriums)
+[11:20:36] [EarthLife-TileGen/INFO] (EarthLife) cinema placed: AMC Empire 25 (1 auditoriums)
+[11:20:36] [EarthLife-TileGen/INFO] (EarthLife) cinema placed: Cinema 123 by Angelika (1 auditoriums)
+[11:20:36] [EarthLife-TileGen/INFO] (EarthLife) cinema placed: Regal UA Kaufman Astoria (10 auditoriums)
+[11:20:38] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST [Test 16 - Northeast 1:1] Empire State Building, Manhattan: PASSED - block 270311, 269841 (382 km from Williamson); cell tier CITY; ground Y 4 (15 m); water false (surface Y 0); 2415 building columns within 60 m, tallest 443 m; tile in 6281 ms
+[11:20:40] [EarthLife-TileGen/INFO] (EarthLife) cinema placed: AMC Newport 11 (5 auditoriums)
+[11:20:40] [EarthLife-TileGen/INFO] (EarthLife) cinema placed: Loew's Jersey Theatre (4 auditoriums)
+[11:20:40] [EarthLife-TileGen/INFO] (EarthLife) cinema placed: Frank Theatres (6 auditoriums)
+[11:20:40] [EarthLife-TileGen/INFO] (EarthLife) cinema placed: Joseph D. Williams Science Theater (1 auditoriums)
+[11:20:40] [EarthLife-TileGen/INFO] (EarthLife) cinema placed: IMAX Dome Theater (2 auditoriums)
+[11:20:40] [EarthLife-TileGen/INFO] (EarthLife) cinema placed: Regal Battery Park (12 auditoriums)
+[11:20:40] [EarthLife-TileGen/INFO] (EarthLife) cinema placed: Alpine Cinema (6 auditoriums)
+[11:20:40] [EarthLife-TileGen/INFO] (EarthLife) cinema placed: Film Forum (9 auditoriums)
+[11:20:40] [EarthLife-TileGen/INFO] (EarthLife) cinema placed: No Evil Eye (1 auditoriums)
+[11:20:40] [EarthLife-TileGen/INFO] (EarthLife) cinema placed: IPIC Theaters (6 auditoriums)
+[11:20:40] [EarthLife-TileGen/INFO] (EarthLife) cinema placed: Roxy Cinema New York (1 auditoriums)
+[11:20:40] [EarthLife-TileGen/INFO] (EarthLife) cinema placed: IFC Center (1 auditoriums)
+[11:20:40] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST [Test 16 - Northeast 1:1] Upper New York Bay (sea level): FAILED - block 265619, 278736 (385 km from Williamson); cell tier CITY; ground Y -11 (0 m); water false (surface Y 0); 0 building columns within 60 m, tallest 0 m; tile in 2108 ms
+[11:20:41] [EarthLife-TileGen/INFO] (EarthLife) cinema placed: Cinemark University City Penn 6 (14 auditoriums)
+[11:20:41] [EarthLife-TileGen/INFO] (EarthLife) cinema placed: PFS Bourse Theater (2 auditoriums)
+[11:20:41] [EarthLife-TileGen/INFO] (EarthLife) cinema placed: AMC Broadstreet 7 (4 auditoriums)
+[11:20:41] [EarthLife-TileGen/INFO] (EarthLife) cinema placed: Ritz Five (3 auditoriums)
+[11:20:41] [EarthLife-TileGen/INFO] (EarthLife) cinema placed: PFS East Theater (2 auditoriums)
+[11:20:41] [EarthLife-TileGen/INFO] (EarthLife) cinema placed: Philadelphia Film Center (1 auditoriums)
+[11:20:41] [EarthLife-TileGen/INFO] (EarthLife) cinema placed: AMC Dine-In Fashion District 8 (5 auditoriums)
+[11:20:41] [EarthLife-TileGen/INFO] (EarthLife) cinema placed: The Universal Sphere (8 auditoriums)
+[11:20:41] [EarthLife-TileGen/INFO] (EarthLife) cinema placed: Trocadero Theatre (1 auditoriums)
+[11:20:41] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST [Test 16 - Northeast 1:1] Philadelphia City Hall, PA: PASSED - block 172907, 361280 (401 km from Williamson); cell tier CITY; ground Y 3 (14 m); water false (surface Y 0); 3549 building columns within 60 m, tallest 30 m; tile in 1598 ms
+[11:20:42] [EarthLife-TileGen/INFO] (EarthLife) cinema placed: Showbox Theater (8 auditoriums)
+[11:20:42] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST [Test 16 - Northeast 1:1] Burlington, VT (Church Street): PASSED - block 316025, -146752 (348 km from Williamson); cell tier CITY; ground Y 50 (61 m); water false (surface Y 0); 1167 building columns within 60 m, tallest 33 m; tile in 676 ms
+[11:20:43] [EarthLife-TileGen/INFO] (EarthLife) cinema placed: IMAX (5 auditoriums)
+[11:20:43] [EarthLife-TileGen/INFO] (EarthLife) cinema placed: Ventnor Square Theater (2 auditoriums)
+[11:20:43] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST [Test 16 - Northeast 1:1] Atlantic City boardwalk, NJ: PASSED - block 237053, 425765 (487 km from Williamson); cell tier TOWN; ground Y 4 (15 m); water false (surface Y 0); 97 building columns within 60 m, tallest 19 m; tile in 982 ms
+[11:20:44] [Server thread/WARN] (Minecraft) Can't keep up! Is the server overloaded? Running 13892ms or 277 ticks behind
+[11:20:44] [Render thread/INFO] (Minecraft) [System] [CHAT] 4D auditoriums: automatic (open Oct 29 - Nov 3)
+[11:20:47] [EarthLife-MapPrefetch/INFO] (EarthLife) cinema placed: AMC Ridgefield Park 12 (5 auditoriums)
+[11:20:47] [EarthLife-MapPrefetch/INFO] (EarthLife) cinema placed: Williams Center for the Arts (4 auditoriums)
+[11:20:47] [EarthLife-MapPrefetch/INFO] (EarthLife) cinema placed: ShowPlace Theatres (6 auditoriums)
+[11:20:47] [EarthLife-MapPrefetch/INFO] (EarthLife) cinema placed: Columbia Park Theaters (4 auditoriums)
+[11:20:48] [Server thread/INFO] (EarthLife) EarthLife: map window 3 cells, 447029 buildings, 245348 roads, 1564 stores, 6 populations
+[11:20:54] [Server thread/INFO] (EarthLife) EarthLife: map window 4 cells, 493119 buildings, 280594 roads, 1823 stores, 6 populations
+[11:21:01] [Server thread/WARN] (Minecraft) Can't keep up! Is the server overloaded? Running 2762ms or 55 ticks behind
+[11:21:07] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST [Test 16 - Northeast 1:1] Manhattan in game: PASSED - screenshot 40_manhattan from 60 m above Grand Central
+[11:21:07] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST [Test 11 - Aviation] airport generated: PASSED - KSDC terminal check-in floor at 5281, 119, -1390 is block.minecraft.polished_andesite; airports with terminals: [KSDC, KROC, KIUA, KGVQ]
+[11:21:09] [Server thread/INFO] (EarthLife) EarthLife: map window 3 cells, 10928 buildings, 2428 roads, 34 stores, 6 populations
+[11:21:15] [Server thread/INFO] (EarthLife) EarthLife: map window 4 cells, 11737 buildings, 2662 roads, 34 stores, 6 populations
+[11:21:16] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST [Test 11 - Aviation] boarding: PASSED - aircraft EL101 boarding at KSDC; player boarded=true, riding=true
+[11:21:16] [Render thread/INFO] (Minecraft) [System] [CHAT] ✓ Booked EL101 KSDC→KROC, seat 1A, gate A1. Boarding pass EL101-684107. Paid 105 LC.
+[11:21:16] [Render thread/INFO] (Minecraft) [System] [CHAT] Welcome aboard EL101. Your seat is 1A: walk to your row and jump to sit. [M] seatback map.
+[11:21:18] [Render thread/INFO] (Minecraft) [System] [CHAT] ✈ Doors closed. Welcome aboard, flight from Williamson-Sodus Airport to Frederick Douglass Greater Rochester International Airport.
+[11:21:39] [Server thread/INFO] (Minecraft) System chat: The game is sprinting
+[11:21:39] [Render thread/INFO] (Minecraft) [System] [CHAT] [Server: The game is sprinting]
+[11:21:49] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST flight progress: TAXI_OUT 50.5 km to go
+[11:21:49] [Server thread/INFO] (Minecraft) System chat: Interrupted the current tick sprint
+[11:21:49] [Server thread/INFO] (Minecraft) System chat: The game is sprinting
+[11:21:49] [Render thread/INFO] (Minecraft) [System] [CHAT] [Server: Interrupted the current tick sprint]
+[11:21:49] [Render thread/INFO] (Minecraft) [System] [CHAT] [Server: The game is sprinting]
+[11:21:59] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST flight progress: TAXI_OUT 50.4 km to go
+[11:21:59] [Server thread/INFO] (Minecraft) System chat: Interrupted the current tick sprint
+[11:21:59] [Server thread/INFO] (Minecraft) System chat: The game is sprinting
+[11:21:59] [Render thread/INFO] (Minecraft) [System] [CHAT] [Server: Interrupted the current tick sprint]
+[11:21:59] [Render thread/INFO] (Minecraft) [System] [CHAT] [Server: The game is sprinting]
+[11:22:09] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST flight progress: TAXI_OUT 50.3 km to go
+[11:22:09] [Server thread/INFO] (Minecraft) System chat: Interrupted the current tick sprint
+[11:22:09] [Server thread/INFO] (Minecraft) System chat: The game is sprinting
+[11:22:09] [Render thread/INFO] (Minecraft) [System] [CHAT] [Server: Interrupted the current tick sprint]
+[11:22:09] [Render thread/INFO] (Minecraft) [System] [CHAT] [Server: The game is sprinting]
+[11:22:19] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST flight progress: TAXI_OUT 50.2 km to go
+[11:22:19] [Server thread/INFO] (Minecraft) System chat: Interrupted the current tick sprint
+[11:22:19] [Server thread/INFO] (Minecraft) System chat: The game is sprinting
+[11:22:19] [Render thread/INFO] (Minecraft) [System] [CHAT] [Server: Interrupted the current tick sprint]
+[11:22:19] [Render thread/INFO] (Minecraft) [System] [CHAT] [Server: The game is sprinting]
+[11:22:29] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST flight progress: TAXI_OUT 50.1 km to go
+[11:22:29] [Server thread/INFO] (Minecraft) System chat: Interrupted the current tick sprint
+[11:22:29] [Server thread/INFO] (Minecraft) System chat: The game is sprinting
+[11:22:29] [Render thread/INFO] (Minecraft) [System] [CHAT] [Server: Interrupted the current tick sprint]
+[11:22:29] [Render thread/INFO] (Minecraft) [System] [CHAT] [Server: The game is sprinting]
+[11:22:39] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST flight progress: TAXI_OUT 50.0 km to go
+[11:22:39] [Server thread/INFO] (Minecraft) System chat: Interrupted the current tick sprint
+[11:22:39] [Server thread/INFO] (Minecraft) System chat: The game is sprinting
+[11:22:39] [Render thread/INFO] (Minecraft) [System] [CHAT] [Server: Interrupted the current tick sprint]
+[11:22:39] [Render thread/INFO] (Minecraft) [System] [CHAT] [Server: The game is sprinting]
+[11:22:49] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST flight progress: TAXI_OUT 50.0 km to go
+[11:22:49] [Server thread/INFO] (Minecraft) System chat: Interrupted the current tick sprint
+[11:22:49] [Server thread/INFO] (Minecraft) System chat: The game is sprinting
+[11:22:49] [Render thread/INFO] (Minecraft) [System] [CHAT] [Server: Interrupted the current tick sprint]
+[11:22:49] [Render thread/INFO] (Minecraft) [System] [CHAT] [Server: The game is sprinting]
+[11:22:51] [Render thread/INFO] (Minecraft) [System] [CHAT] ✈ Flight attendants, prepare for takeoff.
+[11:22:59] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST flight progress: TAKEOFF_ROLL 49.9 km to go
+[11:22:59] [Server thread/INFO] (Minecraft) System chat: Interrupted the current tick sprint
+[11:22:59] [Server thread/INFO] (Minecraft) System chat: The game is sprinting
+[11:22:59] [Render thread/INFO] (Minecraft) [System] [CHAT] [Server: Interrupted the current tick sprint]
+[11:22:59] [Render thread/INFO] (Minecraft) [System] [CHAT] [Server: The game is sprinting]
+[11:23:09] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST flight progress: TAKEOFF_ROLL 49.6 km to go
+[11:23:09] [Server thread/INFO] (Minecraft) System chat: Interrupted the current tick sprint
+[11:23:09] [Server thread/INFO] (Minecraft) System chat: The game is sprinting
+[11:23:09] [Render thread/INFO] (Minecraft) [System] [CHAT] [Server: Interrupted the current tick sprint]
+[11:23:09] [Render thread/INFO] (Minecraft) [System] [CHAT] [Server: The game is sprinting]
+[11:23:13] [Render thread/INFO] (Minecraft) [System] [CHAT] ✈ Rotate. We're airborne.
+[11:23:19] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST flight progress: CLIMB 49.1 km to go
+[11:23:19] [Server thread/INFO] (Minecraft) System chat: Interrupted the current tick sprint
+[11:23:19] [Server thread/INFO] (Minecraft) System chat: The game is sprinting
+[11:23:19] [Render thread/INFO] (Minecraft) [System] [CHAT] [Server: Interrupted the current tick sprint]
+[11:23:19] [Render thread/INFO] (Minecraft) [System] [CHAT] [Server: The game is sprinting]
+[11:23:29] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST flight progress: CLIMB 48.5 km to go
+[11:23:29] [Server thread/INFO] (Minecraft) System chat: Interrupted the current tick sprint
+[11:23:29] [Server thread/INFO] (Minecraft) System chat: The game is sprinting
+[11:23:29] [Render thread/INFO] (Minecraft) [System] [CHAT] [Server: Interrupted the current tick sprint]
+[11:23:29] [Render thread/INFO] (Minecraft) [System] [CHAT] [Server: The game is sprinting]
+[11:23:40] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST flight progress: CLIMB 47.9 km to go
+[11:23:40] [Server thread/INFO] (Minecraft) System chat: Interrupted the current tick sprint
+[11:23:40] [Server thread/INFO] (Minecraft) System chat: The game is sprinting
+[11:23:40] [Render thread/INFO] (Minecraft) [System] [CHAT] [Server: Interrupted the current tick sprint]
+[11:23:40] [Render thread/INFO] (Minecraft) [System] [CHAT] [Server: The game is sprinting]
+[11:23:50] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST flight progress: CLIMB 47.3 km to go
+[11:23:50] [Server thread/INFO] (Minecraft) System chat: Interrupted the current tick sprint
+[11:23:50] [Server thread/INFO] (Minecraft) System chat: The game is sprinting
+[11:23:50] [Render thread/INFO] (Minecraft) [System] [CHAT] [Server: Interrupted the current tick sprint]
+[11:23:50] [Render thread/INFO] (Minecraft) [System] [CHAT] [Server: The game is sprinting]
+[11:24:00] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST flight progress: CLIMB 46.7 km to go
+[11:24:00] [Server thread/INFO] (Minecraft) System chat: Interrupted the current tick sprint
+[11:24:00] [Server thread/INFO] (Minecraft) System chat: The game is sprinting
+[11:24:00] [Render thread/INFO] (Minecraft) [System] [CHAT] [Server: Interrupted the current tick sprint]
+[11:24:00] [Render thread/INFO] (Minecraft) [System] [CHAT] [Server: The game is sprinting]
+[11:24:02] [Server thread/INFO] (EarthLife) EarthLife: map window 2 cells, 9430 buildings, 2010 roads, 34 stores, 7 populations
+[11:24:08] [Server thread/INFO] (EarthLife) EarthLife: map window 1 cells, 5554 buildings, 1386 roads, 25 stores, 7 populations
+[11:24:11] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST flight progress: CLIMB 46.0 km to go
+[11:24:11] [Server thread/INFO] (Minecraft) System chat: Interrupted the current tick sprint
+[11:24:11] [Server thread/INFO] (Minecraft) System chat: The game is sprinting
+[11:24:11] [Render thread/INFO] (Minecraft) [System] [CHAT] [Server: Interrupted the current tick sprint]
+[11:24:11] [Render thread/INFO] (Minecraft) [System] [CHAT] [Server: The game is sprinting]
+[11:24:21] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST flight progress: CLIMB 45.5 km to go
+[11:24:21] [Server thread/INFO] (Minecraft) System chat: Interrupted the current tick sprint
+[11:24:21] [Server thread/INFO] (Minecraft) System chat: The game is sprinting
+[11:24:21] [Render thread/INFO] (Minecraft) [System] [CHAT] [Server: Interrupted the current tick sprint]
+[11:24:21] [Render thread/INFO] (Minecraft) [System] [CHAT] [Server: The game is sprinting]
+[11:24:31] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST flight progress: CLIMB 44.8 km to go
+[11:24:31] [Server thread/INFO] (Minecraft) System chat: Interrupted the current tick sprint
+[11:24:31] [Server thread/INFO] (Minecraft) System chat: The game is sprinting
+[11:24:31] [Render thread/INFO] (Minecraft) [System] [CHAT] [Server: Interrupted the current tick sprint]
+[11:24:31] [Render thread/INFO] (Minecraft) [System] [CHAT] [Server: The game is sprinting]
+[11:24:42] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST flight progress: CLIMB 44.2 km to go
+[11:24:42] [Server thread/INFO] (Minecraft) System chat: Interrupted the current tick sprint
+[11:24:42] [Server thread/INFO] (Minecraft) System chat: The game is sprinting
+[11:24:43] [Render thread/INFO] (Minecraft) [System] [CHAT] [Server: Interrupted the current tick sprint]
+[11:24:43] [Render thread/INFO] (Minecraft) [System] [CHAT] [Server: The game is sprinting]
+[11:24:53] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST flight progress: CLIMB 43.6 km to go
+[11:24:53] [Server thread/INFO] (Minecraft) System chat: Interrupted the current tick sprint
+[11:24:53] [Server thread/INFO] (Minecraft) System chat: The game is sprinting
+[11:24:53] [Render thread/INFO] (Minecraft) [System] [CHAT] [Server: Interrupted the current tick sprint]
+[11:24:53] [Render thread/INFO] (Minecraft) [System] [CHAT] [Server: The game is sprinting]
+[11:25:03] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST flight progress: CLIMB 42.9 km to go
+[11:25:03] [Server thread/INFO] (Minecraft) System chat: Interrupted the current tick sprint
+[11:25:03] [Server thread/INFO] (Minecraft) System chat: The game is sprinting
+[11:25:03] [Render thread/INFO] (Minecraft) [System] [CHAT] [Server: Interrupted the current tick sprint]
+[11:25:03] [Render thread/INFO] (Minecraft) [System] [CHAT] [Server: The game is sprinting]
+[11:25:13] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST flight progress: CLIMB 42.3 km to go
+[11:25:13] [Server thread/INFO] (Minecraft) System chat: Interrupted the current tick sprint
+[11:25:13] [Server thread/INFO] (Minecraft) System chat: The game is sprinting
+[11:25:13] [Render thread/INFO] (Minecraft) [System] [CHAT] [Server: Interrupted the current tick sprint]
+[11:25:13] [Render thread/INFO] (Minecraft) [System] [CHAT] [Server: The game is sprinting]
+[11:25:23] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST flight progress: CLIMB 41.7 km to go
+[11:25:23] [Server thread/INFO] (Minecraft) System chat: Interrupted the current tick sprint
+[11:25:23] [Server thread/INFO] (Minecraft) System chat: The game is sprinting
+[11:25:23] [Render thread/INFO] (Minecraft) [System] [CHAT] [Server: Interrupted the current tick sprint]
+[11:25:23] [Render thread/INFO] (Minecraft) [System] [CHAT] [Server: The game is sprinting]
+[11:25:33] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST flight progress: CLIMB 41.1 km to go
+[11:25:33] [Server thread/INFO] (Minecraft) System chat: Interrupted the current tick sprint
+[11:25:33] [Server thread/INFO] (Minecraft) System chat: The game is sprinting
+[11:25:34] [Render thread/INFO] (Minecraft) [System] [CHAT] [Server: Interrupted the current tick sprint]
+[11:25:34] [Render thread/INFO] (Minecraft) [System] [CHAT] [Server: The game is sprinting]
+[11:25:41] [Server thread/INFO] (EarthLife) EarthLife: map window 2 cells, 13278 buildings, 3694 roads, 40 stores, 7 populations
+[11:25:44] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST flight progress: CLIMB 40.5 km to go
+[11:25:44] [Server thread/INFO] (Minecraft) System chat: Interrupted the current tick sprint
+[11:25:44] [Server thread/INFO] (Minecraft) System chat: The game is sprinting
+[11:25:44] [Render thread/INFO] (Minecraft) [System] [CHAT] [Server: Interrupted the current tick sprint]
+[11:25:44] [Render thread/INFO] (Minecraft) [System] [CHAT] [Server: The game is sprinting]
+[11:25:54] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST flight progress: CLIMB 39.9 km to go
+[11:25:54] [Server thread/INFO] (Minecraft) System chat: Interrupted the current tick sprint
+[11:25:54] [Server thread/INFO] (Minecraft) System chat: The game is sprinting
+[11:25:54] [Render thread/INFO] (Minecraft) [System] [CHAT] [Server: Interrupted the current tick sprint]
+[11:25:54] [Render thread/INFO] (Minecraft) [System] [CHAT] [Server: The game is sprinting]
+[11:26:04] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST flight progress: CLIMB 39.3 km to go
+[11:26:04] [Server thread/INFO] (Minecraft) System chat: Interrupted the current tick sprint
+[11:26:04] [Server thread/INFO] (Minecraft) System chat: The game is sprinting
+[11:26:04] [Render thread/INFO] (Minecraft) [System] [CHAT] [Server: Interrupted the current tick sprint]
+[11:26:04] [Render thread/INFO] (Minecraft) [System] [CHAT] [Server: The game is sprinting]
+[11:26:15] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST flight progress: CLIMB 38.7 km to go
+[11:26:15] [Server thread/INFO] (Minecraft) System chat: Interrupted the current tick sprint
+[11:26:15] [Server thread/INFO] (Minecraft) System chat: The game is sprinting
+[11:26:15] [Render thread/INFO] (Minecraft) [System] [CHAT] [Server: Interrupted the current tick sprint]
+[11:26:15] [Render thread/INFO] (Minecraft) [System] [CHAT] [Server: The game is sprinting]
+[11:26:26] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST flight progress: CLIMB 38.1 km to go
+[11:26:26] [Server thread/INFO] (Minecraft) System chat: Interrupted the current tick sprint
+[11:26:26] [Server thread/INFO] (Minecraft) System chat: The game is sprinting
+[11:26:26] [Render thread/INFO] (Minecraft) [System] [CHAT] [Server: Interrupted the current tick sprint]
+[11:26:26] [Render thread/INFO] (Minecraft) [System] [CHAT] [Server: The game is sprinting]
+[11:26:36] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST flight progress: CLIMB 37.5 km to go
+[11:26:36] [Server thread/INFO] (Minecraft) System chat: Interrupted the current tick sprint
+[11:26:36] [Server thread/INFO] (Minecraft) System chat: The game is sprinting
+[11:26:36] [Render thread/INFO] (Minecraft) [System] [CHAT] [Server: Interrupted the current tick sprint]
+[11:26:36] [Render thread/INFO] (Minecraft) [System] [CHAT] [Server: The game is sprinting]
+[11:26:47] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST flight progress: CLIMB 36.9 km to go
+[11:26:47] [Server thread/INFO] (Minecraft) System chat: Interrupted the current tick sprint
+[11:26:47] [Server thread/INFO] (Minecraft) System chat: The game is sprinting
+[11:26:47] [Render thread/INFO] (Minecraft) [System] [CHAT] [Server: Interrupted the current tick sprint]
+[11:26:47] [Render thread/INFO] (Minecraft) [System] [CHAT] [Server: The game is sprinting]
+[11:26:57] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST flight progress: CLIMB 36.3 km to go
+[11:26:57] [Server thread/INFO] (Minecraft) System chat: Interrupted the current tick sprint
+[11:26:57] [Server thread/INFO] (Minecraft) System chat: The game is sprinting
+[11:26:57] [Render thread/INFO] (Minecraft) [System] [CHAT] [Server: Interrupted the current tick sprint]
+[11:26:57] [Render thread/INFO] (Minecraft) [System] [CHAT] [Server: The game is sprinting]
+[11:27:07] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST flight progress: CLIMB 35.7 km to go
+[11:27:07] [Server thread/INFO] (Minecraft) System chat: Interrupted the current tick sprint
+[11:27:07] [Server thread/INFO] (Minecraft) System chat: The game is sprinting
+[11:27:07] [Render thread/INFO] (Minecraft) [System] [CHAT] [Server: Interrupted the current tick sprint]
+[11:27:07] [Render thread/INFO] (Minecraft) [System] [CHAT] [Server: The game is sprinting]
+[11:27:17] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST flight progress: CLIMB 35.1 km to go
+[11:27:17] [Server thread/INFO] (Minecraft) System chat: Interrupted the current tick sprint
+[11:27:17] [Server thread/INFO] (Minecraft) System chat: The game is sprinting
+[11:27:17] [Render thread/INFO] (Minecraft) [System] [CHAT] [Server: Interrupted the current tick sprint]
+[11:27:17] [Render thread/INFO] (Minecraft) [System] [CHAT] [Server: The game is sprinting]
+[11:27:20] [Server thread/INFO] (EarthLife) EarthLife: map window 1 cells, 7724 buildings, 2308 roads, 15 stores, 7 populations
+[11:27:27] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST flight progress: CLIMB 34.5 km to go
+[11:27:27] [Server thread/INFO] (Minecraft) System chat: Interrupted the current tick sprint
+[11:27:27] [Server thread/INFO] (Minecraft) System chat: The game is sprinting
+[11:27:28] [Render thread/INFO] (Minecraft) [System] [CHAT] [Server: Interrupted the current tick sprint]
+[11:27:28] [Render thread/INFO] (Minecraft) [System] [CHAT] [Server: The game is sprinting]
+[11:27:38] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST flight progress: CLIMB 33.9 km to go
+[11:27:38] [Server thread/INFO] (Minecraft) System chat: Interrupted the current tick sprint
+[11:27:38] [Server thread/INFO] (Minecraft) System chat: The game is sprinting
+[11:27:38] [Render thread/INFO] (Minecraft) [System] [CHAT] [Server: Interrupted the current tick sprint]
+[11:27:38] [Render thread/INFO] (Minecraft) [System] [CHAT] [Server: The game is sprinting]
+[11:27:48] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST flight progress: CLIMB 33.3 km to go
+[11:27:48] [Server thread/INFO] (Minecraft) System chat: Interrupted the current tick sprint
+[11:27:48] [Server thread/INFO] (Minecraft) System chat: The game is sprinting
+[11:27:48] [Render thread/INFO] (Minecraft) [System] [CHAT] [Server: Interrupted the current tick sprint]
+[11:27:48] [Render thread/INFO] (Minecraft) [System] [CHAT] [Server: The game is sprinting]
+[11:27:58] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST flight progress: CLIMB 32.7 km to go
+[11:27:58] [Server thread/INFO] (Minecraft) System chat: Interrupted the current tick sprint
+[11:27:58] [Server thread/INFO] (Minecraft) System chat: The game is sprinting
+[11:27:58] [Render thread/INFO] (Minecraft) [System] [CHAT] [Server: Interrupted the current tick sprint]
+[11:27:58] [Render thread/INFO] (Minecraft) [System] [CHAT] [Server: The game is sprinting]
+[11:28:09] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST flight progress: CLIMB 32.1 km to go
+[11:28:09] [Server thread/INFO] (Minecraft) System chat: Interrupted the current tick sprint
+[11:28:09] [Server thread/INFO] (Minecraft) System chat: The game is sprinting
+[11:28:09] [Render thread/INFO] (Minecraft) [System] [CHAT] [Server: Interrupted the current tick sprint]
+[11:28:09] [Render thread/INFO] (Minecraft) [System] [CHAT] [Server: The game is sprinting]
+[11:28:19] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST flight progress: CLIMB 31.5 km to go
+[11:28:19] [Server thread/INFO] (Minecraft) System chat: Interrupted the current tick sprint
+[11:28:19] [Server thread/INFO] (Minecraft) System chat: The game is sprinting
+[11:28:19] [Render thread/INFO] (Minecraft) [System] [CHAT] [Server: Interrupted the current tick sprint]
+[11:28:19] [Render thread/INFO] (Minecraft) [System] [CHAT] [Server: The game is sprinting]
+[11:28:29] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST flight progress: CLIMB 30.9 km to go
+[11:28:29] [Server thread/INFO] (Minecraft) System chat: Interrupted the current tick sprint
+[11:28:29] [Server thread/INFO] (Minecraft) System chat: The game is sprinting
+[11:28:29] [Render thread/INFO] (Minecraft) [System] [CHAT] [Server: Interrupted the current tick sprint]
+[11:28:29] [Render thread/INFO] (Minecraft) [System] [CHAT] [Server: The game is sprinting]
+[11:28:34] [Render thread/INFO] (Minecraft) [System] [CHAT] ✈ We've reached our cruising altitude. Seatback map is live.
+[11:28:40] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST flight progress: CRUISE 30.3 km to go
+[11:28:40] [Server thread/INFO] (Minecraft) System chat: Interrupted the current tick sprint
+[11:28:40] [Server thread/INFO] (Minecraft) System chat: The game is sprinting
+[11:28:40] [Render thread/INFO] (Minecraft) [System] [CHAT] [Server: Interrupted the current tick sprint]
+[11:28:40] [Render thread/INFO] (Minecraft) [System] [CHAT] [Server: The game is sprinting]
+[11:28:50] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST flight progress: CRUISE 29.7 km to go
+[11:28:50] [Server thread/INFO] (Minecraft) System chat: Interrupted the current tick sprint
+[11:28:50] [Server thread/INFO] (Minecraft) System chat: The game is sprinting
+[11:28:50] [Render thread/INFO] (Minecraft) [System] [CHAT] [Server: Interrupted the current tick sprint]
+[11:28:50] [Render thread/INFO] (Minecraft) [System] [CHAT] [Server: The game is sprinting]
+[11:28:53] [Server thread/INFO] (EarthLife) EarthLife: map window 2 cells, 10444 buildings, 11384 roads, 215 stores, 8 populations
+[11:29:00] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST flight progress: CRUISE 29.1 km to go
+[11:29:00] [Server thread/INFO] (Minecraft) System chat: Interrupted the current tick sprint
+[11:29:00] [Server thread/INFO] (Minecraft) System chat: The game is sprinting
+[11:29:00] [Render thread/INFO] (Minecraft) [System] [CHAT] [Server: Interrupted the current tick sprint]
+[11:29:00] [Render thread/INFO] (Minecraft) [System] [CHAT] [Server: The game is sprinting]
+[11:29:11] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST flight progress: CRUISE 28.5 km to go
+[11:29:11] [Server thread/INFO] (Minecraft) System chat: Interrupted the current tick sprint
+[11:29:11] [Server thread/INFO] (Minecraft) System chat: The game is sprinting
+[11:29:11] [Render thread/INFO] (Minecraft) [System] [CHAT] [Server: Interrupted the current tick sprint]
+[11:29:11] [Render thread/INFO] (Minecraft) [System] [CHAT] [Server: The game is sprinting]
+[11:29:21] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST flight progress: CRUISE 27.8 km to go
+[11:29:21] [Server thread/INFO] (Minecraft) System chat: Interrupted the current tick sprint
+[11:29:21] [Server thread/INFO] (Minecraft) System chat: The game is sprinting
+[11:29:21] [Render thread/INFO] (Minecraft) [System] [CHAT] [Server: Interrupted the current tick sprint]
+[11:29:21] [Render thread/INFO] (Minecraft) [System] [CHAT] [Server: The game is sprinting]
+[11:29:23] [EarthLife-TileGen/INFO] (EarthLife) cinema placed: Regal Cinemas Eastview Mall 13 (12 auditoriums)
+[11:29:32] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST flight progress: CRUISE 27.3 km to go
+[11:29:32] [Server thread/INFO] (Minecraft) System chat: Interrupted the current tick sprint
+[11:29:32] [Server thread/INFO] (Minecraft) System chat: The game is sprinting
+[11:29:32] [Render thread/INFO] (Minecraft) [System] [CHAT] [Server: Interrupted the current tick sprint]
+[11:29:32] [Render thread/INFO] (Minecraft) [System] [CHAT] [Server: The game is sprinting]
+[11:29:32] [Render thread/INFO] (Minecraft) [System] [CHAT] ✈ We've begun our descent into Frederick Douglass Greater Rochester International Airport.
+[11:29:42] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST flight progress: DESCENT 26.7 km to go
+[11:29:42] [Server thread/INFO] (Minecraft) System chat: Interrupted the current tick sprint
+[11:29:42] [Server thread/INFO] (Minecraft) System chat: The game is sprinting
+[11:29:42] [Render thread/INFO] (Minecraft) [System] [CHAT] [Server: Interrupted the current tick sprint]
+[11:29:42] [Render thread/INFO] (Minecraft) [System] [CHAT] [Server: The game is sprinting]
+[11:30:00] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST flight progress: DESCENT 25.9 km to go
+[11:30:00] [Server thread/INFO] (Minecraft) System chat: Interrupted the current tick sprint
+[11:30:00] [Server thread/INFO] (Minecraft) System chat: The game is sprinting
+[11:30:00] [Render thread/INFO] (Minecraft) [System] [CHAT] [Server: Interrupted the current tick sprint]
+[11:30:00] [Render thread/INFO] (Minecraft) [System] [CHAT] [Server: The game is sprinting]
+[11:30:15] [Server thread/INFO] (EarthLife) EarthLife: map window 4 cells, 29001 buildings, 24492 roads, 494 stores, 8 populations
+[11:30:20] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST flight progress: DESCENT 25.1 km to go
+[11:30:20] [Server thread/INFO] (Minecraft) System chat: Interrupted the current tick sprint
+[11:30:20] [Server thread/INFO] (Minecraft) System chat: The game is sprinting
+[11:30:20] [Render thread/INFO] (Minecraft) [System] [CHAT] [Server: Interrupted the current tick sprint]
+[11:30:20] [Render thread/INFO] (Minecraft) [System] [CHAT] [Server: The game is sprinting]
+[11:30:40] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST flight progress: DESCENT 24.3 km to go
+[11:30:40] [Server thread/INFO] (Minecraft) System chat: Interrupted the current tick sprint
+[11:30:40] [Server thread/INFO] (Minecraft) System chat: The game is sprinting
+[11:30:41] [Render thread/INFO] (Minecraft) [System] [CHAT] [Server: Interrupted the current tick sprint]
+[11:30:41] [Render thread/INFO] (Minecraft) [System] [CHAT] [Server: The game is sprinting]
+[11:30:55] [Server thread/INFO] (EarthLife) EarthLife: map window 2 cells, 15354 buildings, 19867 roads, 454 stores, 8 populations
+[11:31:01] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST flight progress: DESCENT 23.4 km to go
+[11:31:01] [Server thread/INFO] (Minecraft) System chat: Interrupted the current tick sprint
+[11:31:01] [Server thread/INFO] (Minecraft) System chat: The game is sprinting
+[11:31:01] [Render thread/INFO] (Minecraft) [System] [CHAT] [Server: Interrupted the current tick sprint]
+[11:31:01] [Render thread/INFO] (Minecraft) [System] [CHAT] [Server: The game is sprinting]
+[11:31:21] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST flight progress: DESCENT 22.5 km to go
+[11:31:21] [Server thread/INFO] (Minecraft) System chat: Interrupted the current tick sprint
+[11:31:21] [Server thread/INFO] (Minecraft) System chat: The game is sprinting
+[11:31:21] [Render thread/INFO] (Minecraft) [System] [CHAT] [Server: Interrupted the current tick sprint]
+[11:31:21] [Render thread/INFO] (Minecraft) [System] [CHAT] [Server: The game is sprinting]
+[11:31:41] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST flight progress: DESCENT 21.7 km to go
+[11:31:41] [Server thread/INFO] (Minecraft) System chat: Interrupted the current tick sprint
+[11:31:41] [Server thread/INFO] (Minecraft) System chat: The game is sprinting
+[11:31:41] [Render thread/INFO] (Minecraft) [System] [CHAT] [Server: Interrupted the current tick sprint]
+[11:31:41] [Render thread/INFO] (Minecraft) [System] [CHAT] [Server: The game is sprinting]
+[11:32:02] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST flight progress: DESCENT 21.0 km to go
+[11:32:02] [Server thread/INFO] (Minecraft) System chat: Interrupted the current tick sprint
+[11:32:02] [Server thread/INFO] (Minecraft) System chat: The game is sprinting
+[11:32:02] [Render thread/INFO] (Minecraft) [System] [CHAT] [Server: Interrupted the current tick sprint]
+[11:32:02] [Render thread/INFO] (Minecraft) [System] [CHAT] [Server: The game is sprinting]
+[11:32:22] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST flight progress: DESCENT 20.2 km to go
+[11:32:22] [Server thread/INFO] (Minecraft) System chat: Interrupted the current tick sprint
+[11:32:22] [Server thread/INFO] (Minecraft) System chat: The game is sprinting
+[11:32:22] [Render thread/INFO] (Minecraft) [System] [CHAT] [Server: Interrupted the current tick sprint]
+[11:32:22] [Render thread/INFO] (Minecraft) [System] [CHAT] [Server: The game is sprinting]
+[11:32:32] [EarthLife-TileGen/INFO] (EarthLife) cinema placed: Pittsford Cinemas (9 auditoriums)
+[11:32:42] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST flight progress: DESCENT 19.4 km to go
+[11:32:42] [Server thread/INFO] (Minecraft) System chat: Interrupted the current tick sprint
+[11:32:42] [Server thread/INFO] (Minecraft) System chat: The game is sprinting
+[11:32:42] [Render thread/INFO] (Minecraft) [System] [CHAT] [Server: Interrupted the current tick sprint]
+[11:32:42] [Render thread/INFO] (Minecraft) [System] [CHAT] [Server: The game is sprinting]
+[11:33:03] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST flight progress: DESCENT 18.6 km to go
+[11:33:03] [Server thread/INFO] (Minecraft) System chat: Interrupted the current tick sprint
+[11:33:03] [Server thread/INFO] (Minecraft) System chat: The game is sprinting
+[11:33:03] [Render thread/INFO] (Minecraft) [System] [CHAT] [Server: Interrupted the current tick sprint]
+[11:33:03] [Render thread/INFO] (Minecraft) [System] [CHAT] [Server: The game is sprinting]
+[11:33:18] [Server thread/INFO] (EarthLife) EarthLife: map window 4 cells, 35159 buildings, 63148 roads, 1075 stores, 11 populations
+[11:33:23] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST flight progress: DESCENT 17.8 km to go
+[11:33:23] [Server thread/INFO] (Minecraft) System chat: Interrupted the current tick sprint
+[11:33:23] [Server thread/INFO] (Minecraft) System chat: The game is sprinting
+[11:33:23] [Render thread/INFO] (Minecraft) [System] [CHAT] [Server: Interrupted the current tick sprint]
+[11:33:23] [Render thread/INFO] (Minecraft) [System] [CHAT] [Server: The game is sprinting]
+[11:33:44] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST flight progress: DESCENT 17.1 km to go
+[11:33:44] [Server thread/INFO] (Minecraft) System chat: Interrupted the current tick sprint
+[11:33:44] [Server thread/INFO] (Minecraft) System chat: The game is sprinting
+[11:33:44] [Render thread/INFO] (Minecraft) [System] [CHAT] [Server: Interrupted the current tick sprint]
+[11:33:44] [Render thread/INFO] (Minecraft) [System] [CHAT] [Server: The game is sprinting]
+[11:34:04] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST flight progress: DESCENT 16.3 km to go
+[11:34:04] [Server thread/INFO] (Minecraft) System chat: Interrupted the current tick sprint
+[11:34:04] [Server thread/INFO] (Minecraft) System chat: The game is sprinting
+[11:34:04] [Render thread/INFO] (Minecraft) [System] [CHAT] [Server: Interrupted the current tick sprint]
+[11:34:04] [Render thread/INFO] (Minecraft) [System] [CHAT] [Server: The game is sprinting]
+[11:34:24] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST flight progress: DESCENT 15.6 km to go
+[11:34:24] [Server thread/INFO] (Minecraft) System chat: Interrupted the current tick sprint
+[11:34:24] [Server thread/INFO] (Minecraft) System chat: The game is sprinting
+[11:34:24] [Render thread/INFO] (Minecraft) [System] [CHAT] [Server: Interrupted the current tick sprint]
+[11:34:24] [Render thread/INFO] (Minecraft) [System] [CHAT] [Server: The game is sprinting]
+[11:34:44] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST flight progress: DESCENT 14.8 km to go
+[11:34:44] [Server thread/INFO] (Minecraft) System chat: Interrupted the current tick sprint
+[11:34:44] [Server thread/INFO] (Minecraft) System chat: The game is sprinting
+[11:34:45] [Render thread/INFO] (Minecraft) [System] [CHAT] [Server: Interrupted the current tick sprint]
+[11:34:45] [Render thread/INFO] (Minecraft) [System] [CHAT] [Server: The game is sprinting]
+[11:35:05] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST flight progress: DESCENT 14.1 km to go
+[11:35:05] [Server thread/INFO] (Minecraft) System chat: Interrupted the current tick sprint
+[11:35:05] [Server thread/INFO] (Minecraft) System chat: The game is sprinting
+[11:35:05] [Render thread/INFO] (Minecraft) [System] [CHAT] [Server: Interrupted the current tick sprint]
+[11:35:05] [Render thread/INFO] (Minecraft) [System] [CHAT] [Server: The game is sprinting]
+[11:35:25] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST flight progress: DESCENT 13.3 km to go
+[11:35:25] [Server thread/INFO] (Minecraft) System chat: Interrupted the current tick sprint
+[11:35:25] [Server thread/INFO] (Minecraft) System chat: The game is sprinting
+[11:35:25] [Render thread/INFO] (Minecraft) [System] [CHAT] [Server: Interrupted the current tick sprint]
+[11:35:25] [Render thread/INFO] (Minecraft) [System] [CHAT] [Server: The game is sprinting]
+[11:35:39] [Server thread/INFO] (EarthLife) EarthLife: map window 2 cells, 19805 buildings, 43281 roads, 621 stores, 11 populations
+[11:35:45] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST flight progress: DESCENT 12.6 km to go
+[11:35:45] [Server thread/INFO] (Minecraft) System chat: Interrupted the current tick sprint
+[11:35:45] [Server thread/INFO] (Minecraft) System chat: The game is sprinting
+[11:35:45] [Render thread/INFO] (Minecraft) [System] [CHAT] [Server: Interrupted the current tick sprint]
+[11:35:45] [Render thread/INFO] (Minecraft) [System] [CHAT] [Server: The game is sprinting]
+[11:36:05] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST flight progress: DESCENT 11.9 km to go
+[11:36:05] [Server thread/INFO] (Minecraft) System chat: Interrupted the current tick sprint
+[11:36:05] [Server thread/INFO] (Minecraft) System chat: The game is sprinting
+[11:36:05] [Render thread/INFO] (Minecraft) [System] [CHAT] [Server: Interrupted the current tick sprint]
+[11:36:05] [Render thread/INFO] (Minecraft) [System] [CHAT] [Server: The game is sprinting]
+[11:36:25] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST flight progress: DESCENT 11.1 km to go
+[11:36:25] [Server thread/INFO] (Minecraft) System chat: Interrupted the current tick sprint
+[11:36:25] [Server thread/INFO] (Minecraft) System chat: The game is sprinting
+[11:36:25] [Render thread/INFO] (Minecraft) [System] [CHAT] [Server: Interrupted the current tick sprint]
+[11:36:25] [Render thread/INFO] (Minecraft) [System] [CHAT] [Server: The game is sprinting]
+[11:36:45] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST flight progress: DESCENT 10.4 km to go
+[11:36:45] [Server thread/INFO] (Minecraft) System chat: Interrupted the current tick sprint
+[11:36:45] [Server thread/INFO] (Minecraft) System chat: The game is sprinting
+[11:36:45] [Render thread/INFO] (Minecraft) [System] [CHAT] [Server: Interrupted the current tick sprint]
+[11:36:45] [Render thread/INFO] (Minecraft) [System] [CHAT] [Server: The game is sprinting]
+[11:37:05] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST flight progress: DESCENT 9.7 km to go
+[11:37:05] [Server thread/INFO] (Minecraft) System chat: Interrupted the current tick sprint
+[11:37:05] [Server thread/INFO] (Minecraft) System chat: The game is sprinting
+[11:37:06] [Render thread/INFO] (Minecraft) [System] [CHAT] [Server: Interrupted the current tick sprint]
+[11:37:06] [Render thread/INFO] (Minecraft) [System] [CHAT] [Server: The game is sprinting]
+[11:37:25] [EarthLife-TileGen/INFO] (EarthLife) cinema placed: Cinemark Tinseltown USA and IMAX (16 auditoriums)
+[11:37:25] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST flight progress: DESCENT 9.0 km to go
+[11:37:25] [Server thread/INFO] (Minecraft) System chat: Interrupted the current tick sprint
+[11:37:25] [Server thread/INFO] (Minecraft) System chat: The game is sprinting
+[11:37:25] [EarthLife-TileGen/INFO] (EarthLife) cinema placed: Apple Cinemas Greece Ridge (10 auditoriums)
+[11:37:26] [Render thread/INFO] (Minecraft) [System] [CHAT] [Server: Interrupted the current tick sprint]
+[11:37:26] [Render thread/INFO] (Minecraft) [System] [CHAT] [Server: The game is sprinting]
+[11:37:46] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST flight progress: DESCENT 8.3 km to go
+[11:37:46] [Server thread/INFO] (Minecraft) System chat: Interrupted the current tick sprint
+[11:37:46] [Server thread/INFO] (Minecraft) System chat: The game is sprinting
+[11:37:46] [Render thread/INFO] (Minecraft) [System] [CHAT] [Server: Interrupted the current tick sprint]
+[11:37:46] [Render thread/INFO] (Minecraft) [System] [CHAT] [Server: The game is sprinting]
+[11:38:00] [Server thread/INFO] (EarthLife) EarthLife: map window 4 cells, 26781 buildings, 71983 roads, 965 stores, 12 populations
+[11:38:06] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST flight progress: DESCENT 7.6 km to go
+[11:38:06] [Server thread/INFO] (Minecraft) System chat: Interrupted the current tick sprint
+[11:38:06] [Server thread/INFO] (Minecraft) System chat: The game is sprinting
+[11:38:06] [Render thread/INFO] (Minecraft) [System] [CHAT] [Server: Interrupted the current tick sprint]
+[11:38:06] [Render thread/INFO] (Minecraft) [System] [CHAT] [Server: The game is sprinting]
+[11:38:26] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST flight progress: DESCENT 7.0 km to go
+[11:38:26] [Server thread/INFO] (Minecraft) System chat: Interrupted the current tick sprint
+[11:38:26] [Server thread/INFO] (Minecraft) System chat: The game is sprinting
+[11:38:26] [Render thread/INFO] (Minecraft) [System] [CHAT] [Server: Interrupted the current tick sprint]
+[11:38:26] [Render thread/INFO] (Minecraft) [System] [CHAT] [Server: The game is sprinting]
+[11:38:46] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST flight progress: DESCENT 6.3 km to go
+[11:38:46] [Server thread/INFO] (Minecraft) System chat: Interrupted the current tick sprint
+[11:38:46] [Server thread/INFO] (Minecraft) System chat: The game is sprinting
+[11:38:46] [Render thread/INFO] (Minecraft) [System] [CHAT] [Server: Interrupted the current tick sprint]
+[11:38:46] [Render thread/INFO] (Minecraft) [System] [CHAT] [Server: The game is sprinting]
+[11:39:06] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST flight progress: DESCENT 5.7 km to go
+[11:39:06] [Server thread/INFO] (Minecraft) System chat: Interrupted the current tick sprint
+[11:39:06] [Server thread/INFO] (Minecraft) System chat: The game is sprinting
+[11:39:06] [Render thread/INFO] (Minecraft) [System] [CHAT] [Server: Interrupted the current tick sprint]
+[11:39:06] [Render thread/INFO] (Minecraft) [System] [CHAT] [Server: The game is sprinting]
+[11:39:26] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST flight progress: DESCENT 5.1 km to go
+[11:39:26] [Server thread/INFO] (Minecraft) System chat: Interrupted the current tick sprint
+[11:39:26] [Server thread/INFO] (Minecraft) System chat: The game is sprinting
+[11:39:27] [Render thread/INFO] (Minecraft) [System] [CHAT] [Server: Interrupted the current tick sprint]
+[11:39:27] [Render thread/INFO] (Minecraft) [System] [CHAT] [Server: The game is sprinting]
+[11:39:46] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST flight progress: DESCENT 4.4 km to go
+[11:39:46] [Server thread/INFO] (Minecraft) System chat: Interrupted the current tick sprint
+[11:39:46] [Server thread/INFO] (Minecraft) System chat: The game is sprinting
+[11:39:47] [Render thread/INFO] (Minecraft) [System] [CHAT] [Server: Interrupted the current tick sprint]
+[11:39:47] [Render thread/INFO] (Minecraft) [System] [CHAT] [Server: The game is sprinting]
+[11:40:07] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST flight progress: DESCENT 3.8 km to go
+[11:40:07] [Server thread/INFO] (Minecraft) System chat: Interrupted the current tick sprint
+[11:40:07] [Server thread/INFO] (Minecraft) System chat: The game is sprinting
+[11:40:07] [Render thread/INFO] (Minecraft) [System] [CHAT] [Server: Interrupted the current tick sprint]
+[11:40:07] [Render thread/INFO] (Minecraft) [System] [CHAT] [Server: The game is sprinting]
+[11:40:27] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST flight progress: DESCENT 3.2 km to go
+[11:40:27] [Server thread/INFO] (Minecraft) System chat: Interrupted the current tick sprint
+[11:40:27] [Server thread/INFO] (Minecraft) System chat: The game is sprinting
+[11:40:27] [Render thread/INFO] (Minecraft) [System] [CHAT] [Server: Interrupted the current tick sprint]
+[11:40:27] [Render thread/INFO] (Minecraft) [System] [CHAT] [Server: The game is sprinting]
+[11:40:47] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST flight progress: DESCENT 2.6 km to go
+[11:40:47] [Server thread/INFO] (Minecraft) System chat: Interrupted the current tick sprint
+[11:40:47] [Server thread/INFO] (Minecraft) System chat: The game is sprinting
+[11:40:47] [Render thread/INFO] (Minecraft) [System] [CHAT] [Server: Interrupted the current tick sprint]
+[11:40:47] [Render thread/INFO] (Minecraft) [System] [CHAT] [Server: The game is sprinting]
+[11:40:51] [Server thread/INFO] (EarthLife) EarthLife: map window 2 cells, 6976 buildings, 28702 roads, 344 stores, 12 populations
+[11:40:55] [Render thread/INFO] (Minecraft) [System] [CHAT] ✈ Welcome to Frederick Douglass Greater Rochester International Airport.
+[11:41:07] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST flight progress: LANDING_ROLL 2.1 km to go
+[11:41:07] [Server thread/INFO] (Minecraft) System chat: Interrupted the current tick sprint
+[11:41:07] [Server thread/INFO] (Minecraft) System chat: The game is sprinting
+[11:41:07] [Render thread/INFO] (Minecraft) [System] [CHAT] [Server: Interrupted the current tick sprint]
+[11:41:07] [Render thread/INFO] (Minecraft) [System] [CHAT] [Server: The game is sprinting]
+[11:41:27] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST flight progress: LANDING_ROLL 1.7 km to go
+[11:41:27] [Server thread/INFO] (Minecraft) System chat: Interrupted the current tick sprint
+[11:41:27] [Server thread/INFO] (Minecraft) System chat: The game is sprinting
+[11:41:27] [Render thread/INFO] (Minecraft) [System] [CHAT] [Server: Interrupted the current tick sprint]
+[11:41:27] [Render thread/INFO] (Minecraft) [System] [CHAT] [Server: The game is sprinting]
+[11:41:47] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST flight progress: TAXI_IN 1.6 km to go
+[11:41:47] [Server thread/INFO] (Minecraft) System chat: Sprint completed with 9 ticks per second, or 100.02 ms per tick
+[11:41:47] [Server thread/INFO] (Minecraft) System chat: Interrupted the current tick sprint
+[11:41:47] [Render thread/INFO] (Minecraft) [System] [CHAT] [Server: Sprint completed with 9 ticks per second, or 100.02 ms per tick]
+[11:41:47] [Render thread/INFO] (Minecraft) [System] [CHAT] [Server: Interrupted the current tick sprint]
+[11:41:49] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST [Test 11 - Aviation] aircraft moves: PASSED - position/phase at departure 5290,-1365 BOARDING -> after 400 ticks 5388,-1317 TAXI_OUT
+[11:41:49] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST [Test 11 - Aviation] landing: PASSED - after tick sprint: TAXI_IN; player 0.6 km from KROC terminal
+[11:41:49] [Render thread/INFO] (Minecraft) [System] [CHAT] Waypoint "ReloadCheck" at -39400, 11552. Route: /earthlife map route waypoint ReloadCheck
+[11:41:50] [Server thread/INFO] (Minecraft) Player0 lost connection: Disconnected
+[11:41:50] [Server thread/INFO] (Minecraft) System chat: Player0 left the game
+[11:41:50] [Server thread/INFO] (Minecraft) Stopping singleplayer server as player logged out
+[11:41:50] [Server thread/INFO] (Minecraft) Stopping server
+[11:41:50] [Server thread/INFO] (Minecraft) Saving players
+[11:41:50] [Server thread/INFO] (Minecraft) Saving worlds
+[11:41:52] [Server thread/INFO] (Minecraft) Saving chunks for level 'ServerLevel[EarthLife Test Williamson]'/minecraft:overworld
+[11:41:53] [Server thread/INFO] (Minecraft) Saving chunks for level 'ServerLevel[EarthLife Test Williamson]'/minecraft:the_end
+[11:41:53] [Server thread/INFO] (Minecraft) Saving chunks for level 'ServerLevel[EarthLife Test Williamson]'/minecraft:the_nether
+[11:41:53] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: null screen: net.minecraft.client.gui.screens.GenericMessageScreen@78b6be56
+[11:41:54] [Worker-Main-1/INFO] (Minecraft) Loaded 1866 advancements
+[11:41:54] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: null screen: net.minecraft.client.gui.screens.BackupConfirmScreen@30f84a6c
+[11:41:55] [Render thread/INFO] (BiomeModificationImpl) Applied 0 biome modifications to 0 of 67 new biomes in 506.1 μs
+[11:41:55] [Server thread/INFO] (EarthLife) EarthLife: Northeast map around Williamson ready in 15 ms (map data: p_86_-157.zip ready)
+[11:41:55] [Server thread/INFO] (EarthLife) EarthLife cinemas: 612 listed in NY/PA/NJ/VT; each is built when its map area loads
+[11:41:55] [Server thread/INFO] (EarthLife) EarthLife: Earth world detected (Williamson, New York), services started
+[11:41:55] [Server thread/INFO] (Minecraft) Starting integrated minecraft server version 26.3
+[11:41:55] [Server thread/INFO] (Minecraft) Generating keypair
+[11:41:55] [Server thread/INFO] (Minecraft) Loading 0 persistent chunks...
+[11:41:56] [Server thread/INFO] (Minecraft) Saving chunks for level 'ServerLevel[EarthLife Test Williamson]'/minecraft:overworld
+[11:41:56] [Server thread/INFO] (Minecraft) Saving chunks for level 'ServerLevel[EarthLife Test Williamson]'/minecraft:the_end
+[11:41:56] [Server thread/INFO] (Minecraft) Saving chunks for level 'ServerLevel[EarthLife Test Williamson]'/minecraft:the_nether
+[11:41:56] [Server thread/INFO] (EarthLife) EarthLife ready: 4 airports, 1 bookings restored from ledger
+[11:41:56] [Server thread/INFO] (EarthLife) EarthLife: 21865 towns, 0 residents, 0 buildings (0 estimated), 4 airports with terminals
+[11:41:56] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: null screen: net.minecraft.client.gui.screens.LevelLoadingScreen@12a8907
+[11:41:56] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: null screen: net.minecraft.client.gui.screens.LevelLoadingScreen@12a8907
+[11:41:56] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: null screen: net.minecraft.client.gui.screens.LevelLoadingScreen@12a8907
+[11:41:56] [Server thread/INFO] (Minecraft) Loading 49 chunks for player spawn...
+[11:41:56] [Server thread/INFO] (Minecraft) Preparing spawn area: 16%
+[11:41:56] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: null screen: net.minecraft.client.gui.screens.LevelLoadingScreen@12a8907
+[11:41:56] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: null screen: net.minecraft.client.gui.screens.LevelLoadingScreen@12a8907
+[11:41:56] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: null screen: net.minecraft.client.gui.screens.LevelLoadingScreen@12a8907
+[11:41:56] [Server thread/INFO] (Minecraft) Preparing spawn area: 16%
+[11:41:56] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: null screen: net.minecraft.client.gui.screens.LevelLoadingScreen@12a8907
+[11:41:56] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: null screen: net.minecraft.client.gui.screens.LevelLoadingScreen@12a8907
+[11:41:56] [Server thread/INFO] (Minecraft) Time elapsed: 832 ms
+[11:41:56] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: null screen: net.minecraft.client.gui.screens.LevelLoadingScreen@12a8907
+[11:41:57] [Server thread/INFO] (Minecraft) Player0[local:E:f3ceadf4] logged in with entity id 6937 at (-39397.84001110667, 161.0, 11550.851093402283)
+[11:41:57] [Server thread/INFO] (Minecraft) System chat: Player0 joined the game
+[11:41:57] [Server thread/INFO] (Minecraft) Changing view distance to 5, from 10
+[11:41:57] [Server thread/INFO] (Minecraft) Changing simulation distance to 12, from 0
+[11:41:57] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: ClientLevel screen: net.minecraft.client.gui.screens.LevelLoadingScreen@12a8907
+[11:41:57] [Render thread/WARN] (Minecraft) Received passengers for unknown entity
+[11:41:57] [Render thread/WARN] (Minecraft) Received passengers for unknown entity
+[11:41:57] [Render thread/INFO] (Minecraft) Loaded 36 advancements
+[11:41:57] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: ClientLevel screen: net.minecraft.client.gui.screens.LevelLoadingScreen@12a8907
+[11:41:57] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: ClientLevel screen: net.minecraft.client.gui.screens.LevelLoadingScreen@12a8907
+[11:41:57] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: ClientLevel screen: net.minecraft.client.gui.screens.LevelLoadingScreen@12a8907
+[11:41:57] [EarthLife-TileGen/INFO] (EarthLife) cinema placed: Rochester Movies 10 (6 auditoriums)
+[11:41:57] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: ClientLevel screen: null
+[11:41:57] [EarthLife-TileGen/INFO] (EarthLife) cinema placed: Cinemark Tinseltown USA and IMAX (16 auditoriums)
+[11:41:58] [EarthLife-TileGen/INFO] (EarthLife) cinema placed: Apple Cinemas Greece Ridge (10 auditoriums)
+[11:41:58] [ForkJoinPool.commonPool-worker-3/INFO] (EarthLife) EarthLife map (Northeast 1:1): 21865 places, 399815 major roads; streets and buildings load per area
+[11:41:59] [Server thread/WARN] (Minecraft) Can't keep up! Is the server overloaded? Running 2006ms or 40 ticks behind
+[11:42:01] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST [Test 12 - Save and reload] data consistent after reload: PASSED - services=true, waypoint kept=true, balance=50707 LC, job kept=true, vehicles=[CAR:red], scenario=NEW_LIFE, objectives done=[town_centre, business, open_map, talk, get_job, work_task, paid, event, purchase], player-placed gold block kept=true
+[11:42:02] [Server thread/INFO] (Minecraft) Player0 lost connection: Disconnected
+[11:42:02] [Server thread/INFO] (Minecraft) System chat: Player0 left the game
+[11:42:02] [Server thread/INFO] (Minecraft) Stopping singleplayer server as player logged out
+[11:42:02] [Server thread/INFO] (Minecraft) Stopping server
+[11:42:02] [Server thread/INFO] (Minecraft) Saving players
+[11:42:02] [Server thread/INFO] (Minecraft) Saving worlds
+[11:42:02] [Server thread/INFO] (Minecraft) Saving chunks for level 'ServerLevel[EarthLife Test Williamson]'/minecraft:overworld
+[11:42:02] [Server thread/INFO] (Minecraft) Saving chunks for level 'ServerLevel[EarthLife Test Williamson]'/minecraft:the_end
+[11:42:02] [Server thread/INFO] (Minecraft) Saving chunks for level 'ServerLevel[EarthLife Test Williamson]'/minecraft:the_nether
+[11:42:03] [Worker-Main-1/INFO] (Minecraft) Loaded 1866 advancements
+[11:42:03] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: null screen: net.minecraft.client.gui.screens.GenericMessageScreen@2a06a2ce
+[11:42:03] [Render thread/INFO] (BiomeModificationImpl) Applied 0 biome modifications to 0 of 67 new biomes in 163.4 μs
+[11:42:03] [Server thread/INFO] (Minecraft) Starting integrated minecraft server version 26.3
+[11:42:03] [Server thread/INFO] (Minecraft) Generating keypair
+[11:42:03] [Server thread/INFO] (Minecraft) Selecting global world spawn...
+[11:42:06] [Server thread/INFO] (Minecraft) Loading 0 persistent chunks...
+[11:42:06] [Server thread/INFO] (Minecraft) Preparing spawn area: 16%
+[11:42:06] [Server thread/INFO] (Minecraft) Saving chunks for level 'ServerLevel[Plain Default World]'/minecraft:overworld
+[11:42:06] [Server thread/INFO] (Minecraft) Saving chunks for level 'ServerLevel[Plain Default World]'/minecraft:the_end
+[11:42:06] [Server thread/INFO] (Minecraft) Saving chunks for level 'ServerLevel[Plain Default World]'/minecraft:the_nether
+[11:42:06] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: null screen: net.minecraft.client.gui.screens.LevelLoadingScreen@52a616d6
+[11:42:07] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: null screen: net.minecraft.client.gui.screens.LevelLoadingScreen@52a616d6
+[11:42:07] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: null screen: net.minecraft.client.gui.screens.LevelLoadingScreen@52a616d6
+[11:42:07] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: null screen: net.minecraft.client.gui.screens.LevelLoadingScreen@52a616d6
+[11:42:07] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: null screen: net.minecraft.client.gui.screens.LevelLoadingScreen@52a616d6
+[11:42:07] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: null screen: net.minecraft.client.gui.screens.LevelLoadingScreen@52a616d6
+[11:42:07] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: null screen: net.minecraft.client.gui.screens.LevelLoadingScreen@52a616d6
+[11:42:07] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: null screen: net.minecraft.client.gui.screens.LevelLoadingScreen@52a616d6
+[11:42:07] [Server thread/INFO] (Minecraft) Loading 47 chunks for player spawn...
+[11:42:07] [Server thread/INFO] (Minecraft) Preparing spawn area: 16%
+[11:42:07] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: null screen: net.minecraft.client.gui.screens.LevelLoadingScreen@52a616d6
+[11:42:07] [Server thread/INFO] (Minecraft) Preparing spawn area: 16%
+[11:42:07] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: null screen: net.minecraft.client.gui.screens.LevelLoadingScreen@52a616d6
+[11:42:07] [Server thread/INFO] (Minecraft) Preparing spawn area: 16%
+[11:42:08] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: null screen: net.minecraft.client.gui.screens.LevelLoadingScreen@52a616d6
+[11:42:08] [Server thread/INFO] (Minecraft) Preparing spawn area: 16%
+[11:42:08] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: null screen: net.minecraft.client.gui.screens.LevelLoadingScreen@52a616d6
+[11:42:08] [Server thread/INFO] (Minecraft) Preparing spawn area: 16%
+[11:42:08] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: null screen: net.minecraft.client.gui.screens.LevelLoadingScreen@52a616d6
+[11:42:08] [Server thread/INFO] (Minecraft) Preparing spawn area: 16%
+[11:42:08] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: null screen: net.minecraft.client.gui.screens.LevelLoadingScreen@52a616d6
+[11:42:08] [Server thread/INFO] (Minecraft) Preparing spawn area: 16%
+[11:42:08] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: null screen: net.minecraft.client.gui.screens.LevelLoadingScreen@52a616d6
+[11:42:08] [Server thread/INFO] (Minecraft) Preparing spawn area: 16%
+[11:42:08] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: null screen: net.minecraft.client.gui.screens.LevelLoadingScreen@52a616d6
+[11:42:08] [Server thread/INFO] (Minecraft) Preparing spawn area: 16%
+[11:42:09] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: null screen: net.minecraft.client.gui.screens.LevelLoadingScreen@52a616d6
+[11:42:09] [Server thread/INFO] (Minecraft) Preparing spawn area: 24%
+[11:42:09] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: null screen: net.minecraft.client.gui.screens.LevelLoadingScreen@52a616d6
+[11:42:09] [Server thread/INFO] (Minecraft) Preparing spawn area: 29%
+[11:42:09] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: null screen: net.minecraft.client.gui.screens.LevelLoadingScreen@52a616d6
+[11:42:09] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: null screen: net.minecraft.client.gui.screens.LevelLoadingScreen@52a616d6
+[11:42:09] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: null screen: net.minecraft.client.gui.screens.LevelLoadingScreen@52a616d6
+[11:42:09] [Server thread/INFO] (Minecraft) Preparing spawn area: 29%
+[11:42:09] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: null screen: net.minecraft.client.gui.screens.LevelLoadingScreen@52a616d6
+[11:42:09] [Server thread/WARN] (Minecraft) Can't keep up! Is the server overloaded? Running 2003ms or 40 ticks behind
+[11:42:10] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: null screen: net.minecraft.client.gui.screens.LevelLoadingScreen@52a616d6
+[11:42:10] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: null screen: net.minecraft.client.gui.screens.LevelLoadingScreen@52a616d6
+[11:42:10] [Server thread/INFO] (Minecraft) Preparing spawn area: 41%
+[11:42:10] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: null screen: net.minecraft.client.gui.screens.LevelLoadingScreen@52a616d6
+[11:42:10] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: null screen: net.minecraft.client.gui.screens.LevelLoadingScreen@52a616d6
+[11:42:10] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: null screen: net.minecraft.client.gui.screens.LevelLoadingScreen@52a616d6
+[11:42:10] [Server thread/INFO] (Minecraft) Preparing spawn area: 57%
+[11:42:11] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: null screen: net.minecraft.client.gui.screens.LevelLoadingScreen@52a616d6
+[11:42:11] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: null screen: net.minecraft.client.gui.screens.LevelLoadingScreen@52a616d6
+[11:42:11] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: null screen: net.minecraft.client.gui.screens.LevelLoadingScreen@52a616d6
+[11:42:11] [Server thread/INFO] (Minecraft) Time elapsed: 7493 ms
+[11:42:11] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: null screen: net.minecraft.client.gui.screens.LevelLoadingScreen@52a616d6
+[11:42:11] [Server thread/INFO] (Minecraft) Player0[local:E:59b37c0a] logged in with entity id 6967 at (101.5, 69.0, 142.5)
+[11:42:11] [Server thread/INFO] (Minecraft) System chat: Player0 joined the game
+[11:42:11] [Server thread/INFO] (Minecraft) Changing view distance to 5, from 10
+[11:42:11] [Server thread/INFO] (Minecraft) Changing simulation distance to 12, from 0
+[11:42:11] [Render thread/INFO] (Minecraft) Loaded 2 advancements
+[11:42:11] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: ClientLevel screen: net.minecraft.client.gui.screens.LevelLoadingScreen@52a616d6
+[11:42:11] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: ClientLevel screen: net.minecraft.client.gui.screens.LevelLoadingScreen@52a616d6
+[11:42:11] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: ClientLevel screen: net.minecraft.client.gui.screens.LevelLoadingScreen@52a616d6
+[11:42:11] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: ClientLevel screen: net.minecraft.client.gui.screens.LevelLoadingScreen@52a616d6
+[11:42:12] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: ClientLevel screen: net.minecraft.client.gui.screens.LevelLoadingScreen@52a616d6
+[11:42:12] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: ClientLevel screen: net.minecraft.client.gui.screens.LevelLoadingScreen@52a616d6
+[11:42:12] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: ClientLevel screen: net.minecraft.client.gui.screens.LevelLoadingScreen@52a616d6
+[11:42:12] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: ClientLevel screen: net.minecraft.client.gui.screens.LevelLoadingScreen@52a616d6
+[11:42:12] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: ClientLevel screen: null
+[11:42:12] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST [Test 13 - World separation] default world unaffected: PASSED - generator=NoiseBasedChunkGenerator, EarthLife services running=false, earthlife folder in save=false, height=384
+[11:42:13] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST [Test 13 - World separation] EarthLife screens stay off: PASSED - pressed M in a Default world: LifeMap opened=false (expected false), HUD hidden
+[11:42:13] [Server thread/INFO] (Minecraft) Player0 lost connection: Disconnected
+[11:42:13] [Server thread/INFO] (Minecraft) System chat: Player0 left the game
+[11:42:13] [Server thread/INFO] (Minecraft) Stopping singleplayer server as player logged out
+[11:42:14] [Server thread/INFO] (Minecraft) Stopping server
+[11:42:14] [Server thread/INFO] (Minecraft) Saving players
+[11:42:14] [Server thread/INFO] (Minecraft) Saving worlds
+[11:42:14] [Server thread/INFO] (Minecraft) Saving chunks for level 'ServerLevel[Plain Default World]'/minecraft:overworld
+[11:42:14] [Server thread/INFO] (Minecraft) Saving chunks for level 'ServerLevel[Plain Default World]'/minecraft:the_end
+[11:42:14] [Server thread/INFO] (Minecraft) Saving chunks for level 'ServerLevel[Plain Default World]'/minecraft:the_nether
+[11:42:15] [Worker-Main-1/INFO] (Minecraft) Loaded 1866 advancements
+[11:42:15] [Thread-2/INFO] (Minecraft) Environment: Environment[discoveryUrl=https://discovery.minecraftservices.com/minecraft/client, name=PROD]
+[11:42:16] [Worker-Main-2/INFO] (Minecraft) Loaded 1866 advancements
+[11:42:16] [Thread-2/INFO] (BiomeModificationImpl) Applied 0 biome modifications to 0 of 67 new biomes in 189.9 μs
+[11:42:16] [Server thread/INFO] (EarthLife) EarthLife: Northeast map around Williamson ready in 10 ms (map data: p_86_-157.zip ready)
+[11:42:16] [Server thread/INFO] (EarthLife) EarthLife cinemas: 612 listed in NY/PA/NJ/VT; each is built when its map area loads
+[11:42:16] [Server thread/INFO] (EarthLife) EarthLife: Earth world detected (Williamson, New York), services started
+[11:42:16] [Server thread/INFO] (Minecraft) Starting minecraft server version 26.3
+[11:42:16] [Server thread/INFO] (Minecraft) Loading properties
+[11:42:16] [Server thread/INFO] (Minecraft) Default game type: SURVIVAL
+[11:42:16] [Server thread/INFO] (Minecraft) Generating keypair
+[11:42:16] [Server thread/INFO] (Minecraft) Starting Minecraft server on *:25565
+[11:42:16] [Server thread/WARN] (Minecraft) **** SERVER IS RUNNING IN OFFLINE/INSECURE MODE!
+[11:42:16] [Server thread/WARN] (Minecraft) The server will make no attempt to authenticate usernames. Beware.
+[11:42:16] [Server thread/WARN] (Minecraft) While this makes the game possible to play without internet access, it also opens up the ability for hackers to connect with any username they choose.
+[11:42:16] [Server thread/WARN] (Minecraft) To change this, set "online-mode" to "true" in the server.properties file.
+[11:42:16] [Server thread/INFO] (Minecraft) Preparing level "earthlife-dedicated"
+[11:42:16] [Server thread/INFO] (Minecraft) Selecting global world spawn...
+[11:42:17] [Server thread/INFO] (Minecraft) Loading 0 persistent chunks...
+[11:42:17] [Server thread/INFO] (Minecraft) Preparing spawn area: 100%
+[11:42:17] [Server thread/INFO] (Minecraft) Time elapsed: 513 ms
+[11:42:17] [Server thread/INFO] (Minecraft) Done (0.515s)! For help, type "help"
+[11:42:17] [Server thread/INFO] (Minecraft) Saving chunks for level 'ServerLevel[New World]'/minecraft:overworld
+[11:42:17] [Server thread/INFO] (Minecraft) Saving chunks for level 'ServerLevel[New World]'/minecraft:the_end
+[11:42:17] [Server thread/INFO] (Minecraft) Saving chunks for level 'ServerLevel[New World]'/minecraft:the_nether
+[11:42:17] [Server thread/INFO] (EarthLife) EarthLife ready: 4 airports, 0 bookings restored from ledger
+[11:42:17] [Server thread/INFO] (EarthLife) EarthLife: world spawn set to 0, 125, 0 in Williamson
+[11:42:17] [Server thread/INFO] (EarthLife) EarthLife: 21865 towns, 0 residents, 0 buildings (0 estimated), 4 airports with terminals
+[11:42:17] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST [Test 14 - Dedicated server] server boots with Earth: PASSED - dedicated=true, generator=VoxelEarthChunkGenerator, services=true
+[11:42:17] [Render thread/INFO] (Minecraft) Connecting to localhost, 25565
+[11:42:17] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: null screen: net.minecraft.client.gui.screens.ConnectScreen@f744766
+[11:42:17] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: null screen: net.minecraft.client.gui.screens.ConnectScreen@f744766
+[11:42:18] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: null screen: net.minecraft.client.gui.screens.ConnectScreen@f744766
+[11:42:18] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: null screen: net.minecraft.client.gui.screens.ConnectScreen@f744766
+[11:42:18] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: null screen: net.minecraft.client.gui.screens.ConnectScreen@f744766
+[11:42:18] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: null screen: net.minecraft.client.gui.screens.ConnectScreen@f744766
+[11:42:18] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: null screen: net.minecraft.client.gui.screens.ConnectScreen@f744766
+[11:42:18] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: null screen: net.minecraft.client.gui.screens.ConnectScreen@f744766
+[11:42:18] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: null screen: net.minecraft.client.gui.screens.ConnectScreen@f744766
+[11:42:18] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: null screen: net.minecraft.client.gui.screens.ConnectScreen@f744766
+[11:42:18] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: null screen: net.minecraft.client.gui.screens.ConnectScreen@f744766
+[11:42:19] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: null screen: net.minecraft.client.gui.screens.ConnectScreen@f744766
+[11:42:19] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: null screen: net.minecraft.client.gui.screens.ConnectScreen@f744766
+[11:42:19] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: null screen: net.minecraft.client.gui.screens.ConnectScreen@f744766
+[11:42:19] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: null screen: net.minecraft.client.gui.screens.ConnectScreen@f744766
+[11:42:19] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: null screen: net.minecraft.client.gui.screens.ConnectScreen@f744766
+[11:42:19] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: null screen: net.minecraft.client.gui.screens.ConnectScreen@f744766
+[11:42:19] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: null screen: net.minecraft.client.gui.screens.ConnectScreen@f744766
+[11:42:19] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: null screen: net.minecraft.client.gui.screens.ConnectScreen@f744766
+[11:42:20] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: null screen: net.minecraft.client.gui.screens.ConnectScreen@f744766
+[11:42:20] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: null screen: net.minecraft.client.gui.screens.ConnectScreen@f744766
+[11:42:20] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: null screen: net.minecraft.client.gui.screens.ConnectScreen@f744766
+[11:42:20] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: null screen: net.minecraft.client.gui.screens.ConnectScreen@f744766
+[11:42:20] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: null screen: net.minecraft.client.gui.screens.ConnectScreen@f744766
+[11:42:20] [Server thread/WARN] (Minecraft) Can't keep up! Is the server overloaded? Running 2011ms or 40 ticks behind
+[11:42:20] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: null screen: net.minecraft.client.gui.screens.ConnectScreen@f744766
+[11:42:20] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: null screen: net.minecraft.client.gui.screens.ConnectScreen@f744766
+[11:42:20] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: null screen: net.minecraft.client.gui.screens.ConnectScreen@f744766
+[11:42:20] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: null screen: net.minecraft.client.gui.screens.ConnectScreen@f744766
+[11:42:20] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: null screen: net.minecraft.client.gui.screens.ConnectScreen@f744766
+[11:42:20] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: null screen: net.minecraft.client.gui.screens.ConnectScreen@f744766
+[11:42:20] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: null screen: net.minecraft.client.gui.screens.ConnectScreen@f744766
+[11:42:20] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: null screen: net.minecraft.client.gui.screens.ConnectScreen@f744766
+[11:42:20] [Server thread/INFO] (Minecraft) Player0[/127.0.0.1:55824] logged in with entity id 7100 at (0.5, 125.0, 0.5)
+[11:42:21] [Server thread/INFO] (EarthLife) EarthLife: Player0 arrived in Williamson at 0, 125, 0 (NEW_LIFE)
+[11:42:21] [Server thread/INFO] (Minecraft) System chat: Player0 joined the game
+[11:42:21] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: null screen: net.minecraft.client.gui.screens.ConnectScreen@f744766
+[11:42:21] [Render thread/INFO] (Minecraft) [System] [CHAT] §6EarthLife§r · New Life: you just moved to Williamson with 250 LifeCoins. Follow the objectives on the right - press [K] for the EarthLife menu.
+[11:42:21] [Render thread/INFO] (Minecraft) Loaded 3 advancements
+[11:42:21] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: ClientLevel screen: net.minecraft.client.gui.screens.LevelLoadingScreen@476517b0
+[11:42:21] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: ClientLevel screen: net.minecraft.client.gui.screens.LevelLoadingScreen@476517b0
+[11:42:21] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: ClientLevel screen: net.minecraft.client.gui.screens.LevelLoadingScreen@476517b0
+[11:42:21] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: ClientLevel screen: net.minecraft.client.gui.screens.LevelLoadingScreen@476517b0
+[11:42:22] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: ClientLevel screen: net.minecraft.client.gui.screens.LevelLoadingScreen@476517b0
+[11:42:22] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: ClientLevel screen: net.minecraft.client.gui.screens.LevelLoadingScreen@476517b0
+[11:42:22] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: ClientLevel screen: null
+[11:42:22] [ForkJoinPool.commonPool-worker-3/INFO] (EarthLife) EarthLife map (Northeast 1:1): 21865 places, 399815 major roads; streets and buildings load per area
+[11:42:22] [Render thread/INFO] (Minecraft) [System] [CHAT] §a✔ Objective complete:§r Locate the nearest town centre (walk there) §6+10 LC
+[11:42:25] [Server thread/INFO] (EarthLife) EarthLife: map window 1 cells, 5554 buildings, 1386 roads, 25 stores, 1 populations
+[11:42:25] [Render thread/INFO] (Minecraft) [System] [CHAT] §a✔ Objective complete:§r Walk into a local business §6+10 LC
+[11:42:25] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST [Test 14 - Dedicated server] client connects: PASSED - client joined; WorldInfo received=true, start town Williamson
+[11:42:25] [Server thread/INFO] (Minecraft) Player0 lost connection: Disconnected
+[11:42:25] [Server thread/INFO] (Minecraft) System chat: Player0 left the game
+[11:42:25] [Server thread/INFO] (Minecraft) Stopping server
+[11:42:25] [Server thread/INFO] (Minecraft) Saving players
+[11:42:25] [Server thread/INFO] (Minecraft) Saving worlds
+[11:42:26] [Server thread/INFO] (Minecraft) Saving chunks for level 'ServerLevel[New World]'/minecraft:overworld
+[11:42:27] [Server thread/INFO] (Minecraft) Saving chunks for level 'ServerLevel[New World]'/minecraft:the_end
+[11:42:27] [Server thread/INFO] (Minecraft) Saving chunks for level 'ServerLevel[New World]'/minecraft:the_nether
+[11:42:27] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST SUMMARY: 1 failed checks
+[11:42:27] [Test thread/ERROR] (fabric-client-gametest-api-v1) Client gametests failed with an exception
+java.lang.AssertionError: 1 EarthLife in-game checks failed - see earthlife-test-report.json
+	at knot//earthlife.test.EarthLifeClientGameTest.runTest(EarthLifeClientGameTest.java:147)
+	at knot//net.fabricmc.fabric.impl.client.gametest.FabricClientGameTestRunner.lambda$start$0(FabricClientGameTestRunner.java:54)
+	at knot//net.fabricmc.fabric.impl.client.gametest.threading.ThreadingImpl.lambda$runTestThread$0(ThreadingImpl.java:139)
+	at java.base/java.lang.Thread.run(Thread.java:1474)
+[11:42:27] [Render thread/ERROR] (FabricLoader) Minecraft has crashed!
+net.fabricmc.loader.impl.FormattedException: java.lang.AssertionError: 1 EarthLife in-game checks failed - see earthlife-test-report.json
+	at net.fabricmc.loader.impl.FormattedException.ofLocalized(FormattedException.java:63)
+	at net.fabricmc.loader.impl.game.minecraft.MinecraftGameProvider.launch(MinecraftGameProvider.java:519)
+	at net.fabricmc.loader.impl.launch.knot.Knot.launch(Knot.java:72)
+	at net.fabricmc.loader.impl.launch.knot.KnotClient.main(KnotClient.java:23)
+	at net.fabricmc.devlaunchinjector.Main.main(Main.java:86)
+Caused by: java.lang.AssertionError: 1 EarthLife in-game checks failed - see earthlife-test-report.json
+	at knot//earthlife.test.EarthLifeClientGameTest.runTest(EarthLifeClientGameTest.java:147)
+	at knot//net.fabricmc.fabric.impl.client.gametest.FabricClientGameTestRunner.lambda$start$0(FabricClientGameTestRunner.java:54)
+	at knot//net.fabricmc.fabric.impl.client.gametest.threading.ThreadingImpl.lambda$runTestThread$0(ThreadingImpl.java:139)
+	at java.base/java.lang.Thread.run(Thread.java:1474)

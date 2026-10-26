@@ -1,0 +1,166 @@
+[11:18:13] [Render thread/ERROR] (Minecraft) Illegal option value 0 for Anisotropic Filtering
+[11:18:14] [Download-2/INFO] (Minecraft) Could not authorize you against Realms server: java.lang.RuntimeException: Failed to parse into SignedJWT: FabricMC
+[11:18:18] [Render thread/ERROR] (Minecraft) Error starting SoundSystem. Turning off sounds & music
+java.lang.IllegalStateException: Failed to open OpenAL device
+[11:18:19] [Download-1/INFO] (Minecraft) Could not authorize you against Realms server: java.lang.RuntimeException: Failed to parse into SignedJWT: FabricMC
+[11:18:21] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST [Test 1 - Compilation] jar built: PASSED - this test runs inside the compiled mod (Gradle :fabric-mod:build succeeded before the run)
+[11:18:23] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST [Test 2 - Mod loading] mod loaded: PASSED - FabricLoader reports earthlife 0.4.1 loaded in Minecraft 26.3
+[11:18:23] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST [Test 2 - Mod loading] keybinds registered: PASSED - M/K/J/L/N key mappings exist in category earthlife
+[11:18:25] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST [Test 3 - World type] Earth listed in Create New World: PASSED - world type list entry: Earth — 1:1 Real World
+[11:18:26] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST [Test 3 - World type] Customize available: PASSED - WorldCreationUiState.getPresetEditor() for Earth is non-null (mixin)
+[11:18:26] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST [Test 3 - World type] settings screen opens: PASSED - clicked the Customize button
+[11:18:26] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST [Test 3 - World type] settings saved into the world's generator: PASSED - overworld generator settings after Done: Sodus/TRAVELER
+[11:18:43] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST [Test 4 - World creation] world loads: PASSED - Earth world created and chunks rendered in 4 s
+[11:18:43] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST [Test 4 - World creation] Earth generator + services active: PASSED - VoxelEarthChunkGenerator services=true height=1024 minY=-64
+[11:18:43] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST [Test 4 - World creation] tall world (1024 blocks): PASSED - VoxelEarthChunkGenerator services=true height=1024 minY=-64
+[11:18:46] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST [Test 4 - World creation] safe spawn in Williamson: PASSED - 1 m from Williamson centre (43.22370, -77.18609); standing on block.minecraft.dirt, feet in block.minecraft.dirt_path, place=Williamson, scenario=NEW_LIFE
+[11:18:48] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST [Test 4 - World creation] welcome overlay / world info received: PASSED - client received WorldInfo for Williamson welcome=true
+[11:18:48] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST [Test 5 - Geographic scale] distances: PASSED - Williamson->Sodus 10234.4 blocks vs 10207.7 m geodesic (0.262%)
+[11:18:48] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST [Test 5 - Geographic scale] building footprint: PASSED - OSM way w828631081: polygon area 122 m2, 121 block columns inside, 121 with the roof block present (4 m from spawn)
+[11:18:48] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST [Test 5 - Geographic scale] furnished interior: PASSED - house kitchen marker at -5,41 -> block block.minecraft.crafting_table
+[11:18:48] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST [Test 5 - Geographic scale] road on the ground: PASSED - OSM way w20634262 (PRIMARY, 10.0 m wide): 5 of 5 samples along a 9 m segment are road surface blocks
+[11:18:51] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST [Test 6 - Map keybind] M opens LifeMap: PASSED - pressed M -> LifeMapScreen open; map data: 0 roads, 0 buildings
+[11:18:56] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST [Test 6 - Map keybind] zoom and layers: PASSED - scrolled out/in; screenshots 07/08
+[11:18:59] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST [Test 7 - Player location] position updates: PASSED - player moved 361 blocks; lat/lon 43.22370,-77.18609 -> 43.22550,-77.18240; LifeMap follows the player (screenshot 09)
+[11:19:01] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST [Test 7 - Player location] walking moves the player: PASSED - held W for 40 ticks: moved 8.4 blocks
+[11:19:01] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST [Test 8 - Data loading] tile cache on disk: PASSED - 248 cached tiles in /home/runner/work/Earth-life/Earth-life/fabric-mod/build/run/clientGameTest/saves/EarthLife Test Williamson/./earthlife/tilecache
+[11:19:03] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST [Test 8 - Data loading] missing data handled: PASSED - chunk at 50000,50000 generated, surface Y 313, flagged estimated=true
+[11:19:04] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST [Test 8 - Data loading] chunk generation benchmark: PASSED - 64 new chunks (in Williamson/Sodus data) in 1561 ms = 24.4 ms/chunk on the CI runner (2-4 vCPU, software rendering); heap 1690 -> 1187 MB (max 4096 MB)
+[11:19:04] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST [Test 8 - Data loading] offline startup: PASSED - event feeds are not contacted (-Dearthlife.offline=true); Northeast worlds fetch map packs (cached afterwards), starter worlds read the jar: events loaded 66, feed errors: [mlb: offline mode (earthlife.offline) - using cached/holiday events only], map data source: Map data (c) OpenStreetMap contributors, ODbL 1.0, Northeast packs: map data: p_85_-154.zip ready
+[11:19:04] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST [Test 9 - Survival] survival mode: PASSED - game mode survival
+[11:19:09] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST [Test 9 - Survival] mining by hand: PASSED - block at 300, 121, -191 broken=true, dirt in inventory=0, dirt item dropped nearby=2 (held left mouse for 3 s)
+[11:19:11] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST [Test 9 - Survival] building: PASSED - oak planks placed at 300, 122, -190 next to the stone at 300, 121, -189 (right-clicked with planks)
+[11:19:11] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST [Test 9 - Survival] crafting: PASSED - 1 oak log -> 4 x minecraft:oak_planks via the game's recipe manager
+[11:19:11] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST [Test 9 - Survival] caves and ores: PASSED - 7x7 chunks under the player: 11785 cave blocks, 11246 ore blocks (188 diamond); biome monster spawn list has 9 entries
+[11:19:12] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST [Test 9 - Survival] hunger: PASSED - food level 20 -> 18 after exhaustion (vanilla hunger still active)
+[11:19:16] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST [Test 10 - Life systems] residents spawn and talk: PASSED - right-clicked resident Silas Olsen -> dialogue screen with choices; chose "How's your day going?" and got a reply (screenshots 10-11)
+[11:19:16] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST [Test 10 - Life systems] job: apply, clock in, task, wages: PASSED - hired=Janitor, on shift=true, messes cleaned=6, tasks recorded=6, balance 305 -> 523 LC
+[11:19:16] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST [Test 10 - Life systems] wallet transactions: PASSED - 9 ledger entries ([STARTER, OBJECTIVE, WAGE]), balances chain correctly=true
+[11:19:20] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST [Test 10 - Life systems] L key opens wallet: PASSED - pressed the L mapping -> screen EarthMenuScreen
+[11:19:24] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST [Test 10 - Life systems] J key opens jobs: PASSED - pressed the J mapping -> screen EarthMenuScreen
+[11:19:27] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST [Test 10 - Life systems] N key opens nearby: PASSED - pressed the N mapping -> screen EarthMenuScreen
+[11:19:31] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST [Test 10 - Life systems] K key opens life: PASSED - pressed the K mapping -> screen EarthMenuScreen
+[11:19:33] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST [Test 10 - Life systems] events tab: PASSED - 6 rows, first: Halloween in 5 days - trick-or-treat and contests are on
+[11:19:33] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST [Test 10 - Life systems] vehicle ownership: PASSED - owned [CAR:red], summoned vehicles nearby: 1
+[11:19:34] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST [Test 10 - Life systems] get in through the driver's door: PASSED - interact=Success[swingSource=PREDICTED, itemContext=ItemContext[wasItemInteraction=true, heldItemTransformedTo=null]] seated=true seat=0 driverDoorOpen=true type=CAR
+[11:19:37] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST [Test 10 - Life systems] door closes after you sit down: PASSED - flags=64
+[11:19:41] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST [Test 10 - Life systems] in-car GPS: PASSED - action='Turn right' onto='Arrowbend Drive' toTurn=450 m remaining=1052 m street='Lake Avenue' gpsTexture=earthlife:gps_screen
+[11:19:44] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST [Test 10 - Life systems] driving moves the car: PASSED - moved 6.8 m in 2 s, top speed 5.6 m/s (drove)
+[11:19:44] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST [Test 10 - Life systems] get out beside the door: PASSED - riding=false doorFlags=1 distance from car centre=1.9 m
+[11:19:44] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST [Test 10 - Life systems] Halloween trick-or-treat: PASSED - Grace Kim said: "Happy Halloween! Here's 4 pieces of candy. (4 collected so far)"; candy=4; residents in costume nearby=true
+[11:19:51] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST [Test 10 - Life systems] Halloween haunted house: PASSED - haunted house in Williamson at -35, -494; 6 hidden pumpkins, found 3/3, candy now 7
+[11:19:51] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST [Test 15 - Cinema] real cinemas placed: PASSED - 2 theaters from OpenStreetMap in this world; nearest: AMC Webster 12 (8 auditoriums, one 4D) - its kiosk maps back to 43.20221, -77.49438 vs OSM 43.20204, -77.49411
+[11:19:54] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST [Test 15 - Cinema] theater interior generated: PASSED - Auditorium 2: 58 of 63 seats are recliners, 10 popcorn machines / soda fountains / kiosks in the lobby
+[11:19:58] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST [Test 15 - Cinema] concessions: buy and eat popcorn: PASSED - 3 purchases in the ledger: 3; popcorn 1, cola 1, gummy bears 1; popcorn/cola are food/drink: true
+[11:19:58] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST [Test 15 - Cinema] eating popcorn fills hunger: PASSED - hunger 10 -> 15 after eating popcorn
+[11:19:58] [EarthLife-cinema-start/INFO] (EarthLife) Cinema sound unavailable (java.lang.ExceptionInInitializerError); films play silently
+[11:20:09] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST [Test 15 - Cinema] film plays on the screen: PASSED - show=Test Pattern, seated=true, status=Playing, 1152x480, clock 10.5 s, picture=earthlife:cinema/266-1_3a79d1ca, sound=yes
+[11:20:20] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST [Test 15 - Cinema] 3D with red/cyan glasses: PASSED - format=SBS anaglyph=true status=Playing picture=earthlife:cinema/266-1_25b9c2f0 glasses=true
+[11:20:31] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST [Test 15 - Cinema] 4D motion seat effects: PASSED - 4D season open today (Oct 29 - Nov 3): false; forced on for the test; motion seat=true, 4D active=true, effects: rumble 0%, picture=earthlife:cinema/266-0_30d5e66c, TactSuit: TactSuit: not connected
+[11:20:38] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST [Test 16 - Northeast 1:1] Empire State Building, Manhattan: PASSED - block 270311, 269841 (382 km from Williamson); cell tier CITY; ground Y 4 (15 m); water false (surface Y 0); 2415 building columns within 60 m, tallest 443 m; tile in 6281 ms
+[11:20:40] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST [Test 16 - Northeast 1:1] Upper New York Bay (sea level): FAILED - block 265619, 278736 (385 km from Williamson); cell tier CITY; ground Y -11 (0 m); water false (surface Y 0); 0 building columns within 60 m, tallest 0 m; tile in 2108 ms
+[11:20:41] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST [Test 16 - Northeast 1:1] Philadelphia City Hall, PA: PASSED - block 172907, 361280 (401 km from Williamson); cell tier CITY; ground Y 3 (14 m); water false (surface Y 0); 3549 building columns within 60 m, tallest 30 m; tile in 1598 ms
+[11:20:42] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST [Test 16 - Northeast 1:1] Burlington, VT (Church Street): PASSED - block 316025, -146752 (348 km from Williamson); cell tier CITY; ground Y 50 (61 m); water false (surface Y 0); 1167 building columns within 60 m, tallest 33 m; tile in 676 ms
+[11:20:43] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST [Test 16 - Northeast 1:1] Atlantic City boardwalk, NJ: PASSED - block 237053, 425765 (487 km from Williamson); cell tier TOWN; ground Y 4 (15 m); water false (surface Y 0); 97 building columns within 60 m, tallest 19 m; tile in 982 ms
+[11:21:07] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST [Test 16 - Northeast 1:1] Manhattan in game: PASSED - screenshot 40_manhattan from 60 m above Grand Central
+[11:21:07] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST [Test 11 - Aviation] airport generated: PASSED - KSDC terminal check-in floor at 5281, 119, -1390 is block.minecraft.polished_andesite; airports with terminals: [KSDC, KROC, KIUA, KGVQ]
+[11:21:16] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST [Test 11 - Aviation] boarding: PASSED - aircraft EL101 boarding at KSDC; player boarded=true, riding=true
+[11:21:49] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST flight progress: TAXI_OUT 50.5 km to go
+[11:21:59] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST flight progress: TAXI_OUT 50.4 km to go
+[11:22:09] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST flight progress: TAXI_OUT 50.3 km to go
+[11:22:19] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST flight progress: TAXI_OUT 50.2 km to go
+[11:22:29] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST flight progress: TAXI_OUT 50.1 km to go
+[11:22:39] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST flight progress: TAXI_OUT 50.0 km to go
+[11:22:49] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST flight progress: TAXI_OUT 50.0 km to go
+[11:22:59] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST flight progress: TAKEOFF_ROLL 49.9 km to go
+[11:23:09] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST flight progress: TAKEOFF_ROLL 49.6 km to go
+[11:23:19] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST flight progress: CLIMB 49.1 km to go
+[11:23:29] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST flight progress: CLIMB 48.5 km to go
+[11:23:40] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST flight progress: CLIMB 47.9 km to go
+[11:23:50] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST flight progress: CLIMB 47.3 km to go
+[11:24:00] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST flight progress: CLIMB 46.7 km to go
+[11:24:11] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST flight progress: CLIMB 46.0 km to go
+[11:24:21] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST flight progress: CLIMB 45.5 km to go
+[11:24:31] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST flight progress: CLIMB 44.8 km to go
+[11:24:42] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST flight progress: CLIMB 44.2 km to go
+[11:24:53] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST flight progress: CLIMB 43.6 km to go
+[11:25:03] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST flight progress: CLIMB 42.9 km to go
+[11:25:13] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST flight progress: CLIMB 42.3 km to go
+[11:25:23] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST flight progress: CLIMB 41.7 km to go
+[11:25:33] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST flight progress: CLIMB 41.1 km to go
+[11:25:44] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST flight progress: CLIMB 40.5 km to go
+[11:25:54] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST flight progress: CLIMB 39.9 km to go
+[11:26:04] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST flight progress: CLIMB 39.3 km to go
+[11:26:15] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST flight progress: CLIMB 38.7 km to go
+[11:26:26] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST flight progress: CLIMB 38.1 km to go
+[11:26:36] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST flight progress: CLIMB 37.5 km to go
+[11:26:47] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST flight progress: CLIMB 36.9 km to go
+[11:26:57] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST flight progress: CLIMB 36.3 km to go
+[11:27:07] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST flight progress: CLIMB 35.7 km to go
+[11:27:17] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST flight progress: CLIMB 35.1 km to go
+[11:27:27] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST flight progress: CLIMB 34.5 km to go
+[11:27:38] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST flight progress: CLIMB 33.9 km to go
+[11:27:48] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST flight progress: CLIMB 33.3 km to go
+[11:27:58] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST flight progress: CLIMB 32.7 km to go
+[11:28:09] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST flight progress: CLIMB 32.1 km to go
+[11:28:19] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST flight progress: CLIMB 31.5 km to go
+[11:28:29] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST flight progress: CLIMB 30.9 km to go
+[11:28:40] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST flight progress: CRUISE 30.3 km to go
+[11:28:50] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST flight progress: CRUISE 29.7 km to go
+[11:29:00] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST flight progress: CRUISE 29.1 km to go
+[11:29:11] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST flight progress: CRUISE 28.5 km to go
+[11:29:21] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST flight progress: CRUISE 27.8 km to go
+[11:29:32] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST flight progress: CRUISE 27.3 km to go
+[11:29:42] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST flight progress: DESCENT 26.7 km to go
+[11:30:00] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST flight progress: DESCENT 25.9 km to go
+[11:30:20] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST flight progress: DESCENT 25.1 km to go
+[11:30:40] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST flight progress: DESCENT 24.3 km to go
+[11:31:01] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST flight progress: DESCENT 23.4 km to go
+[11:31:21] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST flight progress: DESCENT 22.5 km to go
+[11:31:41] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST flight progress: DESCENT 21.7 km to go
+[11:32:02] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST flight progress: DESCENT 21.0 km to go
+[11:32:22] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST flight progress: DESCENT 20.2 km to go
+[11:32:42] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST flight progress: DESCENT 19.4 km to go
+[11:33:03] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST flight progress: DESCENT 18.6 km to go
+[11:33:23] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST flight progress: DESCENT 17.8 km to go
+[11:33:44] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST flight progress: DESCENT 17.1 km to go
+[11:34:04] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST flight progress: DESCENT 16.3 km to go
+[11:34:24] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST flight progress: DESCENT 15.6 km to go
+[11:34:44] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST flight progress: DESCENT 14.8 km to go
+[11:35:05] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST flight progress: DESCENT 14.1 km to go
+[11:35:25] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST flight progress: DESCENT 13.3 km to go
+[11:35:45] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST flight progress: DESCENT 12.6 km to go
+[11:36:05] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST flight progress: DESCENT 11.9 km to go
+[11:36:25] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST flight progress: DESCENT 11.1 km to go
+[11:36:45] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST flight progress: DESCENT 10.4 km to go
+[11:37:05] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST flight progress: DESCENT 9.7 km to go
+[11:37:25] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST flight progress: DESCENT 9.0 km to go
+[11:37:46] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST flight progress: DESCENT 8.3 km to go
+[11:38:06] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST flight progress: DESCENT 7.6 km to go
+[11:38:26] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST flight progress: DESCENT 7.0 km to go
+[11:38:46] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST flight progress: DESCENT 6.3 km to go
+[11:39:06] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST flight progress: DESCENT 5.7 km to go
+[11:39:26] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST flight progress: DESCENT 5.1 km to go
+[11:39:46] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST flight progress: DESCENT 4.4 km to go
+[11:40:07] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST flight progress: DESCENT 3.8 km to go
+[11:40:27] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST flight progress: DESCENT 3.2 km to go
+[11:40:47] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST flight progress: DESCENT 2.6 km to go
+[11:41:07] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST flight progress: LANDING_ROLL 2.1 km to go
+[11:41:27] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST flight progress: LANDING_ROLL 1.7 km to go
+[11:41:47] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST flight progress: TAXI_IN 1.6 km to go
+[11:41:49] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST [Test 11 - Aviation] aircraft moves: PASSED - position/phase at departure 5290,-1365 BOARDING -> after 400 ticks 5388,-1317 TAXI_OUT
+[11:41:49] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST [Test 11 - Aviation] landing: PASSED - after tick sprint: TAXI_IN; player 0.6 km from KROC terminal
+[11:42:01] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST [Test 12 - Save and reload] data consistent after reload: PASSED - services=true, waypoint kept=true, balance=50707 LC, job kept=true, vehicles=[CAR:red], scenario=NEW_LIFE, objectives done=[town_centre, business, open_map, talk, get_job, work_task, paid, event, purchase], player-placed gold block kept=true
+[11:42:12] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST [Test 13 - World separation] default world unaffected: PASSED - generator=NoiseBasedChunkGenerator, EarthLife services running=false, earthlife folder in save=false, height=384
+[11:42:13] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST [Test 13 - World separation] EarthLife screens stay off: PASSED - pressed M in a Default world: LifeMap opened=false (expected false), HUD hidden
+[11:42:17] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST [Test 14 - Dedicated server] server boots with Earth: PASSED - dedicated=true, generator=VoxelEarthChunkGenerator, services=true
+[11:42:25] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST [Test 14 - Dedicated server] client connects: PASSED - client joined; WorldInfo received=true, start town Williamson
+[11:42:27] [Test thread/INFO] (Minecraft) [STDOUT]: EARTHLIFE-TEST SUMMARY: 1 failed checks
+[11:42:27] [Test thread/ERROR] (fabric-client-gametest-api-v1) Client gametests failed with an exception
+[11:42:27] [Render thread/ERROR] (FabricLoader) Minecraft has crashed!
+net.fabricmc.loader.impl.FormattedException: java.lang.AssertionError: 1 EarthLife in-game checks failed - see earthlife-test-report.json
+	at net.fabricmc.loader.impl.FormattedException.ofLocalized(FormattedException.java:63)
+Caused by: java.lang.AssertionError: 1 EarthLife in-game checks failed - see earthlife-test-report.json
+* Exception is:
+org.gradle.api.tasks.TaskExecutionException: Execution failed for task ':fabric-mod:runClientGameTest' (registered by plugin 'fabric-loom').
+Caused by: org.gradle.process.ProcessExecutionException: Process 'command 'xvfb-run'' finished with non-zero exit value 1

@@ -1,0 +1,102 @@
+{
+  "Test 1 - Compilation": {
+    "jar built": "PASSED - this test runs inside the compiled mod (Gradle :fabric-mod:build succeeded before the run)"
+  },
+  "Test 2 - Mod loading": {
+    "mod loaded": "PASSED - FabricLoader reports earthlife 0.4.1 loaded in Minecraft 26.3",
+    "keybinds registered": "PASSED - M/K/J/L/N key mappings exist in category earthlife"
+  },
+  "Test 3 - World type": {
+    "Earth listed in Create New World": "PASSED - world type list entry: Earth — 1:1 Real World",
+    "Customize available": "PASSED - WorldCreationUiState.getPresetEditor() for Earth is non-null (mixin)",
+    "settings screen opens": "PASSED - clicked the Customize button",
+    "settings saved into the world's generator": "PASSED - overworld generator settings after Done: Sodus/TRAVELER"
+  },
+  "Test 4 - World creation": {
+    "world loads": "PASSED - Earth world created and chunks rendered in 4 s",
+    "Earth generator + services active": "PASSED - VoxelEarthChunkGenerator services=true height=1024 minY=-64",
+    "tall world (1024 blocks)": "PASSED - VoxelEarthChunkGenerator services=true height=1024 minY=-64",
+    "safe spawn in Williamson": "PASSED - 1 m from Williamson centre (43.22370, -77.18609); standing on block.minecraft.dirt, feet in block.minecraft.dirt_path, place=Williamson, scenario=NEW_LIFE",
+    "welcome overlay / world info received": "PASSED - client received WorldInfo for Williamson welcome=true"
+  },
+  "Test 5 - Geographic scale": {
+    "distances": "PASSED - Williamson->Sodus 10234.4 blocks vs 10207.7 m geodesic (0.262%)",
+    "building footprint": "PASSED - OSM way w828631081: polygon area 122 m2, 121 block columns inside, 121 with the roof block present (4 m from spawn)",
+    "furnished interior": "PASSED - house kitchen marker at -5,41 -> block block.minecraft.crafting_table",
+    "road on the ground": "PASSED - OSM way w20634262 (PRIMARY, 10.0 m wide): 5 of 5 samples along a 9 m segment are road surface blocks"
+  },
+  "Test 6 - Map keybind": {
+    "M opens LifeMap": "PASSED - pressed M -> LifeMapScreen open; map data: 0 roads, 0 buildings",
+    "zoom and layers": "PASSED - scrolled out/in; screenshots 07/08"
+  },
+  "Test 7 - Player location": {
+    "position updates": "PASSED - player moved 361 blocks; lat/lon 43.22370,-77.18609 -> 43.22550,-77.18240; LifeMap follows the player (screenshot 09)",
+    "walking moves the player": "PASSED - held W for 40 ticks: moved 8.4 blocks"
+  },
+  "Test 8 - Data loading": {
+    "tile cache on disk": "PASSED - 248 cached tiles in /home/runner/work/Earth-life/Earth-life/fabric-mod/build/run/clientGameTest/saves/EarthLife Test Williamson/./earthlife/tilecache",
+    "missing data handled": "PASSED - chunk at 50000,50000 generated, surface Y 313, flagged estimated=true",
+    "chunk generation benchmark": "PASSED - 64 new chunks (in Williamson/Sodus data) in 1561 ms = 24.4 ms/chunk on the CI runner (2-4 vCPU, software rendering); heap 1690 -> 1187 MB (max 4096 MB)",
+    "offline startup": "PASSED - event feeds are not contacted (-Dearthlife.offline=true); Northeast worlds fetch map packs (cached afterwards), starter worlds read the jar: events loaded 66, feed errors: [mlb: offline mode (earthlife.offline) - using cached/holiday events only], map data source: Map data (c) OpenStreetMap contributors, ODbL 1.0, Northeast packs: map data: p_85_-154.zip ready"
+  },
+  "Test 9 - Survival": {
+    "survival mode": "PASSED - game mode survival",
+    "mining by hand": "PASSED - block at 300, 121, -191 broken=true, dirt in inventory=0, dirt item dropped nearby=2 (held left mouse for 3 s)",
+    "building": "PASSED - oak planks placed at 300, 122, -190 next to the stone at 300, 121, -189 (right-clicked with planks)",
+    "crafting": "PASSED - 1 oak log -> 4 x minecraft:oak_planks via the game's recipe manager",
+    "caves and ores": "PASSED - 7x7 chunks under the player: 11785 cave blocks, 11246 ore blocks (188 diamond); biome monster spawn list has 9 entries",
+    "hunger": "PASSED - food level 20 -> 18 after exhaustion (vanilla hunger still active)"
+  },
+  "Test 10 - Life systems": {
+    "residents spawn and talk": "PASSED - right-clicked resident Silas Olsen -> dialogue screen with choices; chose \"How's your day going?\" and got a reply (screenshots 10-11)",
+    "job: apply, clock in, task, wages": "PASSED - hired=Janitor, on shift=true, messes cleaned=6, tasks recorded=6, balance 305 -> 523 LC",
+    "wallet transactions": "PASSED - 9 ledger entries ([STARTER, OBJECTIVE, WAGE]), balances chain correctly=true",
+    "L key opens wallet": "PASSED - pressed the L mapping -> screen EarthMenuScreen",
+    "J key opens jobs": "PASSED - pressed the J mapping -> screen EarthMenuScreen",
+    "N key opens nearby": "PASSED - pressed the N mapping -> screen EarthMenuScreen",
+    "K key opens life": "PASSED - pressed the K mapping -> screen EarthMenuScreen",
+    "events tab": "PASSED - 6 rows, first: Halloween in 5 days - trick-or-treat and contests are on",
+    "vehicle ownership": "PASSED - owned [CAR:red], summoned vehicles nearby: 1",
+    "get in through the driver's door": "PASSED - interact=Success[swingSource=PREDICTED, itemContext=ItemContext[wasItemInteraction=true, heldItemTransformedTo=null]] seated=true seat=0 driverDoorOpen=true type=CAR",
+    "door closes after you sit down": "PASSED - flags=64",
+    "in-car GPS": "PASSED - action='Turn right' onto='Arrowbend Drive' toTurn=450 m remaining=1052 m street='Lake Avenue' gpsTexture=earthlife:gps_screen",
+    "driving moves the car": "PASSED - moved 6.8 m in 2 s, top speed 5.6 m/s (drove)",
+    "get out beside the door": "PASSED - riding=false doorFlags=1 distance from car centre=1.9 m",
+    "Halloween trick-or-treat": "PASSED - Grace Kim said: \"Happy Halloween! Here's 4 pieces of candy. (4 collected so far)\"; candy=4; residents in costume nearby=true",
+    "Halloween haunted house": "PASSED - haunted house in Williamson at -35, -494; 6 hidden pumpkins, found 3/3, candy now 7"
+  },
+  "Test 15 - Cinema": {
+    "real cinemas placed": "PASSED - 2 theaters from OpenStreetMap in this world; nearest: AMC Webster 12 (8 auditoriums, one 4D) - its kiosk maps back to 43.20221, -77.49438 vs OSM 43.20204, -77.49411",
+    "theater interior generated": "PASSED - Auditorium 2: 58 of 63 seats are recliners, 10 popcorn machines / soda fountains / kiosks in the lobby",
+    "concessions: buy and eat popcorn": "PASSED - 3 purchases in the ledger: 3; popcorn 1, cola 1, gummy bears 1; popcorn/cola are food/drink: true",
+    "eating popcorn fills hunger": "PASSED - hunger 10 -> 15 after eating popcorn",
+    "film plays on the screen": "PASSED - show=Test Pattern, seated=true, status=Playing, 1152x480, clock 10.5 s, picture=earthlife:cinema/266-1_3a79d1ca, sound=yes",
+    "3D with red/cyan glasses": "PASSED - format=SBS anaglyph=true status=Playing picture=earthlife:cinema/266-1_25b9c2f0 glasses=true",
+    "4D motion seat effects": "PASSED - 4D season open today (Oct 29 - Nov 3): false; forced on for the test; motion seat=true, 4D active=true, effects: rumble 0%, picture=earthlife:cinema/266-0_30d5e66c, TactSuit: TactSuit: not connected"
+  },
+  "Test 16 - Northeast 1:1": {
+    "Empire State Building, Manhattan": "PASSED - block 270311, 269841 (382 km from Williamson); cell tier CITY; ground Y 4 (15 m); water false (surface Y 0); 2415 building columns within 60 m, tallest 443 m; tile in 6281 ms",
+    "Upper New York Bay (sea level)": "FAILED - block 265619, 278736 (385 km from Williamson); cell tier CITY; ground Y -11 (0 m); water false (surface Y 0); 0 building columns within 60 m, tallest 0 m; tile in 2108 ms",
+    "Philadelphia City Hall, PA": "PASSED - block 172907, 361280 (401 km from Williamson); cell tier CITY; ground Y 3 (14 m); water false (surface Y 0); 3549 building columns within 60 m, tallest 30 m; tile in 1598 ms",
+    "Burlington, VT (Church Street)": "PASSED - block 316025, -146752 (348 km from Williamson); cell tier CITY; ground Y 50 (61 m); water false (surface Y 0); 1167 building columns within 60 m, tallest 33 m; tile in 676 ms",
+    "Atlantic City boardwalk, NJ": "PASSED - block 237053, 425765 (487 km from Williamson); cell tier TOWN; ground Y 4 (15 m); water false (surface Y 0); 97 building columns within 60 m, tallest 19 m; tile in 982 ms",
+    "Manhattan in game": "PASSED - screenshot 40_manhattan from 60 m above Grand Central"
+  },
+  "Test 11 - Aviation": {
+    "airport generated": "PASSED - KSDC terminal check-in floor at 5281, 119, -1390 is block.minecraft.polished_andesite; airports with terminals: [KSDC, KROC, KIUA, KGVQ]",
+    "boarding": "PASSED - aircraft EL101 boarding at KSDC; player boarded=true, riding=true",
+    "aircraft moves": "PASSED - position/phase at departure 5290,-1365 BOARDING -> after 400 ticks 5388,-1317 TAXI_OUT",
+    "landing": "PASSED - after tick sprint: TAXI_IN; player 0.6 km from KROC terminal"
+  },
+  "Test 12 - Save and reload": {
+    "data consistent after reload": "PASSED - services=true, waypoint kept=true, balance=50707 LC, job kept=true, vehicles=[CAR:red], scenario=NEW_LIFE, objectives done=[town_centre, business, open_map, talk, get_job, work_task, paid, event, purchase], player-placed gold block kept=true"
+  },
+  "Test 13 - World separation": {
+    "default world unaffected": "PASSED - generator=NoiseBasedChunkGenerator, EarthLife services running=false, earthlife folder in save=false, height=384",
+    "EarthLife screens stay off": "PASSED - pressed M in a Default world: LifeMap opened=false (expected false), HUD hidden"
+  },
+  "Test 14 - Dedicated server": {
+    "server boots with Earth": "PASSED - dedicated=true, generator=VoxelEarthChunkGenerator, services=true",
+    "client connects": "PASSED - client joined; WorldInfo received=true, start town Williamson"
+  }
+}
