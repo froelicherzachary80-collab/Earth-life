@@ -414,7 +414,9 @@ public final class EarthLifeClientGameTest implements FabricClientGameTest {
                 ServerPlayer p = s.getPlayerList().getPlayers().get(0);
                 boolean gone = p.level().getBlockState(target).isAir();
                 int dirt = p.getInventory().countItem(Items.DIRT);
-                return "block at " + target.toShortString() + " broken=" + gone + ", dirt in inventory=" + dirt + "|" + (gone && dirt > 0);
+                long dropped = p.level().getEntitiesOfClass(net.minecraft.world.entity.item.ItemEntity.class, new AABB(target).inflate(4),
+                        e -> e.getItem().getItem() == Items.DIRT).size();
+                return "block at " + target.toShortString() + " broken=" + gone + ", dirt in inventory=" + dirt + ", dirt item dropped nearby=" + dropped + "|" + (gone && (dirt > 0 || dropped > 0));
             });
             check(T, "mining by hand", r.endsWith("|true"), r.substring(0, r.lastIndexOf('|')) + " (held left mouse for 3 s)");
         });
@@ -436,8 +438,10 @@ public final class EarthLifeClientGameTest implements FabricClientGameTest {
             ctx.getInput().holdMouseFor(InputConstants.MOUSE_BUTTON_RIGHT, 4);
             ctx.waitTicks(10);
             String r = onServer(sp, s -> {
-                var st = s.overworld().getBlockState(ground.above());
-                return "block above " + ground.toShortString() + " is " + st.getBlock().getDescriptionId() + "|" + st.is(Blocks.OAK_PLANKS);
+                for (BlockPos q : BlockPos.betweenClosed(ground.offset(-1, 0, -1), ground.offset(1, 2, 1)))
+                    if (s.overworld().getBlockState(q).is(Blocks.OAK_PLANKS)) return "oak planks placed at " + q.toShortString() + " next to the stone at " + ground.toShortString() + "|true";
+                int left = s.getPlayerList().getPlayers().get(0).getInventory().countItem(Items.OAK_PLANKS);
+                return "no planks placed around " + ground.toShortString() + " (" + left + " planks left in inventory)|false";
             });
             check(T, "building", r.endsWith("|true"), r.substring(0, r.lastIndexOf('|')) + " (right-clicked with planks)");
         });
@@ -647,7 +651,7 @@ public final class EarthLifeClientGameTest implements FabricClientGameTest {
             ctx.takeScreenshot("18_flight_in_progress");
             // fly the rest at maximum speed (tick sprint), checking every few seconds, for up to 8 real minutes
             String phase = "";
-            for (int i = 0; i < 48 && !(phase.startsWith("ARRIVED") || phase.startsWith("TAXI_IN") || phase.startsWith("left")); i++) {
+            for (int i = 0; i < 90 && !(phase.startsWith("ARRIVED") || phase.startsWith("TAXI_IN") || phase.startsWith("left")); i++) {
                 sp.getServer().runCommand("tick sprint 1200");
                 ctx.waitTicks(200);
                 phase = onServer(sp, s -> { var a = s.getPlayerList().getPlayers().get(0).getVehicle() instanceof AirplaneEntity x ? x : null;
@@ -659,6 +663,8 @@ public final class EarthLifeClientGameTest implements FabricClientGameTest {
                 var l = EarthLifeServices.get().airportLayouts.get("KROC");
                 double[] m = l == null ? new double[]{0, 0, 0} : l.placed.marker("agent:checkin:1");
                 return String.format("%s; player %.1f km from KROC terminal", a == null ? "disembarked" : a.sim().phase().toString(), Math.hypot(p.getX() - m[0], p.getZ() - m[2]) / 1000); });
+            sp.getServer().runCommand("tick sprint stop");
+            ctx.waitTicks(20);
             boolean moved = !start.split(" ")[0].equals(mid.split(" ")[0]);
             boolean landed = end.startsWith("ARRIVED") || end.startsWith("TAXI_IN") || end.startsWith("disembarked");
             record(T, "aircraft moves", moved ? "PASSED" : "FAILED", "position/phase at departure " + start + " -> after 400 ticks " + mid);

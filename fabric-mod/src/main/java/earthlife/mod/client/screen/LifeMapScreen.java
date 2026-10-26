@@ -41,7 +41,8 @@ public final class LifeMapScreen extends Screen {
     private double[] selected;            // clicked map point {x, z}
     private String selectedName;
     private boolean layersOpen;
-    private int toolbarH = 24;
+    private String notice;
+    private int toolbarH = 24, searchW = 120;
 
     public LifeMapScreen() { super(Component.literal("LifeMap")); }
 
@@ -58,17 +59,20 @@ public final class LifeMapScreen extends Screen {
     @Override protected void init() {
         var p = minecraft.player;
         if (p != null && (follow || !initialized)) { centerX = p.getX(); centerZ = p.getZ(); initialized = true; }
-        search = new EditBox(font, 6, 3, Math.min(200, width / 3), 18, Component.literal("Search"));
-        search.setHint(Component.literal("Search towns, streets, places…"));
-        search.setResponder(this::runSearch);
-        addRenderableWidget(search);
         int bx = width - 6;
         bx = tool(bx, 20, "×", b -> onClose());
         bx = tool(bx, 20, "−", b -> zoomBy(1, width / 2.0, height / 2.0));
         bx = tool(bx, 20, "+", b -> zoomBy(-1, width / 2.0, height / 2.0));
         bx = tool(bx, 54, follow ? "● Follow" : "◎ Me", b -> { follow = true; rebuildWidgets(); });
         bx = tool(bx, 52, "Layers", b -> { layersOpen = !layersOpen; rebuildWidgets(); });
-        if (!ClientState.route.isEmpty()) tool(bx, 70, "Clear route", b -> { ClientState.route = List.of(); ClientState.routeTarget = null; rebuildWidgets(); });
+        bx = tool(bx, 66, "Waypoints", b -> minecraft.gui.setScreen(new EarthMenuScreen("life")));
+        if (!ClientState.route.isEmpty()) bx = tool(bx, 70, "Clear route", b -> { ClientState.route = List.of(); ClientState.routeTarget = null; rebuildWidgets(); });
+        searchW = Math.max(60, Math.min(200, bx - 10));
+        search = new EditBox(font, 6, 3, searchW, 18, Component.literal("Search"));
+        search.setHint(Component.literal("Search towns, streets, places…"));
+        search.setResponder(this::runSearch);
+        addRenderableWidget(search);
+
 
         int py = toolbarH + 4;
         if (layersOpen) {
@@ -77,6 +81,9 @@ public final class LifeMapScreen extends Screen {
             py = toggle(py, "Land cover", layers.landcover, v -> layers.landcover = v);
             py = toggle(py, "Buildings", layers.buildings, v -> layers.buildings = v);
             py = toggle(py, "Roads", layers.roads, v -> layers.roads = v);
+            py = toggle(py, "Railways", layers.railways, v -> layers.railways = v);
+            py = toggle(py, "Runways & taxiways", layers.aeroways, v -> layers.aeroways = v);
+            py = toggle(py, "Satellite-style colours", layers.satellite, v -> layers.satellite = v);
             py = toggle(py, "Places", showPois, v -> showPois = v);
             py = toggle(py, "Residents", showNpcs, v -> showNpcs = v);
             py = toggle(py, "Events", showEvents, v -> showEvents = v);
@@ -91,10 +98,15 @@ public final class LifeMapScreen extends Screen {
         int ry = toolbarH + 2;
         for (int i = 0; i < Math.min(8, results.size()); i++) {
             Payloads.Poi r = results.get(i);
-            addRenderableWidget(Button.builder(Component.literal(trim(r.name(), 30) + " · " + r.kind().replace("town:", "")), b -> {
-                centerX = r.x(); centerZ = r.z(); follow = false; selected = new double[]{r.x(), r.z()}; selectedName = r.name();
-                results = List.of(); search.setValue(""); rebuildWidgets();
-            }).bounds(6, ry, Math.min(200, width / 3), 16).build());
+            String kindLabel = r.kind().equals("far") ? "outside this world's data" : r.kind().replace("town:", "").replace("place:", "");
+            addRenderableWidget(Button.builder(Component.literal(trim(r.name(), 30) + " · " + kindLabel), b -> {
+                results = List.of(); search.setValue("");
+                if (r.kind().equals("far")) {
+                    notice = r.name() + String.format(" is %.0f km away, outside this world's map region: no roads or buildings are generated there yet.",
+                            Math.hypot(r.x() - minecraft.player.getX(), r.z() - minecraft.player.getZ()) / 1000);
+                } else { centerX = r.x(); centerZ = r.z(); follow = false; selected = new double[]{r.x(), r.z()}; selectedName = r.name(); notice = null; }
+                rebuildWidgets();
+            }).bounds(6, ry, Math.max(searchW, 160), 16).build());
             ry += 17;
         }
         if (selected != null) {
@@ -196,6 +208,14 @@ public final class LifeMapScreen extends Screen {
         if (super.mouseClicked(e, dbl)) return true;
         if (e.y() < toolbarH) return false;
         double x = wx(e.x()), z = wz(e.y());
+        if (e.button() == 2) { follow = true; rebuildWidgets(); return true; }                 // middle click: centre on me
+        if (e.button() == 1) {                                                                // right click: drop a waypoint
+            String name = "Pin" + (1 + (ClientState.life == null ? 0 : ClientState.life.waypoints().size()));
+            EarthLifeClient.command(String.format(Locale.ROOT, "earthlife waypoint set %s %.1f %.1f", name, x, z));
+            selected = new double[]{x, z}; selectedName = name; notice = "Waypoint " + name + " added.";
+            rebuildWidgets();
+            return true;
+        }
         selected = new double[]{x, z};
         selectedName = nearestLabel(x, z, 12 * bpp());
         if (dbl) { startRoute(x, z, selectedName == null ? "map point" : selectedName); }
@@ -278,6 +298,7 @@ public final class LifeMapScreen extends Screen {
 
     private void drawOverlays(GuiGraphicsExtractor g, ClientMapData data) {
         if (!ClientState.route.isEmpty()) polyline(g, ClientState.route, 0xFF1E88E5, 2);
+        if (showPois && zoom >= 3 && zoom <= 8) for (Payloads.Poi pl : data.places) label(g, pl.x(), pl.z(), pl.name(), 0xFFE0E0E0);
         if (showPois && ClientState.world != null) for (Payloads.Poi poi : ClientState.world.pois()) {
             boolean town = poi.kind().startsWith("town");
             if (town && poi.kind().endsWith("hamlet") && zoom > 4) continue;
@@ -348,6 +369,13 @@ public final class LifeMapScreen extends Screen {
         }
         var life = ClientState.life;
         if (life != null) lines.add(0, life.place());
+        if (data != null && p != null) {
+            GeoPoint gp = data.projection.fromBlock(p.getX(), p.getZ());
+            String county = county(gp.lat(), gp.lon());
+            var w = ClientState.world;
+            lines.add(1, (county.isEmpty() ? "" : county + ", ") + (w != null ? w.startState() + ", " + w.startCountry() : ""));
+        }
+        lines.add("Zoom: " + MapRaster.ZOOM_NAMES[zoom] + (notice != null ? "" : ""));
         if (!ClientState.route.isEmpty() && p != null) {
             double len = RoadGraph.length(ClientState.route);
             lines.add(String.format("Route to %s: %.1f km · walk %d min · drive %d min", trim(ClientState.routeLabel, 24), len / 1000, Math.round(len / 1.4 / 60), Math.round(len / 13.4 / 60)));
@@ -369,8 +397,22 @@ public final class LifeMapScreen extends Screen {
         int bx = 8, by = height - 12;
         g.fill(bx, by, bx + barPx, by + 2, 0xFFFFFFFF);
         g.text(font, nice >= 1000 ? String.format("%.0f km", nice / 1000) : String.format("%.0f m", nice), bx + barPx + 4, by - 4, 0xFFFFFFFF, true);
-        String attrib = "© OpenStreetMap contributors · terrain: USGS/NOAA via AWS Terrain Tiles · scroll = zoom, drag = pan, click = select, double-click = route";
+        if (notice != null) {
+            int nw = font.width(notice);
+            g.fill(width / 2 - nw / 2 - 4, toolbarH + 4, width / 2 + nw / 2 + 4, toolbarH + 16, 0xC0000000);
+            g.centeredText(font, notice, width / 2, toolbarH + 6, 0xFFFFE082);
+        }
+        String attrib = "© OpenStreetMap contributors · terrain: USGS/NOAA via AWS Terrain Tiles · wheel zoom · drag pan · click select · right-click waypoint · middle-click centre · double-click route";
         g.text(font, attrib, bx + barPx + 50, by - 4, 0xFFBDBDBD, true);
+    }
+
+    /** County for the Western NY region (approximate borders, from latitude/longitude). */
+    static String county(double lat, double lon) {
+        if (lat < 42.6 || lat > 43.5 || lon < -78.3 || lon > -76.6) return "";
+        if (lon < -77.375 && lat > 42.95) return "Monroe County";
+        if (lon >= -77.375 && lon <= -76.70 && lat >= 42.97) return "Wayne County";
+        if (lat < 42.97 && lon > -77.37 && lon < -76.95) return "Ontario County";
+        return "";
     }
 
     @Override public void onClose() { super.onClose(); }

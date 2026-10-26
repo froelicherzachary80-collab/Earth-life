@@ -15,7 +15,7 @@ import java.util.List;
  */
 public final class TileGenerator {
     /** Bump when the rasterisation changes, so cached tiles from older versions are regenerated. */
-    public static final int VERSION = 2;
+    public static final int VERSION = 3;
 
     static int roadRank(RoadClass c) {
         return switch (c) { case PATH -> 0; case RAIL -> 1; case SERVICE -> 2; case RESIDENTIAL -> 3; case SECONDARY -> 4; case PRIMARY -> 5; case MOTORWAY -> 6; case TAXIWAY -> 7; case RUNWAY -> 8; };
@@ -40,7 +40,43 @@ public final class TileGenerator {
     public java.util.List<Site> sites() { return java.util.List.copyOf(sites); }
 
     /** Per-building decisions that must agree across tile borders: base height, style, roof frame, door and chimney spots. */
-    record Plan(int baseY, BuildingStyle.Resolved style, BuildingStyle.Obb obb, int roofH, byte kind, double[] door, double[] chimney) {}
+    record Plan(int baseY, BuildingStyle.Resolved style, BuildingStyle.Obb obb, int roofH, byte kind, double[] door, double[] chimney,
+                java.util.Map<Long, Integer> furniture) {}
+
+    /** Interior furniture codes stored in TileData.flags2 bits 4-7 (see TileData.furniture). */
+    public static final int F_CRAFTING = 1, F_FURNACE = 2, F_CHEST = 3, F_BED_FOOT = 4, F_BED_HEAD = 5, F_TABLE = 6, F_BOOKSHELF = 7, F_SHELF = 8, F_COUNTER = 9;
+
+    /**
+     * Gameplay floor plans (never a claim about a real building's interior): houses get a kitchen corner (crafting
+     * table + furnace), storage chest, bed, bookshelf and a lit table; stores get shelf rows (barrels) and a counter.
+     */
+    static java.util.Map<Long, Integer> furniture(Building bd, BuildingStyle.Obb o) {
+        java.util.Map<Long, Integer> m = new java.util.HashMap<>();
+        if (o == null || o.halfU() < 3 || o.halfV() < 2.5) return m;
+        String k = bd.kind() == null ? "" : bd.kind();
+        java.util.function.BiConsumer<double[], Integer> put = (uv, code) -> {
+            double x = o.cx() + uv[0] * o.ux() - uv[1] * o.uz(), z = o.cz() + uv[0] * o.uz() + uv[1] * o.ux();
+            if (Features.pointInRing(bd.footprint(), x, z)) m.putIfAbsent(((long) (int) Math.floor(x) << 32) ^ ((int) Math.floor(z) & 0xffffffffL), code);
+        };
+        double hu = o.halfU() - 1.5, hv = o.halfV() - 1.5;
+        switch (k) {
+            case "house", "residential", "detached", "semidetached_house", "bungalow", "terrace", "apartments", "farm" -> {
+                put.accept(new double[]{-hu, -hv}, F_CRAFTING);
+                put.accept(new double[]{-hu + 1, -hv}, F_FURNACE);
+                put.accept(new double[]{-hu, hv}, F_CHEST);
+                put.accept(new double[]{hu - 1, hv}, F_BED_FOOT);
+                put.accept(new double[]{hu, hv}, F_BED_HEAD);
+                put.accept(new double[]{hu, -hv}, F_BOOKSHELF);
+                put.accept(new double[]{0, 0}, F_TABLE);
+            }
+            case "retail", "commercial", "supermarket", "kiosk", "shop" -> {
+                for (double u = -hu + 1; u <= hu - 3; u += 2) { put.accept(new double[]{u, -hv}, F_SHELF); put.accept(new double[]{u, 0}, F_SHELF); }
+                for (double v = hv; v >= hv - 2; v -= 1) put.accept(new double[]{hu, v}, F_COUNTER);
+            }
+            default -> {}
+        }
+        return m;
+    }
     private final java.util.Map<String, Plan> plans = new java.util.concurrent.ConcurrentHashMap<>();
 
     Plan plan(Building bd) {
@@ -60,7 +96,7 @@ public final class TileGenerator {
         };
         return new Plan(baseY, style, obb, roofH, kind, doorPoint(bd, obb), style.chimney() ? new double[]{
                 obb.cx() + obb.ux() * obb.halfU() * 0.55 - obb.uz() * obb.halfV() * 0.3,
-                obb.cz() + obb.uz() * obb.halfU() * 0.55 + obb.ux() * obb.halfV() * 0.3} : null);
+                obb.cz() + obb.uz() * obb.halfU() * 0.55 + obb.ux() * obb.halfV() * 0.3} : null, furniture(bd, obb));
     }
 
     /** Front door: the point on the outline closest to the nearest road (within 80 m), else the middle of a long side. */
@@ -192,6 +228,10 @@ public final class TileGenerator {
                 byte f2 = 0;
                 if (wall && plan.door != null && Math.hypot(x - plan.door[0], z - plan.door[1]) < 1.0) f2 |= TileData.F2_DOOR;
                 if (plan.chimney != null && Math.hypot(x - plan.chimney[0], z - plan.chimney[1]) < 0.71) f2 |= TileData.F2_CHIMNEY;
+                if (!wall && step == 1) {
+                    Integer fc = plan.furniture.get(((long) (int) Math.floor(x) << 32) ^ ((int) Math.floor(z) & 0xffffffffL));
+                    if (fc != null) f2 |= (byte) (fc << 4);
+                }
                 t.flags2[i] = f2;
             });
         }

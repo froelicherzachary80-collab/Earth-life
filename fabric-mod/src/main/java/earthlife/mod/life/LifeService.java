@@ -159,11 +159,11 @@ public final class LifeService {
         for (var e : s.airportLayouts.entrySet()) { double[] m = e.getValue().placed.marker("agent:checkin:1"); pois.add(new Payloads.Poi("airport", e.getKey() + " " + s.airports.get(e.getKey()).name(), m[0], m[2])); }
         for (var l : s.landmarks.values()) { var b = s.projection.toBlock(l.landmark().pos().lat(), l.landmark().pos().lon()); pois.add(new Payloads.Poi("landmark", l.landmark().name(), b.x(), b.z())); }
         EarthSettings st = s.settings;
-        String summary = String.format("%s, %s · %s quality · buildings %s · roads %s · real terrain %s · transport %s · simulation %s · %s · day length %s",
+        String summary = String.format("%s, %s · %s quality · buildings %s · roads %s · real terrain %s · airports %s · residents %s · %s · day length %s",
                 st.town(), st.state(), EarthSettings.pretty(st.qualityEnum()), onOff(st.buildings()), onOff(st.roads()), onOff(st.realTerrain()),
                 onOff(st.transport()), onOff(st.simulation()), EarthSettings.pretty(st.scenarioEnum()), EarthSettings.pretty(st.dayLengthEnum()));
         earthlife.mod.net.Net.send(p, new Payloads.WorldInfo(true, s.region, s.projection.origin().lat(), s.projection.origin().lon(),
-                EarthLifeServices.SEA_LEVEL_Y_AT_0M, st.town(), life(p).scenario, s.bundledData, s.attribution, s.allowLocationSharing, !life(p).welcomed, summary, pois));
+                EarthLifeServices.SEA_LEVEL_Y_AT_0M, st.town(), st.state(), st.country(), life(p).scenario, s.bundledData, s.attribution, s.allowLocationSharing, !life(p).welcomed, summary, pois));
     }
 
     static String onOff(boolean b) { return b ? "on" : "off"; }

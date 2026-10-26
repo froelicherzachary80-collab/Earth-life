@@ -33,6 +33,8 @@ public final class ClientMapData {
     public final List<Line> coastline = new ArrayList<>();
     public final ElevationSource elevation;
     public final List<Towns.Town> towns;
+    /** Hamlets and villages from OpenStreetMap place nodes (map labels and search). */
+    public final List<Payloads.Poi> places = new ArrayList<>();
     private RoadGraph graph;
     static final int CELL = 512;
     private final Map<Long, List<Object>> cells = new HashMap<>();
@@ -60,7 +62,7 @@ public final class ClientMapData {
 
     private ClientMapData(Payloads.WorldInfo i, ClientMapData base) {
         info = i; projection = base.projection; features = base.features; roads.addAll(base.roads); coastline.addAll(base.coastline);
-        elevation = base.elevation; towns = base.towns; graph = base.graph; cells.putAll(base.cells);
+        elevation = base.elevation; towns = base.towns; graph = base.graph; cells.putAll(base.cells); places.addAll(base.places);
     }
 
     private ClientMapData(Payloads.WorldInfo info) throws Exception {
@@ -78,6 +80,12 @@ public final class ClientMapData {
                 for (Object e : Json.arr(Json.obj(o).get("line"))) { var a = Json.arr(e); pts.add(new Features.Pt(Json.num(a.get(0)), Json.num(a.get(1)))); }
                 coastline.add(new Line(pts));
             }
+        }
+        String osmTowns = info.bundledData() ? text("regions/western-ny/osm-towns.json") : null;
+        if (osmTowns != null) for (Object o : Json.arr(Json.obj(Json.parse(osmTowns)).get("towns"))) {
+            var m = Json.obj(o);
+            var b = projection.toBlock(Json.num(m.get("lat")), Json.num(m.get("lon")));
+            places.add(new Payloads.Poi("place:" + Json.str(m, "kind"), Json.str(m, "name"), b.x(), b.z()));
         }
         String townsJson = info.bundledData() ? text("towns.json") : null;
         towns = townsJson != null ? Towns.load(townsJson) : List.of(new Towns.Town(info.startTown(), Towns.Kind.TOWN, projection.origin(), 0, false));
@@ -153,6 +161,15 @@ public final class ClientMapData {
         List<Payloads.Poi> out = new ArrayList<>();
         if (s.length() < 2) return out;
         for (Payloads.Poi p : extra) if (p.name().toLowerCase(Locale.ROOT).contains(s)) out.add(p);
+        for (Payloads.Poi p : places) if (p.name().toLowerCase(Locale.ROOT).contains(s) && out.stream().noneMatch(o -> o.name().equals(p.name()))) out.add(p);
+        // Worldwide gazetteer: places outside this world's map data are listed with their real position and coverage.
+        for (var pl : earthlife.mod.world.EarthSettings.PLACES) {
+            String label = pl.town() + ", " + pl.state();
+            if (!label.toLowerCase(Locale.ROOT).contains(s) || out.stream().anyMatch(o -> o.name().startsWith(pl.town()))) continue;
+            var b = projection.toBlock(pl.lat(), pl.lon());
+            boolean far = Math.hypot(b.x(), b.z()) > 150_000;
+            out.add(new Payloads.Poi(far ? "far" : "town", label + (far ? String.format(Locale.ROOT, " (%.4f, %.4f)", pl.lat(), pl.lon()) : ""), b.x(), b.z()));
+        }
         Set<String> seenStreets = new HashSet<>();
         for (NamedRoad r : roads) {
             if (r.name() == null || !r.name().toLowerCase(Locale.ROOT).contains(s) || !seenStreets.add(r.name())) continue;

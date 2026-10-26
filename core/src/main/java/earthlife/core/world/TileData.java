@@ -31,6 +31,8 @@ public final class TileData {
     public final short[] eaveY;
     public final byte[] wallMat, roofMat, flags2;
     public static final byte F2_DOOR = 1, F2_CHIMNEY = 2, F2_LANDMARK = 4;
+    /** Interior furniture code (TileGenerator.F_*) of a building column, 0 = none. */
+    public int furniture(int sx, int sz) { return (flags2[idx(sx, sz)] >> 4) & 0xF; }
 
     public TileData(TileKey key) {
         this.key = key;

@@ -90,15 +90,15 @@ public final class Payloads {
      * Sent on join (and after reloads): whether this is an Earth world and how to draw its map. The client draws roads
      * and buildings from the same bundled map data the server uses, positioned with this origin.
      */
-    public record WorldInfo(boolean earth, String region, double originLat, double originLon, int seaLevelYAt0m, String startTown,
+    public record WorldInfo(boolean earth, String region, double originLat, double originLon, int seaLevelYAt0m, String startTown, String startState, String startCountry,
                             String scenario, boolean bundledData, String attribution, boolean showPlayersAllowed, boolean welcome,
                             String settingsSummary, List<Poi> pois) implements CustomPacketPayload {
         public static final Type<WorldInfo> TYPE = new Type<>(id("world_info"));
         public static final StreamCodec<FriendlyByteBuf, WorldInfo> CODEC = StreamCodec.of((b, p) -> {
             b.writeBoolean(p.earth); b.writeUtf(p.region); b.writeDouble(p.originLat); b.writeDouble(p.originLon); b.writeVarInt(p.seaLevelYAt0m);
-            b.writeUtf(p.startTown); b.writeUtf(p.scenario); b.writeBoolean(p.bundledData); b.writeUtf(p.attribution); b.writeBoolean(p.showPlayersAllowed);
+            b.writeUtf(p.startTown); b.writeUtf(p.startState); b.writeUtf(p.startCountry); b.writeUtf(p.scenario); b.writeBoolean(p.bundledData); b.writeUtf(p.attribution); b.writeBoolean(p.showPlayersAllowed);
             b.writeBoolean(p.welcome); b.writeUtf(p.settingsSummary); writePois(b, p.pois);
-        }, b -> new WorldInfo(b.readBoolean(), b.readUtf(), b.readDouble(), b.readDouble(), b.readVarInt(), b.readUtf(), b.readUtf(), b.readBoolean(),
+        }, b -> new WorldInfo(b.readBoolean(), b.readUtf(), b.readDouble(), b.readDouble(), b.readVarInt(), b.readUtf(), b.readUtf(), b.readUtf(), b.readUtf(), b.readBoolean(),
                 b.readUtf(), b.readBoolean(), b.readBoolean(), b.readUtf(), readPois(b, 4096)));
         @Override public Type<? extends CustomPacketPayload> type() { return TYPE; }
     }

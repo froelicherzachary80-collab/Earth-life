@@ -262,9 +262,11 @@ public final class V04Commands {
 
     static String worldInfo() {
         var st = EarthLifeServices.get().settings;
-        return String.format("Earth world · start %s, %s, %s (%.4f, %.4f) · quality %s · buildings %s · roads %s · real terrain %s · transport %s · simulation %s · start time %s · scenario %s · day length %s",
-                st.town(), st.state(), st.country(), st.lat(), st.lon(), st.quality(), st.buildings(), st.roads(), st.realTerrain(), st.transport(), st.simulation(),
-                st.startTime(), st.scenario(), st.dayLength());
+        StringBuilder on = new StringBuilder(), off = new StringBuilder();
+        boolean[] a = st.options().array();
+        for (int i = 0; i < a.length; i++) (a[i] ? on : off).append(on.length() > 0 && a[i] || off.length() > 0 && !a[i] ? ", " : "").append(earthlife.mod.world.EarthSettings.Options.NAMES[i]);
+        return String.format("Earth world · start %s, %s, %s (%.4f, %.4f) · quality %s · start time %s · scenario %s · day length %s · ON: %s · OFF: %s",
+                st.town(), st.state(), st.country(), st.lat(), st.lon(), st.qualityEnum(), st.startTime(), st.scenario(), st.dayLength(), on, off.length() == 0 ? "nothing" : off);
     }
 
     static String teleport(ServerPlayer p, double x, double z, String label) {

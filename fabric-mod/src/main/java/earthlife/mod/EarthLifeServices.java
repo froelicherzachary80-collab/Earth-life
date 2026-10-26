@@ -101,7 +101,7 @@ public final class EarthLifeServices implements AutoCloseable {
             var b = projection.toBlock(t.centre().lat(), t.centre().lon());
             centres.add(new ProceduralInfill.Centre(t.name(), b.x(), b.z(), t.kind().radiusM(), t.kind() == Towns.Kind.CITY));
         }
-        if (settings.buildings() && !Boolean.FALSE.equals(cfg.get("estimatedInfill"))) features.buildings.addAll(ProceduralInfill.infill(features, centres, 0xEA27L));
+        if (settings.options().estimatedBuildings() && !Boolean.FALSE.equals(cfg.get("estimatedInfill"))) features.buildings.addAll(ProceduralInfill.infill(features, centres, 0xEA27L));
 
         // Elevation: bundled/override DEM grid when available; otherwise gentle estimated hills. "Real terrain" off = flat land.
         ElevationSource fallback = new ElevationSource.Procedural(bundledData ? 110 : 95, 20, 0xEA27L);
@@ -172,8 +172,9 @@ public final class EarthLifeServices implements AutoCloseable {
         @SuppressWarnings("unchecked") List<String> ics = (List<String>) ev.getOrDefault("ics", List.of());
         List<Integer> sports = new ArrayList<>();
         for (Object o : (List<?>) ev.getOrDefault("mlbSportIds", List.of(11L))) sports.add(((Number) o).intValue());
-        var evCfg = new earthlife.core.events.EventEngine.Config(!Boolean.FALSE.equals(ev.get("holidays")), !Boolean.FALSE.equals(ev.get("mlb")),
-                teams, sports, (String) ev.get("ticketmasterKey"), ((Number) ev.getOrDefault("radiusMiles", 50L)).intValue(), ics, time.clock().zone());
+        boolean eventsOn = settings.options().events();
+        var evCfg = new earthlife.core.events.EventEngine.Config(eventsOn && !Boolean.FALSE.equals(ev.get("holidays")), eventsOn && !Boolean.FALSE.equals(ev.get("mlb")),
+                teams, sports, eventsOn ? (String) ev.get("ticketmasterKey") : null, ((Number) ev.getOrDefault("radiusMiles", 50L)).intValue(), eventsOn ? ics : List.of(), time.clock().zone());
         var http = java.net.http.HttpClient.newBuilder().followRedirects(java.net.http.HttpClient.Redirect.NORMAL).connectTimeout(java.time.Duration.ofSeconds(15)).build();
         boolean offline = Boolean.getBoolean("earthlife.offline") || Boolean.TRUE.equals(cfg.get("offline"));
         events = new earthlife.core.events.EventEngine(evCfg, projection.origin(), 90_000, landmarkList, towns, worldDir.resolve("events-cache.json"), url -> {
@@ -239,11 +240,16 @@ public final class EarthLifeServices implements AutoCloseable {
 
     /** Applies the world's building/road toggles to raw map data. */
     private static Features filtered(Features in, earthlife.mod.world.EarthSettings s) {
-        if (s.buildings() && s.roads()) return in;
+        var o = s.options();
+        if (o.mappedBuildings() && o.roads() && o.railways()) return in;
         Features out = new Features(in.attribution);
         out.areas.addAll(in.areas); out.water.addAll(in.water);
-        if (s.buildings()) out.buildings.addAll(in.buildings);
-        for (var r : in.roads) if (s.roads() || r.cls() == Features.RoadClass.RUNWAY || r.cls() == Features.RoadClass.TAXIWAY) out.roads.add(r);
+        if (o.mappedBuildings()) out.buildings.addAll(in.buildings);
+        for (var r : in.roads) {
+            boolean air = r.cls() == Features.RoadClass.RUNWAY || r.cls() == Features.RoadClass.TAXIWAY;
+            boolean rail = r.cls() == Features.RoadClass.RAIL;
+            if (air || (rail ? o.railways() : o.roads())) out.roads.add(r);
+        }
         return out;
     }
 

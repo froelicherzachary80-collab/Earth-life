@@ -40,7 +40,11 @@ public final class Halloween {
 
     public static LocalDate today(ZoneId zone) { return LocalDate.now(zone); }
 
-    public static boolean isSeason(ZoneId zone) { return forced || earthlife.core.events.HalloweenCalendar.isSeason(today(zone)); }
+    public static boolean isSeason(ZoneId zone) {
+        if (forced) return true;
+        if (EarthLifeServices.running() && !EarthLifeServices.get().settings.options().events()) return false;   // Live events off for this world
+        return earthlife.core.events.HalloweenCalendar.isSeason(today(zone));
+    }
 
     public static boolean isEvening(long dayTime) { return forced || earthlife.core.events.HalloweenCalendar.isEveningHour(GameClock.hour(dayTime)); }
 

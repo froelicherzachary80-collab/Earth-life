@@ -18,10 +18,12 @@ import java.util.concurrent.*;
 public final class MapRaster {
     public static final int TILE = 256;
     /** Blocks per map pixel for each zoom level (index 0 = most zoomed in). */
-    public static final double[] BPP = {0.25, 0.5, 1, 2, 4, 8, 16, 32, 64};
+    public static final double[] BPP = {0.25, 0.5, 1, 2, 4, 8, 16, 32, 64, 128, 256, 512};
+    /** Names shown for each zoom level (building ... state). */
+    public static final String[] ZOOM_NAMES = {"Building", "Building", "Street", "Street", "Neighbourhood", "Neighbourhood", "Town", "Town", "City", "Region", "Region", "State"};
 
     public static final class Layers {
-        public boolean terrain = true, buildings = true, roads = true, water = true, landcover = true;
+        public boolean terrain = true, buildings = true, roads = true, water = true, landcover = true, railways = true, aeroways = true, satellite = false;
     }
 
     record Key(int zoom, int tx, int tz, int layers) {}
@@ -39,7 +41,10 @@ public final class MapRaster {
         textures.clear();
     }
 
-    static int mask(Layers l) { return (l.terrain ? 1 : 0) | (l.buildings ? 2 : 0) | (l.roads ? 4 : 0) | (l.water ? 8 : 0) | (l.landcover ? 16 : 0); }
+    static int mask(Layers l) {
+        return (l.terrain ? 1 : 0) | (l.buildings ? 2 : 0) | (l.roads ? 4 : 0) | (l.water ? 8 : 0) | (l.landcover ? 16 : 0)
+                | (l.railways ? 32 : 0) | (l.aeroways ? 64 : 0) | (l.satellite ? 128 : 0);
+    }
 
     /** Texture for a tile, or null while it's still being drawn (requested on first call). */
     public static synchronized Identifier tile(ClientMapData data, int zoom, int tx, int tz, Layers layers, int[] uploadBudget) {
@@ -87,25 +92,26 @@ public final class MapRaster {
             double wx = x0 + (x + 0.5) * bpp, wz = z0 + (y + 0.5) * bpp;
             double e = d.elevation.elevationAt(wx, wz);
             int c;
-            if (layers.water && e < 74.2) c = depthBlue(74.2 - e);
+            if (layers.water && e < 74.2) c = layers.satellite ? blend(0xFF1E3F5C, 0xFF0E2238, Math.min(1, (74.2 - e) / 40)) : depthBlue(74.2 - e);
             else if (!layers.terrain) c = 0xFFE8E4D8;
             else {
                 double shade = d.elevation.elevationAt(wx - bpp * 2, wz - bpp * 2) - e;   // light from the north-west
-                c = landColor(e, shade / Math.max(1, bpp));
+                c = layers.satellite ? satLand(e, shade / Math.max(1, bpp), x, y) : landColor(e, shade / Math.max(1, bpp));
             }
             px[y * TILE + x] = c;
         }
         double x1 = x0 + TILE * bpp, z1 = z0 + TILE * bpp;
         Collection<Object> feats = d.query(x0, z0, x1, z1);
-        if (layers.landcover) for (Object o : feats) if (o instanceof Features.Area a) fill(px, a.ring(), x0, z0, bpp, coverColor(a.cover()));
+        if (layers.landcover) for (Object o : feats) if (o instanceof Features.Area a) fill(px, a.ring(), x0, z0, bpp, layers.satellite ? satCover(a.cover()) : coverColor(a.cover()));
         if (layers.water) {
-            for (Object o : feats) if (o instanceof Features.Water w) fill(px, w.ring(), x0, z0, bpp, 0xFF6FA8DC);
+            for (Object o : feats) if (o instanceof Features.Water w) fill(px, w.ring(), x0, z0, bpp, layers.satellite ? 0xFF22445E : 0xFF6FA8DC);
             for (Object o : feats) if (o instanceof ClientMapData.Line l) line(px, l.pts(), x0, z0, bpp, 1.5, 0xFF3D6E9E);
         }
         if (layers.buildings && bpp <= 8) for (Object o : feats) if (o instanceof Features.Building b) {
             boolean est = b.prov() == Features.Provenance.ESTIMATED;
             int c = "terminal".equals(b.kind()) || "commercial".equals(b.kind()) || "retail".equals(b.kind()) ? 0xFFB98F6E
                     : "barn".equals(b.kind()) || "farm_auxiliary".equals(b.kind()) ? 0xFFB5544B : 0xFF9C8F84;
+            if (layers.satellite) c = (Math.abs(b.id().hashCode()) % 3 == 0) ? 0xFF7A6F66 : (Math.abs(b.id().hashCode()) % 3 == 1 ? 0xFF5B5550 : 0xFF8E8A86);
             fill(px, b.footprint(), x0, z0, bpp, est ? blend(c, 0xFFD0CCC4, 0.45) : c);
             if (bpp <= 1) outline(px, b.footprint(), x0, z0, bpp, 0xFF5E544C);
         }
@@ -113,6 +119,8 @@ public final class MapRaster {
             for (int pass = 0; pass < 2; pass++) for (Object o : feats) if (o instanceof ClientMapData.NamedRoad nr) {
                 Features.Road r = nr.road();
                 var cls = r.cls();
+                if (cls == Features.RoadClass.RAIL && !layers.railways) continue;
+                if ((cls == Features.RoadClass.RUNWAY || cls == Features.RoadClass.TAXIWAY) && !layers.aeroways) continue;
                 if (bpp > 16 && !(cls == Features.RoadClass.MOTORWAY || cls == Features.RoadClass.PRIMARY || cls == Features.RoadClass.RAIL)) continue;
                 if (bpp > 4 && (cls == Features.RoadClass.SERVICE || cls == Features.RoadClass.PATH)) continue;
                 double wPx = Math.max(cls == Features.RoadClass.PATH ? 0.8 : 1.2, r.widthM() / bpp);
@@ -121,6 +129,23 @@ public final class MapRaster {
             }
         }
         return px;
+    }
+
+    /** "Satellite-inspired" cartography: an imagery-like palette drawn from the same map data (not real satellite imagery). */
+    static int satLand(double elev, double shade, int x, int y) {
+        double t = Math.max(0, Math.min(1, (elev - 74) / 250));
+        int base = blend(0xFF5D7A3C, 0xFF77744A, t);
+        int noise = ((x * 7349 + y * 1871) & 15) - 8;
+        base = blend(base, noise > 0 ? 0xFF6E8A44 : 0xFF4F6A33, Math.abs(noise) / 32.0);
+        double s = Math.max(-0.3, Math.min(0.3, shade * 0.1));
+        return s >= 0 ? blend(base, 0xFFFFFFFF, s) : blend(base, 0xFF000000, -s);
+    }
+
+    static int satCover(Features.Landcover c) {
+        return switch (c) {
+            case FARMLAND -> 0xFF8E8B55; case ORCHARD -> 0xFF5E7E3A; case FOREST -> 0xFF35512A; case GRASS -> 0xFF6A8A45;
+            case RESIDENTIAL -> 0xFF7D7F6A; case INDUSTRIAL -> 0xFF8A8580; case BEACH -> 0xFFCDBF92; case WETLAND -> 0xFF4E6447; case AIRPORT_APRON -> 0xFF9A9896;
+        };
     }
 
     static int depthBlue(double depth) {

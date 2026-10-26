@@ -5,6 +5,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import earthlife.core.world.BuildingStyle;
 import earthlife.core.world.TileData;
 import earthlife.core.world.TileData.Surface;
+import earthlife.core.world.TileGenerator;
 import earthlife.core.world.TileKey;
 import earthlife.mod.EarthLifeServices;
 import earthlife.mod.McCompat;
@@ -83,7 +84,9 @@ public final class VoxelEarthChunkGenerator extends ChunkGenerator {
         int minY = chunk.getMinY(), maxY = minY + chunk.getHeight() - 1;
         TileData t = tileFor(cx, cz);
         var pos = new BlockPos.MutableBlockPos();
-        boolean lowQ = settings.qualityEnum() == EarthSettings.Quality.LOW;
+        EarthSettings.Quality q = settings.qualityEnum();
+        boolean lowQ = q == EarthSettings.Quality.PERFORMANCE;
+        var opt = settings.options();
         for (int dz = 0; dz < 16; dz++) for (int dx = 0; dx < 16; dx++) {
             int x = cx + dx, z = cz + dz;
             if (t == null) { fallbackColumn(chunk, pos, x, z, minY); continue; }
@@ -93,6 +96,9 @@ public final class VoxelEarthChunkGenerator extends ChunkGenerator {
             Surface surf = t.surfaceAt(sx, sz);
             boolean road = t.has(sx, sz, TileData.FLAG_ROAD);
             if (!settings.roads() && road && surf != Surface.RUNWAY && surf != Surface.TAXIWAY) surf = Surface.GRASS;
+            if (!opt.farmland() && surf == Surface.FARMLAND) surf = Surface.GRASS;
+            boolean water = opt.waterways() && t.has(sx, sz, TileData.FLAG_WATER);
+            if (!opt.waterways() && t.has(sx, sz, TileData.FLAG_WATER)) top += 3;           // no basin: dry land where the pond was
             for (int y = minY; y <= top; y++) {
                 BlockState st = y == minY ? Blocks.BEDROCK.defaultBlockState()
                         : y < top - 4 ? (y < 0 ? Blocks.DEEPSLATE.defaultBlockState() : Blocks.STONE.defaultBlockState())
@@ -100,16 +106,22 @@ public final class VoxelEarthChunkGenerator extends ChunkGenerator {
                 McCompat.set(chunk, pos.set(x, y, z), st);
             }
             // Water: mapped lakes/rivers are carved basins filled 2 deep; anything below the lake datum floods to sea level.
-            if (t.has(sx, sz, TileData.FLAG_WATER))
-                for (int y = top + 1; y <= top + 2; y++) McCompat.set(chunk, pos.set(x, y, z), Blocks.WATER.defaultBlockState());
+            if (water) for (int y = top + 1; y <= top + 2; y++) McCompat.set(chunk, pos.set(x, y, z), Blocks.WATER.defaultBlockState());
             if (top < SEA - 1)
                 for (int y = top + 1; y < SEA; y++) McCompat.set(chunk, pos.set(x, y, z), Blocks.WATER.defaultBlockState());
             if (surf == Surface.FARMLAND && !road && Math.floorMod(x, 4) != 0)
                 McCompat.set(chunk, pos.set(x, top + 1, z), Blocks.WHEAT.defaultBlockState());
-            if (settings.buildings() && t.structureTopY[i] > 0) building(chunk, pos, x, z, top, t, sx, sz, maxY, lowQ);
-            if (!lowQ && t.has(sx, sz, TileData.FLAG_TREE)) tree(chunk, pos, x, z, top, cx, cz, surf == Surface.ORCHARD);
+            boolean house = t.structureTopY[i] > 0 && (t.has(sx, sz, TileData.FLAG_ESTIMATED) ? opt.estimatedBuildings() : opt.mappedBuildings());
+            if (house) {
+                building(chunk, pos, x, z, top, t, sx, sz, maxY, lowQ);
+                if (settings.furnish()) furnish(chunk, pos, x, z, top, t, sx, sz, cx, cz);
+            }
+            if (opt.forests() && t.has(sx, sz, TileData.FLAG_TREE) && (!lowQ || Math.floorMod(x * 3 + z * 5, 2) == 0))
+                tree(chunk, pos, x, z, top, cx, cz, surf == Surface.ORCHARD);
+            if (opt.streetDetails() && !lowQ && !road && !house && !water) streetLamp(chunk, pos, x, z, top, t, sx, sz, q == EarthSettings.Quality.ULTRA ? 23 : 37);
         }
         if (t != null && settings.buildings()) placeBlueprints(chunk, pos, cx, cz, minY, maxY);
+        caves(chunk, pos, cp, minY, t);
         ores(chunk, pos, cp, minY);
         Heightmap.primeHeightmaps(chunk, EnumSet.of(Heightmap.Types.OCEAN_FLOOR_WG, Heightmap.Types.WORLD_SURFACE_WG));
         return CompletableFuture.completedFuture(chunk);
@@ -120,6 +132,107 @@ public final class VoxelEarthChunkGenerator extends ChunkGenerator {
         for (int y = minY; y <= 64; y++)
             McCompat.set(chunk, pos.set(x, y, z), y == minY ? Blocks.BEDROCK.defaultBlockState() : y < 61 ? Blocks.STONE.defaultBlockState()
                     : y < 64 ? Blocks.DIRT.defaultBlockState() : Blocks.GRASS_BLOCK.defaultBlockState());
+    }
+
+    /**
+     * Street lamp beside a town road: on a non-road column whose neighbour is asphalt, spaced by a hash of the position
+     * (about one every `spacing` metres of kerb) - only where there are buildings or residential/commercial land nearby.
+     */
+    private static void streetLamp(ChunkAccess c, BlockPos.MutableBlockPos p, int x, int z, int top, TileData t, int sx, int sz, int spacing) {
+        if (Math.floorMod(x * 73856093 ^ z * 19349663, spacing) != 0) return;
+        if (sx < 1 || sz < 1 || sx > t.n - 2 || sz > t.n - 2) return;
+        boolean kerb = false;
+        for (int[] d : new int[][]{{1, 0}, {-1, 0}, {0, 1}, {0, -1}}) {
+            int k = t.idx(sx + d[0], sz + d[1]);
+            if ((t.flags[k] & TileData.FLAG_ROAD) != 0 && t.surface[k] == (byte) Surface.ASPHALT.ordinal()) kerb = true;
+            if ((t.flags[k] & TileData.FLAG_BUILDING) != 0) return;
+        }
+        if (!kerb) return;
+        boolean town = false;
+        for (int d = -12; d <= 12 && !town; d += 4) for (int e = -12; e <= 12 && !town; e += 4) {
+            int ax = sx + d, az = sz + e;
+            if (ax >= 0 && az >= 0 && ax < t.n && az < t.n && t.structureTopY[t.idx(ax, az)] > 0) town = true;
+        }
+        if (!town) return;
+        BlockState post = McCompat.block("minecraft:dark_oak_fence");
+        for (int y = 1; y <= 4; y++) McCompat.set(c, p.set(x, top + y, z), post);
+        McCompat.set(c, p.set(x, top + 5, z), McCompat.block("minecraft:lantern"));
+    }
+
+    /** Gameplay furniture for interior markers from the tile (houses: kitchen corner, bed, chest, bookshelf, lit table; stores: shelves + counter). */
+    private static void furnish(ChunkAccess c, BlockPos.MutableBlockPos p, int x, int z, int base, TileData t, int sx, int sz, int cx, int cz) {
+        int f = t.furniture(sx, sz);
+        if (f == 0) return;
+        int y = base + 1;
+        BlockState st = switch (f) {
+            case TileGenerator.F_CRAFTING -> Blocks.CRAFTING_TABLE.defaultBlockState();
+            case TileGenerator.F_FURNACE -> Blocks.FURNACE.defaultBlockState();
+            case TileGenerator.F_CHEST -> Blocks.CHEST.defaultBlockState();
+            case TileGenerator.F_BOOKSHELF -> Blocks.BOOKSHELF.defaultBlockState();
+            case TileGenerator.F_SHELF -> Blocks.BARREL.defaultBlockState();
+            case TileGenerator.F_COUNTER -> Blocks.SMOOTH_STONE.defaultBlockState();
+            case TileGenerator.F_TABLE -> McCompat.block("minecraft:oak_fence");
+            case TileGenerator.F_BED_FOOT -> bed(t, sx, sz, x, z, cx, cz, false);
+            case TileGenerator.F_BED_HEAD -> bed(t, sx, sz, x, z, cx, cz, true);
+            default -> null;
+        };
+        if (st == null) return;
+        McCompat.set(c, p.set(x, y, z), st);
+        if (f == TileGenerator.F_TABLE) McCompat.set(c, p.set(x, y + 1, z), McCompat.block("minecraft:lantern"));
+    }
+
+    /** Bed halves facing each other; both halves must be in this chunk (otherwise a rug is placed instead). */
+    private static BlockState bed(TileData t, int sx, int sz, int x, int z, int cx, int cz, boolean head) {
+        int want = head ? TileGenerator.F_BED_FOOT : TileGenerator.F_BED_HEAD;
+        int[][] dirs = {{1, 0}, {-1, 0}, {0, 1}, {0, -1}};
+        net.minecraft.core.Direction[] facing = {net.minecraft.core.Direction.EAST, net.minecraft.core.Direction.WEST, net.minecraft.core.Direction.SOUTH, net.minecraft.core.Direction.NORTH};
+        for (int k = 0; k < 4; k++) {
+            int nx = sx + dirs[k][0], nz = sz + dirs[k][1];
+            if (nx < 0 || nz < 0 || nx >= t.n || nz >= t.n || t.furniture(nx, nz) != want) continue;
+            int wx = x + dirs[k][0], wz = z + dirs[k][1];
+            if (wx < cx || wx > cx + 15 || wz < cz || wz > cz + 15) break;
+            // FACING points from foot to head
+            net.minecraft.core.Direction f = head ? facing[k].getOpposite() : facing[k];
+            return McCompat.block("minecraft:red_bed").setValue(net.minecraft.world.level.block.BedBlock.FACING, f)
+                    .setValue(net.minecraft.world.level.block.BedBlock.PART, head ? net.minecraft.world.level.block.state.properties.BedPart.HEAD
+                            : net.minecraft.world.level.block.state.properties.BedPart.FOOT);
+        }
+        return McCompat.block("minecraft:red_carpet");
+    }
+
+    /**
+     * Caves: worm tunnels carved below the surface (never within 8 blocks of the ground, so roads and houses stay
+     * intact). Each chunk may start a tunnel; tunnels from neighbouring chunks are replayed so they continue across
+     * chunk borders. Below Y -54 caves fill with lava, like deep vanilla caves.
+     */
+    private static void caves(ChunkAccess chunk, BlockPos.MutableBlockPos pos, ChunkPos cp, int minY, TileData t) {
+        int x0 = cp.getMinBlockX(), z0 = cp.getMinBlockZ();
+        for (int ox = -5; ox <= 5; ox++) for (int oz = -5; oz <= 5; oz++) {
+            long seed = (cp.x() + ox) * 0x5DEECE66DL + (cp.z() + oz) * 0x2545F4914F6CDD1DL + 0x9E3779B9L;
+            java.util.Random r = new java.util.Random(seed);
+            if (r.nextInt(7) != 0) continue;
+            double x = (cp.x() + ox) * 16 + r.nextInt(16), z = (cp.z() + oz) * 16 + r.nextInt(16), y = -50 + r.nextInt(90);
+            double yaw = r.nextDouble() * Math.PI * 2, pitch = (r.nextDouble() - 0.5) * 0.5;
+            int len = 70 + r.nextInt(80);
+            for (int step = 0; step < len; step++) {
+                double rad = 1.6 + 1.4 * Math.sin(step * Math.PI / len) + r.nextDouble() * 0.3;
+                x += Math.cos(yaw) * Math.cos(pitch); z += Math.sin(yaw) * Math.cos(pitch); y += Math.sin(pitch);
+                yaw += (r.nextDouble() - 0.5) * 0.35; pitch = pitch * 0.9 + (r.nextDouble() - 0.5) * 0.12;
+                if (x + rad < x0 || x - rad > x0 + 15 || z + rad < z0 || z - rad > z0 + 15) continue;
+                for (int bx = (int) Math.floor(x - rad); bx <= (int) Math.ceil(x + rad); bx++) for (int bz = (int) Math.floor(z - rad); bz <= (int) Math.ceil(z + rad); bz++) {
+                    if (bx < x0 || bx > x0 + 15 || bz < z0 || bz > z0 + 15) continue;
+                    int surface = t == null ? 64 : t.terrainY[t.idx(bx - t.key.minX(), bz - t.key.minZ())];
+                    for (int by = (int) Math.floor(y - rad); by <= (int) Math.ceil(y + rad); by++) {
+                        if (by <= minY + 4 || by > surface - 8) continue;
+                        double dx = bx + 0.5 - x, dy = (by + 0.5 - y) * 1.3, dz = bz + 0.5 - z;
+                        if (dx * dx + dy * dy + dz * dz > rad * rad) continue;
+                        BlockState here = chunk.getBlockState(pos.set(bx, by, bz));
+                        if (here.is(Blocks.STONE) || here.is(Blocks.DEEPSLATE) || here.is(Blocks.DIRT))
+                            McCompat.set(chunk, pos, by < -54 ? Blocks.LAVA.defaultBlockState() : Blocks.CAVE_AIR.defaultBlockState());
+                    }
+                }
+            }
+        }
     }
 
     /** Deterministic ore veins by depth (vanilla decoration is off in Earth worlds, so survival still has ores). */
@@ -222,7 +335,7 @@ public final class VoxelEarthChunkGenerator extends ChunkGenerator {
         int i = t.idx(sx, sz);
         int top = Math.min(maxY - 3, t.structureTopY[i]);
         int eave = Math.min(top, t.eaveY[i] > 0 ? t.eaveY[i] : top - 1);
-        boolean wall = t.has(sx, sz, TileData.FLAG_BUILDING_WALL), door = t.has2(sx, sz, TileData.F2_DOOR), chimney = t.has2(sx, sz, TileData.F2_CHIMNEY);
+        boolean wall = t.has(sx, sz, TileData.FLAG_BUILDING_WALL), door = t.has2(sx, sz, TileData.F2_DOOR), chimney = !lowQ && t.has2(sx, sz, TileData.F2_CHIMNEY);
         var wallMat = BuildingStyle.Wall.values()[t.wallMat[i]];
         BlockState wb = wallBlock(wallMat), rb = roofBlock(BuildingStyle.Roof.values()[t.roofMat[i]]);
         boolean glassBuilding = wallMat == BuildingStyle.Wall.GLASS;

@@ -82,20 +82,19 @@ public final class EarthLifeClient implements ClientModInitializer {
         });
         // A key can be shared with a vanilla binding (L = Advancements by default). Both get the press; if vanilla opened
         // its screen after ours, put ours back on the next tick (in Earth worlds; elsewhere vanilla keeps the key).
-        ClientTickEvents.START_CLIENT_TICK.register(mc -> {
-            String want = pendingKeyScreen;
-            pendingKeyScreen = null;
-            if (want != null && ClientState.earth() && !(mc.gui.screen() instanceof EarthMenuScreen)) open(mc, want);
+        ClientTickEvents.START_CLIENT_TICK.register(mc -> screenAtTickStart = mc.gui.screen());
+        ClientTickEvents.END_CLIENT_TICK.register(mc -> {
+            // Vanilla binds Advancements to L too. Both mappings receive the press, but vanilla opens its screen first and
+            // opening a screen clears every pending click. In Earth worlds the wallet wins; rebind either key to keep both.
+            if (screenAtTickStart == null && mc.gui.screen() instanceof net.minecraft.client.gui.screens.advancements.AdvancementsScreen
+                    && WALLET.same(mc.options.keyAdvancements) && ClientState.earth()) open(mc, "menu:wallet");
         });
         HudElementRegistry.addLast(EarthLifeMod.id("hud"), (g, delta) -> drawHud(g));
     }
 
-    static volatile String pendingKeyScreen;
+    static net.minecraft.client.gui.screens.Screen screenAtTickStart;
 
-    static void openKey(Minecraft mc, String screen) {
-        open(mc, screen);
-        if (ClientState.earth()) pendingKeyScreen = screen;
-    }
+    static void openKey(Minecraft mc, String screen) { open(mc, screen); }
 
     /** Opens a client screen by name: map, map:route:x:z:label, map:clear, menu:<tab>, seatback. */
     public static void open(Minecraft mc, String screen) {
@@ -150,14 +149,16 @@ public final class EarthLifeClient implements ClientModInitializer {
         }
         if (welcomeUntilMs > System.currentTimeMillis() && ClientState.world != null) {
             var w = ClientState.world;
-            int bw = Math.min(320, sw - 20), bx = (sw - bw) / 2, by = sh / 2 - 70;
-            g.fill(bx - 6, by - 6, bx + bw + 6, by + 96, 0xD0101418);
-            g.centeredText(font, "§6Welcome to " + w.startTown() + "!", sw / 2, by, 0xFFFFFFFF);
-            g.textWithWordWrap(font, net.minecraft.network.chat.Component.literal("You're standing in a 1:1 copy of the real place, built from real map data. "
-                    + "Scenario: " + w.scenario().replace('_', ' ').toLowerCase() + "."), bx, by + 14, bw, 0xFFE0E0E0);
-            g.centeredText(font, "§eK§r menu · §eM§r map · §eJ§r jobs · §eL§r wallet · §eN§r nearby", sw / 2, by + 50, 0xFFFFFFFF);
-            g.centeredText(font, "Press any EarthLife key to begin", sw / 2, by + 64, 0xFFBDBDBD);
-            g.centeredText(font, "Map data © OpenStreetMap contributors", sw / 2, by + 80, 0xFF8D8D8D);
+            String mode = mc.player.isCreative() ? "Creative" : mc.player.isSpectator() ? "Spectator" : "Survival";
+            String[] lines = {"§6§lWELCOME TO EARTHLIFE", "", "Location: " + w.startTown() + ", " + w.startState(), "Country: " + w.startCountry(),
+                    "World: Earth (1:1 scale)", "Mode: " + mode + " · Scenario: " + w.scenario().replace('_', ' ').toLowerCase(java.util.Locale.ROOT), "",
+                    "Press §eM§r to open your Earth map · §eK§r menu · §eJ§r jobs · §eL§r wallet · §eN§r nearby", "§aYour new life begins here.", "",
+                    "§7Map data © OpenStreetMap contributors"};
+            int bw = 0;
+            for (String l : lines) bw = Math.max(bw, font.width(l));
+            int bx = (sw - bw) / 2, by = Math.max(4, sh / 2 - 80);
+            g.fill(bx - 8, by - 6, bx + bw + 8, by + lines.length * 10 + 2, 0xD0101418);
+            for (int k = 0; k < lines.length; k++) g.centeredText(font, lines[k], sw / 2, by + k * 10, 0xFFFFFFFF);
         } else if (welcomeUntilMs != 0 && welcomeUntilMs <= System.currentTimeMillis()) {
             welcomeUntilMs = 0;
             command("earthlife ui welcomed");
