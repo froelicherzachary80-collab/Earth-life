@@ -27,8 +27,8 @@ public final class DialogueService {
     static final Map<String, String> LABELS = Map.of(
             "chat", "How's your day going?",
             "work", "What do you do for work?",
-            "jobs", "Where can I find a job around here?",
-            "directions", "How do I get to the town centre?",
+            "jobs", "Any jobs around here?",
+            "directions", "Which way is the town centre?",
             "town", "Tell me about this town",
             "trick", "Trick or treat!",
             "gift", "Give a gift (held item)",

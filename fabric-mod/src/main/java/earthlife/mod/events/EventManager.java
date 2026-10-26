@@ -110,7 +110,7 @@ public final class EventManager {
                 n.setNoAi(true);                                   // spectators stay in their seats
                 double[] focus = Optional.ofNullable(lm.marker("field:home")).or(() -> Optional.ofNullable(lm.marker("floor"))).or(() -> Optional.ofNullable(lm.marker("stage"))).orElse(gate);
                 n.setYRot((float) Math.toDegrees(Math.atan2(-(focus[0] - seat[0]), focus[2] - seat[2])));
-                level.addFreshEntity(n);
+                earthlife.mod.McCompat.spawnTemporary(level, n);
                 crowd.add(n);
             }
             crowds.put(e.id(), crowd);
@@ -122,7 +122,7 @@ public final class EventManager {
                     Display.TextDisplay d = EntityTypes.TEXT_DISPLAY.create(level, EntitySpawnReason.TRIGGERED);
                     d.setPos(sb[0], sb[1], sb[2]);
                     d.setYRot((float) (lm.placed().headingDeg + 90));
-                    level.addFreshEntity(d);
+                    earthlife.mod.McCompat.spawnTemporary(level, d);
                     return d;
                 });
                 var sc = e.score();
@@ -188,7 +188,7 @@ public final class EventManager {
                 d.setTransformation(new com.mojang.math.Transformation(new org.joml.Vector3f(0, 0, 0), new org.joml.Quaternionf(),
                         new org.joml.Vector3f(halloween ? 0.6f : 0.3f), new org.joml.Quaternionf()));
                 d.setPos(door[0], y, door[1]);
-                level.addFreshEntity(d);
+                earthlife.mod.McCompat.spawnTemporary(level, d);
                 deco.add(d);
             }
         }

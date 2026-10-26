@@ -100,7 +100,7 @@ public final class FlightDispatcher {
         level.getChunk((int) Math.floor(dep.x()) >> 4, (int) Math.floor(dep.z()) >> 4);
         e.setPos(dep.x(), dep.floorY(), dep.z());
         e.setYRot((float) (dep.headingDeg() + 180));
-        level.addFreshEntity(e);
+        earthlife.mod.McCompat.spawnTemporary(level, e);
         return e;
     }
 

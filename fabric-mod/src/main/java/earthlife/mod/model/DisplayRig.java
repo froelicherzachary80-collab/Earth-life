@@ -56,7 +56,7 @@ public final class DisplayRig {
             d.setPosRotInterpolationDuration(2);
             d.setTransformationInterpolationDuration(2);
             d.setPos(x, y, z);
-            level.addFreshEntity(d);
+            earthlife.mod.McCompat.spawnTemporary(level, d);
             displays.add(d);
         }
     }

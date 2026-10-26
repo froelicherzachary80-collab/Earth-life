@@ -56,6 +56,7 @@ public final class EarthLifeMod implements ModInitializer {
     public static earthlife.mod.npc.NpcManager NPCS = new earthlife.mod.npc.NpcManager();
     public static earthlife.mod.vehicle.TransitManager TRANSIT = new earthlife.mod.vehicle.TransitManager();
     public static earthlife.mod.events.EventManager EVENTS = new earthlife.mod.events.EventManager();
+    public static earthlife.mod.events.HauntedHouse HAUNTED = new earthlife.mod.events.HauntedHouse();
     private static final Map<UUID, Vec3> lastPos = new HashMap<>();
 
     public static Identifier id(String path) { return Identifier.fromNamespaceAndPath("earthlife", path); }
@@ -90,6 +91,7 @@ public final class EarthLifeMod implements ModInitializer {
             NPCS = new earthlife.mod.npc.NpcManager();
             TRANSIT = new earthlife.mod.vehicle.TransitManager();
             EVENTS = new earthlife.mod.events.EventManager();
+            HAUNTED = new earthlife.mod.events.HauntedHouse();
             lastPos.clear();
             EarthLifeServices.start(server, st);
             LOG.info("EarthLife: Earth world detected ({}, {}), services started", st.town(), st.state());
@@ -107,11 +109,12 @@ public final class EarthLifeMod implements ModInitializer {
             LOG.info("EarthLife: {} towns, {} residents, {} buildings ({} estimated), {} airports with terminals", s.towns.size(), residents,
                     s.features.buildings.size(), s.features.buildings.stream().filter(b -> b.prov() == earthlife.core.world.Features.Provenance.ESTIMATED).count(), s.airportLayouts.size());
         });
-        ServerLifecycleEvents.SERVER_STOPPING.register(server -> { if (!EarthLifeServices.running()) return; NPCS.clear(); EVENTS.shutdown(); EarthLifeServices.stop(); });
+        ServerLifecycleEvents.SERVER_STOPPING.register(server -> { if (!EarthLifeServices.running()) return; NPCS.clear(); EVENTS.shutdown(); HAUNTED.clear(); EarthLifeServices.stop(); });
         net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents.DISCONNECT.register((h, server) -> {
             if (EarthLifeServices.running()) { earthlife.mod.npc.DialogueService.forget(h.getPlayer()); EarthLifeServices.get().life.store.saveDirty(); }
         });
         ServerTickEvents.END_SERVER_TICK.register(EarthLifeMod::tick);
+        net.fabricmc.fabric.api.event.lifecycle.v1.ServerEntityEvents.ENTITY_LOAD.register((entity, level) -> McCompat.onEntityLoad(entity));
         ServerPlayConnectionEvents.JOIN.register((h, sender, server) -> {
             ServerPlayer p = h.getPlayer();
             if (!EarthLifeServices.running()) return;
@@ -130,6 +133,9 @@ public final class EarthLifeMod implements ModInitializer {
             }
             return net.minecraft.world.InteractionResult.PASS;
         });
+        net.fabricmc.fabric.api.event.player.UseEntityCallback.EVENT.register((player, world, hand, entity, hit) ->
+                player instanceof ServerPlayer sp && EarthLifeServices.running() && HAUNTED.onInteract(sp, entity)
+                        ? net.minecraft.world.InteractionResult.SUCCESS : net.minecraft.world.InteractionResult.PASS);
         CommandRegistrationCallback.EVENT.register((dispatcher, registry, env) -> V02Commands.register(dispatcher));
         CommandRegistrationCallback.EVENT.register((dispatcher, registry, env) -> V03Commands.register(dispatcher));
         CommandRegistrationCallback.EVENT.register((dispatcher, registry, env) -> V04Commands.register(dispatcher));
@@ -166,6 +172,7 @@ public final class EarthLifeMod implements ModInitializer {
         NPCS.tick(server);
         TRANSIT.tick(server);
         EVENTS.tick(server);
+        HAUNTED.tick(server);
         earthlife.mod.jobs.JobHooks.tick(server);
         if (now % 20 == 0) {
             java.time.ZoneId zone = s.time.clock().zone();

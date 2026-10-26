@@ -228,6 +228,7 @@ public final class EarthLifeClientGameTest implements FabricClientGameTest {
             data(ctx, sp);
             survival(ctx, sp);
             life(ctx, sp);
+            haunted(ctx, sp);
             aviation(ctx, sp);
             // something to verify after reload
             onServer(sp, s -> { ServerPlayer p = s.getPlayerList().getPlayers().get(0);
@@ -643,6 +644,25 @@ public final class EarthLifeClientGameTest implements FabricClientGameTest {
                 return npc.name() + " said: \"" + said + "\"; candy=" + candy + "; residents in costume nearby=" + costume + "|" + (candy > 0 || said.startsWith("Trick"));
             });
             check(T, "Halloween trick-or-treat", r.endsWith("|true"), r.substring(0, r.lastIndexOf('|')));
+        });
+    }
+
+    void haunted(ClientGameTestContext ctx, TestSingleplayerContext sp) {
+        String T = "Test 10 - Life systems";
+        attempt(T, "Halloween haunted house", () -> {
+            onServer(sp, s -> { McCompat.setDayTime(s, McCompat.dayTime(s.overworld()) / 24000 * 24000 + 13000); return 0; });   // 19:00
+            ctx.waitTicks(80);
+            String r = onServer(sp, s -> {
+                ServerPlayer p = s.getPlayerList().getPlayers().get(0);
+                var loc = EarthLifeMod.HAUNTED.location();
+                if (loc.isEmpty()) return "no haunted house active (town " + EarthLifeServices.get().life.placeName(EarthLifeServices.get().projection.fromBlock(p.getX(), p.getZ())) + ")|false";
+                var pumpkins = s.overworld().getEntitiesOfClass(net.minecraft.world.entity.Interaction.class, new AABB(loc.get()[0] - 40, -64, loc.get()[1] - 40, loc.get()[0] + 40, 400, loc.get()[1] + 40));
+                int found = 0;
+                for (var e : pumpkins) if (EarthLifeMod.HAUNTED.onInteract(p, e)) found++;
+                return "haunted house in " + EarthLifeMod.HAUNTED.town() + String.format(" at %.0f, %.0f", loc.get()[0], loc.get()[1]) + "; " + pumpkins.size()
+                        + " hidden pumpkins, found " + EarthLifeMod.HAUNTED.progress(p) + ", candy now " + EarthLifeServices.get().life.life(p).candy + "|" + (found == 3);
+            });
+            check(T, "Halloween haunted house", r.endsWith("|true"), r.substring(0, r.lastIndexOf('|')));
         });
     }
 

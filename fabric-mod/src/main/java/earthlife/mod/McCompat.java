@@ -60,6 +60,22 @@ public final class McCompat {
         return it == null ? net.minecraft.world.item.Items.STICK : it;
     }
 
+    /** Entities EarthLife spawns for this session only (models, decorations, mini-games). */
+    public static final String TEMP_TAG = "earthlife_temp";
+    private static final java.util.Set<java.util.UUID> SESSION = ConcurrentHashMap.newKeySet();
+
+    /** Adds an entity that must not outlive this server session (stale copies loaded from disk later are removed). */
+    public static boolean spawnTemporary(net.minecraft.server.level.ServerLevel level, Entity e) {
+        e.addTag(TEMP_TAG);
+        SESSION.add(e.getUUID());
+        return level.addFreshEntity(e);
+    }
+
+    /** ServerEntityEvents.LOAD: discard EarthLife session entities saved by an earlier session. */
+    public static void onEntityLoad(Entity e) {
+        if (e.entityTags().contains(TEMP_TAG) && !SESSION.contains(e.getUUID())) e.discard();
+    }
+
     private static final Map<String, BlockState> BLOCKS = new ConcurrentHashMap<>();
 
     /** Block by registry id ("minecraft:light_gray_concrete"); unknown ids fall back to stone and are logged once. */

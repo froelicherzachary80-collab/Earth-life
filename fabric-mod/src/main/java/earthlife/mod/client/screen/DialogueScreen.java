@@ -28,7 +28,7 @@ public final class DialogueScreen extends Screen {
             int bx = twoCols ? x0 + (i % 2) * (w + 4) : x0, by = twoCols ? y + (i / 2) * 20 : y + i * 20;
             addRenderableWidget(Button.builder(Component.literal(opt), b -> {
                 EarthLifeClient.command("earthlife talk " + d.entityId() + " " + choice);
-                if (opt.equals("Goodbye") || opt.startsWith("Where can I find a job")) onClose();
+                if (opt.equals("Goodbye") || opt.startsWith("Any jobs")) onClose();
             }).bounds(bx, by, w, 18).build());
         }
     }

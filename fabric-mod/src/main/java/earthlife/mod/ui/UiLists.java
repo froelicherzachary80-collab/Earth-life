@@ -144,6 +144,11 @@ public final class UiLists {
             rows.add(new Row(Halloween.countdown(z), "Candy collected: " + life.candy + " · trick-or-treat residents in the evening (talk → Trick or treat!)", "", ""));
             rows.add(new Row("Costume contest (EarthLife activity)", life.contests.contains(year + ":costume") ? "Entered ✔" : "Evening, at a town centre · your costume scores " + Halloween.costumeScore(p),
                     life.contests.contains(year + ":costume") ? "" : "Enter", "earthlife event costume"));
+            var hh = EarthLifeMod.HAUNTED.location();
+            if (hh.isPresent()) rows.add(new Row("Haunted house in " + EarthLifeMod.HAUNTED.town() + " (EarthLife activity)",
+                    "Find 3 hidden jack o'lanterns tonight · found " + EarthLifeMod.HAUNTED.progress(p), "Route",
+                    String.format(Locale.ROOT, "earthlife map route xz %.1f %.1f", hh.get()[0], hh.get()[1])));
+            else rows.add(new Row("Haunted house (EarthLife activity)", "Opens in the evening (17:00-23:00) near a town centre", "", ""));
             rows.add(new Row("Pumpkin-carving contest (EarthLife activity)", life.contests.contains(year + ":carving") ? "Entered ✔" : "Place carved pumpkins within 12 blocks of your home",
                     life.contests.contains(year + ":carving") ? "" : "Judge my home", "earthlife event carving"));
         } else {

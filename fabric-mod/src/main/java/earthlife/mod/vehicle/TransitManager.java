@@ -62,7 +62,7 @@ public final class TransitManager {
         v.setPos(start.x(), level.getSeaLevel(), start.z());
         v.configure(VehicleType.BUS, "yellow", null, 0, BUS_FARE);
         v.setAutoRoute(route);
-        level.addFreshEntity(v);
+        earthlife.mod.McCompat.spawnTemporary(level, v);
         bus = v;
         for (ServerPlayer p : server.getPlayerList().getPlayers())
             if (p.distanceToSqr(v) < 200 * 200) p.sendSystemMessage(Component.literal("🚌 Bus 1 to " + BUS_STOPS.get(busLeg + busDir) + " is at the " + BUS_STOPS.get(busLeg) + " stop (" + BUS_FARE + " LC)."));
@@ -95,7 +95,7 @@ public final class TransitManager {
             var p0 = rail.line().get(0);
             v.setPos(p0.x(), level.getSeaLevel(), p0.z());
             v.configure(VehicleType.TRAIN, car == 0 ? "red" : "white", null, 0, car == 0 ? 0 : 6).onTrain(train, car * (VehicleType.TRAIN.length + 1));
-            level.addFreshEntity(v);
+            earthlife.mod.McCompat.spawnTemporary(level, v);
         }
     }
 
@@ -132,7 +132,7 @@ public final class TransitManager {
         double yaw = Math.toRadians(p.getYRot());
         v.setPos(p.getX() - Math.sin(yaw) * 4, p.getY(), p.getZ() + Math.cos(yaw) * 4);
         v.configure(t, owned.map(o -> o.split(":")[1]).orElse("white"), p.getStringUUID(), (p.getYRot() + 180 + 360) % 360, 0);
-        level.addFreshEntity(v);
+        earthlife.mod.McCompat.spawnTemporary(level, v);
         cars.add(v);
         return "Your " + t.label + " is here. Right-click to drive.";
     }

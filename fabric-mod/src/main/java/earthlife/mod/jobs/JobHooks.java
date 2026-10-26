@@ -106,7 +106,7 @@ public final class JobHooks {
                     if (t == null) continue;
                     t.bind(n, true);
                     t.setPos(m[0] + 0.5 + (i / 2) * 0.0, m[1], m[2] + 0.5 + (i / 2) * 1.2);
-                    level.addFreshEntity(t);
+                    earthlife.mod.McCompat.spawnTemporary(level, t);
                     list.add(t);
                 }
                 travelers.put(id, list);
