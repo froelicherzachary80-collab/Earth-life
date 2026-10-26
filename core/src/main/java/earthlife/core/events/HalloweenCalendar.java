@@ -17,9 +17,9 @@ public final class HalloweenCalendar {
 
     public static String countdown(LocalDate d) {
         long days = ChronoUnit.DAYS.between(d, LocalDate.of(d.getYear(), 10, 31));
-        if (days == 0) return "🎃 Halloween today! Trick-or-treat 17:00-23:00";
-        if (days > 0 && days <= 7) return "🎃 Halloween in " + days + " day" + (days == 1 ? "" : "s") + " - trick-or-treat and contests are on";
-        if (days == -1) return "🎃 Halloween week wraps up today";
+        if (days == 0) return "Halloween today! Trick-or-treat 17:00-23:00";
+        if (days > 0 && days <= 7) return "Halloween in " + days + " day" + (days == 1 ? "" : "s") + " - trick-or-treat and contests are on";
+        if (days == -1) return "Halloween week wraps up today";
         return "";
     }
 

@@ -149,7 +149,7 @@ public final class EarthLifeServices implements AutoCloseable {
         }
 
         String dataHash = hash(Json.write(Map.of("lm", landmarks.keySet().toString(), "f", features.roads.size() + "/" + features.buildings.size() + "/" + features.areas.size(),
-                "a", airportLayouts.keySet().toString(), "dem", String.valueOf(elevation.getClass().getSimpleName()), "s", settings.toString(), "meta", String.valueOf(bundled("regions/western-ny/meta.json")), "v", "0.4")));
+                "a", airportLayouts.keySet().toString(), "dem", String.valueOf(elevation.getClass().getSimpleName()), "s", settings.toString(), "meta", String.valueOf(bundled("regions/western-ny/meta.json")), "v", "0.4/gen" + TileGenerator.VERSION)));
         tiles = new TileStreamer(generator, worldDir.resolve("tilecache").resolve(dataHash), new ModificationStore(worldDir.resolve("edits")),
                 Math.max(2, Runtime.getRuntime().availableProcessors() / 2), 4096, null);
 

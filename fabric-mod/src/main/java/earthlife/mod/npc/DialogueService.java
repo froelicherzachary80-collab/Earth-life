@@ -29,8 +29,8 @@ public final class DialogueService {
             "work", "What do you do for work?",
             "jobs", "Where can I find a job around here?",
             "directions", "How do I get to the town centre?",
-            "trick", "🎃 Trick or treat!",
-            "gift", "I brought you something (give held item)",
+            "trick", "Trick or treat!",
+            "gift", "Give a gift (held item)",
             "bye", "Goodbye");
 
     /** Opens (or continues) a conversation. */

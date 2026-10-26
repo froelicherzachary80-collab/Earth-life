@@ -141,7 +141,7 @@ public final class EventManager {
         for (ServerPlayer pl : server.getPlayerList().getPlayers()) {
             if (Math.hypot(pl.getX() - gate[0], pl.getZ() - gate[2]) > 120 || !s.ledger.hasReference(pl.getStringUUID(), "eventticket#" + e.id())) continue;
             try { s.ledger.credit(pl.getStringUUID(), 20, "EVENT_BONUS", "attend#" + e.id(), "Attended " + e.title(), level.getGameTime());
-                  pl.sendSystemMessage(Component.literal("🎟 Thanks for coming to " + e.title() + "! +20 LC")); }
+                  pl.sendSystemMessage(Component.literal("Thanks for coming to " + e.title() + "! +20 LC")); }
             catch (Exception ignored) { /* already rewarded */ }
         }
     }

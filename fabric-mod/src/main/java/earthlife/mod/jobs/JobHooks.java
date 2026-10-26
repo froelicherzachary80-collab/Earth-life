@@ -189,7 +189,7 @@ public final class JobHooks {
                     if (++dt.next()[0] == dt.checkpoints().size()) {
                         tests.remove(p.getStringUUID());
                         try { s.jobs.grantLicence(p.getStringUUID(), "license:driver"); } catch (Exception ignored) {}
-                        p.sendSystemMessage(Component.literal("🎉 Driving test passed! You now hold a driver licence."));
+                        p.sendSystemMessage(Component.literal("Driving test passed! You now hold a driver licence."));
                     } else {
                         var n = dt.checkpoints().get(dt.next()[0]);
                         p.sendSystemMessage(Component.literal("Checkpoint " + dt.next()[0] + "/4. Next: " + Math.round(n.x()) + ", " + Math.round(n.z())));
@@ -234,7 +234,7 @@ public final class JobHooks {
         if (flown < 3) return "Flight school needs 3 flights' experience as a passenger (you have " + flown + ").";
         s.ledger.debit(p.getStringUUID(), 1500, "TUITION", "flightschool#" + p.getStringUUID(), "Flight school", p.level().getGameTime());
         s.jobs.grantLicence(p.getStringUUID(), "license:pilot");
-        return "🎓 Flight school complete (1,500 LC). You can now apply as a Pilot at an airport.";
+        return "Flight school complete (1,500 LC). You can now apply as a Pilot at an airport.";
     }
 
     public static List<String> taskList(ServerPlayer p) {

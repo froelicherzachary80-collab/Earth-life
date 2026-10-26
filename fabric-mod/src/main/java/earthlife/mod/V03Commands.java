@@ -53,7 +53,7 @@ public final class V03Commands {
                         var s = EarthLifeServices.get();
                         if (s.ledger.hasReference(p.getStringUUID(), "eventticket#" + e.id())) return "You already have a ticket for " + e.title() + ".";
                         s.ledger.debit(p.getStringUUID(), price, "EVENT_TICKET", "eventticket#" + e.id(), e.title(), p.level().getGameTime());
-                        return "🎟 Ticket bought for " + e.title() + " (" + price + " LC). Be at the venue while it's on for a +20 LC fan bonus."; }))))
+                        return "Ticket bought for " + e.title() + " (" + price + " LC). Be at the venue while it's on for a +20 LC fan bonus."; }))))
                 .then(Commands.literal("status").executes(c -> V02Commands.run(c, (p, x) -> {
                     var errs = EarthLifeServices.get().events.errors();
                     return "Event feeds: " + EarthLifeServices.get().events.all().size() + " events loaded. "

@@ -75,12 +75,26 @@ public final class EarthLifeClient implements ClientModInitializer {
                         && mc.player.getVehicle() instanceof earthlife.mod.aviation.AirplaneEntity;
                 open(mc, flying ? "seatback" : "map");
             }
-            while (MENU.consumeClick()) open(mc, "menu:life");
-            while (JOBS.consumeClick()) open(mc, "menu:jobs");
-            while (WALLET.consumeClick()) open(mc, "menu:wallet");
-            while (NEARBY.consumeClick()) open(mc, "menu:nearby");
+            while (MENU.consumeClick()) openKey(mc, "menu:life");
+            while (JOBS.consumeClick()) openKey(mc, "menu:jobs");
+            while (WALLET.consumeClick()) openKey(mc, "menu:wallet");
+            while (NEARBY.consumeClick()) openKey(mc, "menu:nearby");
+        });
+        // A key can be shared with a vanilla binding (L = Advancements by default). Both get the press; if vanilla opened
+        // its screen after ours, put ours back on the next tick (in Earth worlds; elsewhere vanilla keeps the key).
+        ClientTickEvents.START_CLIENT_TICK.register(mc -> {
+            String want = pendingKeyScreen;
+            pendingKeyScreen = null;
+            if (want != null && ClientState.earth() && !(mc.gui.screen() instanceof EarthMenuScreen)) open(mc, want);
         });
         HudElementRegistry.addLast(EarthLifeMod.id("hud"), (g, delta) -> drawHud(g));
+    }
+
+    static volatile String pendingKeyScreen;
+
+    static void openKey(Minecraft mc, String screen) {
+        open(mc, screen);
+        if (ClientState.earth()) pendingKeyScreen = screen;
     }
 
     /** Opens a client screen by name: map, map:route:x:z:label, map:clear, menu:<tab>, seatback. */

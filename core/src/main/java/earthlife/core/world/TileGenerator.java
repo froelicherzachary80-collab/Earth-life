@@ -4,12 +4,23 @@ import earthlife.core.geo.LocalProjection;
 import earthlife.core.world.Features.*;
 import earthlife.core.world.TileData.Surface;
 
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+
 /**
  * Rasterizes projected geographic features + elevation into a {@link TileData}. Pure function of
  * (key, features, elevation, seed): the same input always yields identical tiles, which is what lets
  * us discard unmodified tiles and regenerate them later while persisting only player edits.
  */
 public final class TileGenerator {
+    /** Bump when the rasterisation changes, so cached tiles from older versions are regenerated. */
+    public static final int VERSION = 2;
+
+    static int roadRank(RoadClass c) {
+        return switch (c) { case PATH -> 0; case RAIL -> 1; case SERVICE -> 2; case RESIDENTIAL -> 3; case SECONDARY -> 4; case PRIMARY -> 5; case MOTORWAY -> 6; case TAXIWAY -> 7; case RUNWAY -> 8; };
+    }
+
     private final FeatureIndex index;
     private final ElevationSource elevation;
     private final LocalProjection proj;
@@ -132,8 +143,11 @@ public final class TileGenerator {
             t.flags[i] = f;
         }
 
-        // Roads after landcover. Roads/runways are flattened to their own centre-line elevation for smooth surfaces.
-        for (Road r : b.roads) {
+        // Roads after landcover, minor first so major roads win where they cross (footpaths/crosswalks don't cut a
+        // highway into dirt). Roads/runways are flattened to their own centre-line elevation for smooth surfaces.
+        List<Road> ordered = new ArrayList<>(b.roads);
+        ordered.sort(Comparator.comparingInt(r -> roadRank(r.cls())));
+        for (Road r : ordered) {
             double half = Math.max(0.5, r.widthM() / 2);
             double[] bb = Features.bbox(r.line(), half + step);
             forEachSample(t, bb, (sx, sz, x, z) -> {

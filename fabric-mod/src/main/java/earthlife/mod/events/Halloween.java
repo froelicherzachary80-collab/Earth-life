@@ -47,7 +47,7 @@ public final class Halloween {
     /** "Halloween in 6 days", "Halloween tonight!", or empty out of season. */
     public static String countdown(ZoneId zone) {
         String c = earthlife.core.events.HalloweenCalendar.countdown(today(zone));
-        return c.isEmpty() && forced ? "🎃 Halloween (forced on by an operator)" : c;
+        return c.isEmpty() && forced ? "Halloween (forced on by an operator)" : c;
     }
 
     static final Item[] COSTUMES = {Items.CARVED_PUMPKIN, Items.SKELETON_SKULL, Items.ZOMBIE_HEAD, Items.CREEPER_HEAD, Items.PIGLIN_HEAD, Blocks.JACK_O_LANTERN.asItem()};
@@ -131,7 +131,7 @@ public final class Halloween {
         life.contests.add(key); life.markDirty();
         s.ledger.credit(p.getStringUUID(), prize, "CONTEST", "contest#costume#" + key, "Halloween costume contest, " + town.name(), p.level().getGameTime());
         s.life.complete(p, "event");
-        return String.format("🎃 Costume contest in %s: your costume scored %d (entrants: %s). You placed #%d of 7 and won %d LC!", town.name(), mine, others, place, prize);
+        return String.format("Costume contest in %s: your costume scored %d (entrants: %s). You placed #%d of 7 and won %d LC!", town.name(), mine, others, place, prize);
     }
 
     public static String carvingContest(ServerPlayer p) throws Exception {
@@ -154,6 +154,6 @@ public final class Halloween {
         life.contests.add(key); life.markDirty();
         s.ledger.credit(p.getStringUUID(), prize, "CONTEST", "contest#carving#" + key, "Pumpkin-carving contest (" + count + " lanterns)", p.level().getGameTime());
         s.life.complete(p, "event");
-        return "🎃 The judges counted " + count + " carved pumpkin" + (count == 1 ? "" : "s") + " at your home: +" + prize + " LC!";
+        return "The judges counted " + count + " carved pumpkin" + (count == 1 ? "" : "s") + " at your home: +" + prize + " LC!";
     }
 }

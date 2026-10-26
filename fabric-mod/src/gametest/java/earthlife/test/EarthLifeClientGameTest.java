@@ -433,7 +433,7 @@ public final class EarthLifeClientGameTest implements FabricClientGameTest {
             ctx.getInput().pressKey(InputConstants.KEY_1);
             ctx.getInput().lookAt(ground);
             ctx.waitTicks(5);
-            ctx.getInput().pressMouse(InputConstants.MOUSE_BUTTON_RIGHT);
+            ctx.getInput().holdMouseFor(InputConstants.MOUSE_BUTTON_RIGHT, 4);
             ctx.waitTicks(10);
             String r = onServer(sp, s -> {
                 var st = s.overworld().getBlockState(ground.above());
@@ -645,8 +645,16 @@ public final class EarthLifeClientGameTest implements FabricClientGameTest {
             String mid = onServer(sp, s -> { var a = (AirplaneEntity) s.getPlayerList().getPlayers().get(0).getVehicle();
                 return a == null ? "left aircraft" : String.format("%.0f,%.0f %s", a.getX(), a.getZ(), a.sim().phase()); });
             ctx.takeScreenshot("18_flight_in_progress");
-            sp.getServer().runCommand("tick sprint 24000");
-            ctx.waitTicks(200);
+            // fly the rest at maximum speed (tick sprint), checking every few seconds, for up to 8 real minutes
+            String phase = "";
+            for (int i = 0; i < 48 && !(phase.startsWith("ARRIVED") || phase.startsWith("TAXI_IN") || phase.startsWith("left")); i++) {
+                sp.getServer().runCommand("tick sprint 1200");
+                ctx.waitTicks(200);
+                phase = onServer(sp, s -> { var a = s.getPlayerList().getPlayers().get(0).getVehicle() instanceof AirplaneEntity x ? x : null;
+                    return a == null ? "left aircraft" : a.sim().phase() + String.format(" %.1f km to go", a.sim().telemetry().distanceRemaining() / 1000); });
+                System.out.println("EARTHLIFE-TEST flight progress: " + phase);
+                if (i == 6) ctx.takeScreenshot("18b_flight_cruise");
+            }
             String end = onServer(sp, s -> { var p = s.getPlayerList().getPlayers().get(0); var a = p.getVehicle() instanceof AirplaneEntity x ? x : null;
                 var l = EarthLifeServices.get().airportLayouts.get("KROC");
                 double[] m = l == null ? new double[]{0, 0, 0} : l.placed.marker("agent:checkin:1");
