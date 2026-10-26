@@ -1,5 +1,55 @@
 # Changelog
 
+## 0.5.0 — ZMF Cinema v0.1: multiplex cinemas in every world (2026-10-26)
+
+See [ZMF-CINEMA.md](ZMF-CINEMA.md) for the player guide and STATUS.md for what the automated tests verified.
+
+### Added
+- **Multiplexes in ordinary worlds** (Default, Amplified, Superflat...): one candidate site per grid cell from the world
+  seed (COMMON ≈ every 1,100 blocks; VERY_COMMON / UNCOMMON / RARE / OFF), checked against the generator's own terrain
+  noise before any chunk exists (dry land, flat enough, no village or other surface structure, not overlapping another
+  multiplex), built in budgeted steps when a player comes near (grading, foundations, clearing), saved in
+  `<world>/zmfcinema/`.
+- **Buildings**: 12–32 screening rooms (small 12, large 20, mega 32, any size between), one or two floors, seven
+  architectural styles, random names, room sizes, ceiling heights, colour themes and lobby layouts. Lobby with self-service
+  kiosks, ticket counter, concession counter, candy displays, snack shelves, lounge sofas, restrooms, showtime board,
+  marquee; two-floor lobbies with a grand staircase and balcony; hallways with room signs and wayfinding.
+- **Constraint-based format allocator**: 2D 3–5, 3D 3–10, 4DX 5–10, IMAX 1–6, exactly one ScreenX, combined rooms (4DX 3D,
+  IMAX 3D, 4DX IMAX, ScreenX 3D) when needed, four web-cinema rooms (A 2D, B 3D, C 4DX, D IMAX) inside the room count;
+  validated (room count, ranges, one ScreenX, unique ids, browser rooms).
+- **Film programs** from titles players share from their own libraries (Jellyfin + video folders; titles and references
+  only): films from 2000 on, distinct per multiplex, different between multiplexes, daily rotation, showtimes 10:00–23:30
+  with pre-show countdowns, *Coming Soon* when there are fewer films than rooms, persistent; admin can change a room's film
+  or reshuffle the program.
+- **Tickets** (emeralds in survival, free in creative, configurable) scanned at the room door; concessions for emeralds.
+- **Automatic 2D-to-3D** red/cyan anaglyph for ordinary films in 3D rooms (per-frame depth estimate, temporal smoothing,
+  depth-image-based rendering, Dubois matrices) with depth, screen plane, pop-out, screen depth, ghosting, comfort,
+  swap-eyes, compare and performance controls.
+- **Automatic 4DX**: rule-based recognition from the picture and the soundtrack (explosions, impacts, thunder, jump scares,
+  optional blood, car chases, rain, ocean, snow, fire, aircraft, space battles, magic) with confidence thresholds,
+  cooldowns and seek handling; damped-spring seat motion (pitch, roll, heave, vibration; reduced-motion setting); virtual
+  atmosphere (wind, mist, rain, snow, embers, smoke, shockwaves, coloured light, frost); emergency stop (END).
+- **IMAX** rooms with curved screens and speaker arrays; **ScreenX** room with an atmospheric extension of the picture on
+  both side walls; screen light spill on the floor.
+- **Web cinemas** with the optional MCEF Modern mod: in-world Chromium screens, browser control screen (page input,
+  address bar, navigation, bookmarks, volume, fullscreen video, resolution, share address to the room), 3D conversion
+  and picture-only 4DX of web frames.
+- **Jellyfin**: sign out, connection test, library selection, server transcoding (H.264/AAC, size limit), audio and
+  subtitle language preferences, watch-progress reporting, posters on idle screens.
+- **TactSuit**: device detection, intensity, safety limit and duty-cycle limiter, event patterns (directional), test
+  patterns, emergency stop, automatic reconnection.
+- New blocks: luxury recliner, lounge sofa, candy display, snack shelf, projector, cinema speaker, 4DX effect module;
+  detailed recliner and 4DX motion-seat models; **Cinema Locator** item (HUD arrow + distance, map with marker).
+- `/zmfcinema` commands, ZMF Cinema menu (key B) with showtimes, snacks, library, 3D, 4DX & suit, quality presets
+  (LITE/BALANCED/HIGH/ULTRA), diagnostics and admin panel; `config/zmf-cinema.json`.
+- Optional built-in resource pack "ZMF Cinema HD" with LabPBR normal/specular maps (generator: `tools/assets/zmf_assets.py`).
+- Tests: 24 engine tests (`ZmfCinemaTest`, `ZmfMediaTest`) and the in-game suite Test 17 (ZMF Cinema).
+
+### Changed
+- Only the auditorium you are in plays a film (at most one stream; two on ULTRA), in Earth theaters too.
+- 4D seats in Earth theaters use the new 4DX engine (effects follow what is detected in the film).
+- CI publishes results of feature branches to `ci-logs-<prefix>` / `ci-tests-<prefix>` instead of overwriting main's.
+
 ## 0.4.1 — Northeast 1:1, cars with doors, movie theaters (2026-10-26)
 
 ### Added

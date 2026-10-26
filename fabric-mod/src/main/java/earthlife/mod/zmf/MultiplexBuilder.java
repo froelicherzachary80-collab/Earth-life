@@ -36,19 +36,20 @@ final class MultiplexBuilder {
 
     MultiplexBuilder(MultiplexService svc, MultiplexRecord rec, MultiplexPlanner.Plan plan, Blueprint.Placed placed) {
         this.svc = svc; this.rec = rec; this.plan = plan; this.placed = placed; this.level = svc.level;
-        // floor height from the real terrain now that the chunks exist (median of the footprint)
+        // floor height: the median of the real terrain where those chunks are already loaded (natural sites were
+        // already levelled from the generator's noise when they were chosen; loading chunks here would stall the server)
         int[] b = placed.worldBounds();
         List<Integer> hs = new ArrayList<>();
         for (int i = 0; i <= 6; i++) for (int j = 0; j <= 6; j++) {
             double[] w = placed.toWorld(-8 + (plan.lengthU() + 8) * i / 6.0, -plan.halfWidthV() + 2.0 * plan.halfWidthV() * j / 6.0);
             int x = (int) Math.floor(w[0]), z = (int) Math.floor(w[1]);
-            level.getChunk(BlockPos.containing(x, 64, z));
-            hs.add(level.getHeight(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, x, z) - 1);
+            if (level.hasChunk(Math.floorDiv(x, 16), Math.floorDiv(z, 16))) hs.add(level.getHeight(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, x, z) - 1);
         }
-        Collections.sort(hs);
-        int base = hs.get(hs.size() / 2);
-        base = Math.max(level.getSeaLevel(), Math.min(level.getMaxY() - plan.maxHeight() - 4, base));
-        rec.y = base;
+        if (hs.size() >= 12) {
+            Collections.sort(hs);
+            rec.y = hs.get(hs.size() / 2);
+        }
+        rec.y = Math.max(level.getMinY() + 8, Math.min(level.getMaxY() - plan.maxHeight() - 4, rec.y));
         // columns ordered chunk by chunk
         Map<Long, List<int[]>> byChunk = new TreeMap<>();
         for (int x = b[0] - MARGIN; x <= b[2] + MARGIN; x++) for (int z = b[1] - MARGIN; z <= b[3] + MARGIN; z++)
@@ -61,15 +62,21 @@ final class MultiplexBuilder {
 
     private Blueprint.Placed atBase;
 
-    /** Does up to `budget` block changes; true when the whole building is done. */
+    /** Does up to `budget` block changes (and loads at most one missing chunk); true when the whole building is done. */
     boolean step(int budget) {
         if (atBase == null) atBase = placedAtBase();
         int top = rec.y + plan.maxHeight() + 3;
         BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos();
+        int loads = 0;
         while (budget > 0 && next < columns.size()) {
-            int[] c = columns.get(next++);
+            int[] c = columns.get(next);
             int x = c[0], z = c[1];
-            if (!level.hasChunk(Math.floorDiv(x, 16), Math.floorDiv(z, 16))) level.getChunk(BlockPos.containing(x, rec.y, z));
+            if (!level.hasChunk(Math.floorDiv(x, 16), Math.floorDiv(z, 16))) {
+                if (loads++ > 0) break;                                      // one chunk per tick, the rest next tick
+                level.getChunk(Math.floorDiv(x, 16), Math.floorDiv(z, 16));
+                budget -= 2000;
+            }
+            next++;
             TreeMap<Integer, String> col = new TreeMap<>();
             atBase.forEachIn(x, z, x, z, blk -> col.put(blk.y(), blk.id()));
             if (col.isEmpty()) { budget -= grade(pos, x, z); continue; }

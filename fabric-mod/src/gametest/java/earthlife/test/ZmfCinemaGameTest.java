@@ -188,7 +188,8 @@ final class ZmfCinemaGameTest {
             player(s).teleportTo(s.overworld(), out[0], rec.y + 9, out[1], Set.of(), (float) (pl.headingDeg + 180) % 360 - 180, 12, false);
             return 0;
         });
-        ctx.runOnClient(mc -> { mc.player.setYRot(yawTowards(sp, id, 10)); mc.player.setXRot(10); });
+        float yawOut = yawTowards(sp, id, 10);
+        ctx.runOnClient(mc -> { mc.player.setYRot(yawOut); mc.player.setXRot(10); });
         ctx.waitTicks(80);
         ctx.takeScreenshot("50_zmf_" + rooms + "_exterior");
         server(sp, s -> {
@@ -197,7 +198,8 @@ final class ZmfCinemaGameTest {
             player(s).teleportTo(s.overworld(), in[0], rec.y + 1, in[1], Set.of(), 0, 0, false);
             return 0;
         });
-        ctx.runOnClient(mc -> { mc.player.setYRot(yawTowards(sp, id, 30)); mc.player.setXRot(5); });
+        float yawIn = yawTowards(sp, id, 30);
+        ctx.runOnClient(mc -> { mc.player.setYRot(yawIn); mc.player.setXRot(5); });
         ctx.waitTicks(60);
         ctx.takeScreenshot("51_zmf_" + rooms + "_lobby");
     }
@@ -231,7 +233,14 @@ final class ZmfCinemaGameTest {
         if (!r.endsWith("|true")) { check("naturally generated multiplex", r); return; }
         String id = r.substring(0, r.indexOf('|'));
         until(ctx, sp, s -> MultiplexService.get().record(id).state == MultiplexRecord.State.BUILT, 240);
-        ctx.waitTicks(30);
+        // stand 40 blocks in front of its doors (so it is certainly the nearest), holding the locator
+        server(sp, s -> {
+            var ms = MultiplexService.get(); var rec = ms.record(id); var pl = ms.placed(rec);
+            double[] w = pl.toWorld(-40, 0);
+            player(s).teleportTo(s.overworld(), w[0], rec.y + 3, w[1], Set.of(), 0, 0, false);
+            return 0;
+        });
+        ctx.waitTicks(40);
         String loc = ctx.computeOnClient(mc -> {
             var n = ZmfState.nearest;
             return n == null ? "locator: no answer" : String.format(Locale.ROOT, "locator shows %s at %.0f, %.0f (built=%s, found=%s), %.0f blocks from the player",

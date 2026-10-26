@@ -76,10 +76,7 @@ public final class MultiplexService {
     /** Builds a planned site now (loading its chunks), e.g. for /zmfcinema teleport nearest and the tests. */
     public void forceBuild(MultiplexRecord r) {
         if (r == null || r.state == MultiplexRecord.State.BUILT || r.state == MultiplexRecord.State.REJECTED || queue.contains(r) || (job != null && job.rec == r)) return;
-        int[] b = placed(r).worldBounds();
-        for (int cx = Math.floorDiv(b[0] - 6, 16); cx <= Math.floorDiv(b[2] + 6, 16); cx++)
-            for (int cz = Math.floorDiv(b[1] - 6, 16); cz <= Math.floorDiv(b[3] + 6, 16); cz++) level.getChunk(cx, cz);
-        queue.addFirst(r);
+        queue.addFirst(r);          // the builder loads any missing chunks itself, one per tick
     }
 
     public record RoomRef(MultiplexRecord rec, MultiplexPlanner.Room room, CinemaService.Aud aud) {}
@@ -267,8 +264,11 @@ public final class MultiplexService {
             if (d < bd) { bd = d; best = r; }
         }
         if (includePlanned && natural) {
+            int evaluations = 0;
             for (var site : grid.near(x, z, 2)) {
                 if (site.distanceTo(x, z) > bd + 400) break;
+                // judging a new site samples the terrain noise: at most two new sites per call (the rest on later calls)
+                if (!records.containsKey(site.id()) && evaluations++ >= 2) continue;
                 var r = siteRecord(site);
                 if (r == null) continue;
                 double d = Math.hypot(r.x - x, r.z - z);
@@ -394,7 +394,7 @@ public final class MultiplexService {
                     double cx = r.x, cz = r.z;
                     double[] mid = placed(r).toWorld(plan.lengthU() / 2.0, 0);
                     double d = Math.hypot(mid[0] - p.getX(), mid[1] - p.getZ());
-                    if (d < ZmfConfig.get().buildDistance && chunksReady(r)) { queue.addLast(r); EarthLifeMod.LOG.info("ZMF Cinema: {} queued ({} m from {})", r.name, Math.round(d), p.getName().getString()); }
+                    if (d < ZmfConfig.get().buildDistance) { queue.addLast(r); EarthLifeMod.LOG.info("ZMF Cinema: {} queued ({} m from {})", r.name, Math.round(d), p.getName().getString()); }
                 }
             }
         }

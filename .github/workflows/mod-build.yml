@@ -129,8 +129,12 @@ jobs:
           PY
       - name: Graphics stack (Mesa software rendering + virtual display)
         run: |
+          # the man-db trigger and recommended packages made this step take ~50 min on ubuntu-24.04 runners
+          sudo rm -f /var/lib/man-db/auto-update
+          echo 'path-exclude /usr/share/doc/*' | sudo tee /etc/dpkg/dpkg.cfg.d/01_nodoc >/dev/null
+          echo 'path-exclude /usr/share/man/*' | sudo tee -a /etc/dpkg/dpkg.cfg.d/01_nodoc >/dev/null
           sudo apt-get update -q
-          sudo apt-get install -y -q mesa-vulkan-drivers libgl1-mesa-dri libegl1 xvfb ffmpeg
+          sudo apt-get install -y -q --no-install-recommends mesa-vulkan-drivers libgl1-mesa-dri libegl1 xvfb xauth ffmpeg
           mkdir -p fabric-mod/build/run/clientGameTest/test-films
           # synthetic test films for the cinema checks (FFmpeg's built-in test pattern + tone; no real films)
           F=fabric-mod/build/run/clientGameTest/test-films
@@ -144,9 +148,9 @@ jobs:
           ls -la "$F"
           # optional: MCEF Modern (Chromium for the web-cinema test) from Modrinth into the test instance's mods folder
           mkdir -p fabric-mod/build/run/clientGameTest/mods
-          URL=$(curl -fsSL 'https://api.modrinth.com/v2/project/mcef-modern/version?game_versions=%5B%2226.3%22%5D&loaders=%5B%22fabric%22%5D' | python3 -c "import json,sys; v=json.load(sys.stdin); print(v[0]['files'][0]['url'] if v else '')" || true)
-          if [ -n "$URL" ]; then curl -fsSL -o fabric-mod/build/run/clientGameTest/mods/mcef-modern.jar "$URL" && echo "MCEF Modern: $URL"; else echo "MCEF Modern not found on Modrinth - web cinema test will be BLOCKED"; fi
-          sudo apt-get install -y -q libnss3 libatk1.0-0t64 libatk-bridge2.0-0t64 libcups2t64 libxcomposite1 libxdamage1 libxrandr2 libgbm1 libxkbcommon0 libasound2t64 libpango-1.0-0 || true
+          URL=$(curl --max-time 60 -fsSL 'https://api.modrinth.com/v2/project/mcef-modern/version?game_versions=%5B%2226.3%22%5D&loaders=%5B%22fabric%22%5D' | python3 -c "import json,sys; v=json.load(sys.stdin); print(v[0]['files'][0]['url'] if v else '')" || true)
+          if [ -n "$URL" ]; then curl --max-time 300 -fsSL -o fabric-mod/build/run/clientGameTest/mods/mcef-modern.jar "$URL" && echo "MCEF Modern: $URL"; else echo "MCEF Modern not found on Modrinth - web cinema test will be BLOCKED"; fi
+          sudo apt-get install -y -q --no-install-recommends libnss3 libatk1.0-0t64 libatk-bridge2.0-0t64 libcups2t64 libxcomposite1 libxdamage1 libxrandr2 libgbm1 libxkbcommon0 libasound2t64 libpango-1.0-0 || true
           echo "eula=true" > fabric-mod/build/run/clientGameTest/eula.txt
           printf 'version:4896\npreferredGraphicsBackend:"vulkan"\nonboardAccessibility:false\n' > fabric-mod/build/run/clientGameTest/options.txt
       - name: Run in-game tests

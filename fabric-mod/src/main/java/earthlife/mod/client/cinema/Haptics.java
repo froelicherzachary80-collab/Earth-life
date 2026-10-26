@@ -200,6 +200,7 @@ public final class Haptics {
         WebSocket ws = socket;
         socket = null;
         queue.clear();
+        nextTry = 0; connecting = null;                 // settings changed: reconnect right away next time
         if (ws != null) try { ws.sendClose(WebSocket.NORMAL_CLOSURE, "bye"); } catch (Exception ignored) {}
     }
 }
