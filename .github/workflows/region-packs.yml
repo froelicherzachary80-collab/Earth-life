@@ -1,0 +1,126 @@
+# Builds the 1:1 Northeast region packs (New York, Pennsylvania, New Jersey, Vermont) that the mod downloads on demand:
+#   Geofabrik OpenStreetMap state extracts (ODbL) + AWS Terrain Tiles -> 1/8-degree cells zipped into 1/2-degree packs,
+#   published as assets of the GitHub release "regions-v1" (index.json, packs, places, cinemas, major roads).
+# Run it from the Actions tab. "limit_packs" builds only a few packs (e.g. "86_-155" = Williamson) for a quick test.
+name: Region packs
+
+on:
+  workflow_dispatch:
+    inputs:
+      states:
+        description: "State codes (NY PA NJ VT)"
+        default: "NY PA NJ VT"
+      limit_packs:
+        description: "Only these packs, comma separated lat2_lon2 (empty = all)"
+        default: ""
+      tag:
+        description: "Release tag to publish to"
+        default: "regions-v1"
+  push:
+    branches: [main]
+    paths:
+      - "tools/regionpack/**"
+      - ".github/workflows/region-packs.yml"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: region-packs
+  cancel-in-progress: true
+
+jobs:
+  extract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 300
+    strategy:
+      fail-fast: false
+      matrix:
+        state: [NY, PA, NJ, VT]
+    steps:
+      - name: Skip states not requested
+        id: want
+        run: |
+          # pushes (pipeline changes) do a quick New York-only test build published under "regions-test"
+          S="${{ github.event.inputs.states }}"; [ -z "$S" ] && S="NY"
+          if echo " $S " | grep -q " ${{ matrix.state }} "; then echo "run=1" >> $GITHUB_OUTPUT; fi
+      - uses: actions/checkout@v5
+        if: steps.want.outputs.run
+      - uses: actions/setup-python@v5
+        if: steps.want.outputs.run
+        with:
+          python-version: "3.12"
+      - if: steps.want.outputs.run
+        run: pip install osmium shapely
+      - name: Download OpenStreetMap extract (Geofabrik)
+        if: steps.want.outputs.run
+        run: |
+          case "${{ matrix.state }}" in NY) N=new-york;; PA) N=pennsylvania;; NJ) N=new-jersey;; VT) N=vermont;; esac
+          curl -fsSL --retry 5 -o state.osm.pbf "https://download.geofabrik.de/north-america/us/$N-latest.osm.pbf"
+          ls -la state.osm.pbf
+      - name: Extract cells
+        if: steps.want.outputs.run
+        run: |
+          /usr/bin/time -v python3 tools/regionpack/extract_state.py state.osm.pbf --state ${{ matrix.state }} -o out/${{ matrix.state }} 2> time.txt
+          tail -25 time.txt
+          du -sh out/${{ matrix.state }}
+          tar -C out -cf ${{ matrix.state }}.tar ${{ matrix.state }}
+      - uses: actions/upload-artifact@v4
+        if: steps.want.outputs.run
+        with:
+          name: cells-${{ matrix.state }}
+          path: ${{ matrix.state }}.tar
+          retention-days: 3
+          compression-level: 1
+
+  assemble:
+    needs: extract
+    runs-on: ubuntu-latest
+    timeout-minutes: 340
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install numpy pillow scipy
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: cells-*
+          merge-multiple: true
+      - name: Unpack
+        run: |
+          mkdir -p out; for t in *.tar; do tar -C out -xf "$t"; rm "$t"; done; ls out; df -h .
+      - name: Pack self-test
+        run: python3 tools/regionpack/test_regionpack.py
+      - name: Assemble packs (terrain + cells)
+        env:
+          LIMIT: ${{ github.event_name == 'push' && '--limit-packs 86_-155,81_-148' || (github.event.inputs.limit_packs && format('--limit-packs {0}', github.event.inputs.limit_packs) || '') }}
+        run: |
+          S=$(ls out | tr '\n' ' ')
+          python3 tools/regionpack/assemble.py --states $(for s in $S; do echo out/$s; done) -o release --workers 4 \
+            $LIMIT 2>&1 | tee assemble.log
+          ls -la release | head; du -sh release
+      - name: Publish release assets
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          TAG="${{ github.event.inputs.tag }}"; [ -z "$TAG" ] && TAG=regions-test
+          gh release view "$TAG" >/dev/null 2>&1 || gh release create "$TAG" --title "EarthLife region packs ($TAG)" \
+            --notes "1:1 map data for New York, Pennsylvania, New Jersey and Vermont, downloaded by the mod as you explore. Map data (c) OpenStreetMap contributors (ODbL 1.0). Terrain: AWS Terrain Tiles (USGS 3DEP, NOAA, SRTM)." --prerelease
+          cp assemble.log release/assemble.log
+          cd release
+          ls packs | split -l 40 - batch_
+          for b in batch_*; do for i in 1 2 3; do gh release upload "$TAG" $(sed 's|^|packs/|' $b) --clobber && break; sleep 10; done; done
+          gh release upload "$TAG" cinemas.json places.json.gz major.elc assemble.log --clobber
+          # index last, so the mod never sees an index that points at packs not uploaded yet
+          gh release upload "$TAG" index.json --clobber
+      - name: Bundle cinema list into the mod
+        if: github.event_name == 'workflow_dispatch' && github.event.inputs.limit_packs == ''
+        run: |
+          mkdir -p fabric-mod/src/main/resources/data/earthlife/northeast
+          cp release/cinemas.json fabric-mod/src/main/resources/data/earthlife/northeast/cinemas.json
+          git config user.name "earthlife-data-bot"; git config user.email "ci@users.noreply.github.com"
+          git add fabric-mod/src/main/resources/data/earthlife/northeast/cinemas.json
+          git diff --cached --quiet && exit 0
+          git commit -m "Northeast cinemas from OpenStreetMap [region packs ${GITHUB_RUN_ID}]"
+          for i in 1 2 3; do git pull --rebase -q origin main && git push -q origin HEAD:main && break; sleep 5; done
