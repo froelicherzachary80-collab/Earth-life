@@ -50,8 +50,8 @@ jobs:
             --towns-out raw/osm-towns.json --landmarks-out raw/osm-landmarks.json
       - name: Starter terrain (20 m) and region terrain (60 m)
         run: |
-          python3 tools/terrain_tiles.py --bbox "$STARTER_BBOX" --origin "$ORIGIN" --zoom 13 --cell 20 -o raw/dem.eldg
-          python3 tools/terrain_tiles.py --bbox "$REGION_BBOX" --origin "$ORIGIN" --zoom 11 --cell 60 -o raw/dem-region.eldg
+          python3 tools/terrain_tiles.py --bbox "$STARTER_BBOX" --origin "$ORIGIN" --zoom 13 --cell 20 --lake-seed 43.325,-77.20 -o raw/dem.eldg
+          python3 tools/terrain_tiles.py --bbox "$REGION_BBOX" --origin "$ORIGIN" --zoom 11 --cell 60 --lake-seed 43.35,-77.20 -o raw/dem-region.eldg
       - name: Package
         run: |
           gzip -9 -c raw/features.json > "$OUT/features.json.gz"
