@@ -36,7 +36,7 @@ public interface ElevationSource {
         public static Grid read(java.io.InputStream raw, ElevationSource fallback) throws IOException {
             try (var in = new DataInputStream(new java.io.BufferedInputStream(raw))) {
                 byte[] magic = in.readNBytes(4);
-                if (!new String(magic).equals("ELDG")) throw new IOException("not an EarthLife DEM grid: " + p);
+                if (!new String(magic).equals("ELDG")) throw new IOException("not an EarthLife DEM grid");
                 if (in.readInt() != 1) throw new IOException("unsupported DEM grid version");
                 double ox = in.readDouble(), oz = in.readDouble(), cell = in.readDouble();
                 int cols = in.readInt(), rows = in.readInt();
