@@ -170,7 +170,7 @@ final class ZmfCinemaGameTest {
                 if (open) doorsOpen++;
                 // the screen wall behind the screen centre is black concrete
                 BlockPos wall = BlockPos.containing(ref.aud().sx() - ref.aud().nx() * 0.6, ref.aud().sy(), ref.aud().sz() - ref.aud().nz() * 0.6);
-                if (lvl.getBlockState(wall).is(Blocks.BLACK_CONCRETE)) screens++;
+                if (lvl.getBlockState(wall) == earthlife.mod.McCompat.block("minecraft:black_concrete")) screens++;
                 if (ok == ref.aud().seats().size() && ok > 0) roomsOk++; else bad.add(room.name() + " seats " + ok + "/" + ref.aud().seats().size());
             }
             var errs = FormatAllocator.validate(plan.formats());
