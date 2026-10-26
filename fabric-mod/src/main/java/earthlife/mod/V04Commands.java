@@ -172,6 +172,11 @@ public final class V04Commands {
                     return String.format("tile %s · terrainY %d · surface %s · structureTop %d · flags %s · npcs live %d · players %d",
                             t.key.fileName(), t.terrainY[i], t.surfaceAt(sx, sz), t.structureTopY[i], Integer.toBinaryString(t.flags[i] & 0xFF),
                             EarthLifeMod.NPCS.liveCount(), p.level().getServer().getPlayerList().getPlayerCount()); })))
+                .then(lit("pay").then(Commands.argument("amount", IntegerArgumentType.integer(1, 1_000_000)).executes(c -> run(c, (p, x) -> {
+                    var s = EarthLifeServices.get();
+                    int amt = IntegerArgumentType.getInteger(x, "amount");
+                    s.ledger.credit(p.getStringUUID(), amt, "ADMIN", "admin#" + p.getStringUUID() + "#" + System.nanoTime(), "Operator grant", p.level().getGameTime());
+                    return "Operator grant: +" + amt + " LC (recorded in the ledger as ADMIN)."; }))))
                 .then(lit("halloween").then(Commands.argument("state", StringArgumentType.word()).executes(c -> run(c, (p, x) -> {
                     Halloween.forced = StringArgumentType.getString(x, "state").equalsIgnoreCase("on");
                     return "Halloween forced " + (Halloween.forced ? "ON (any date, any hour)" : "off (real calendar)") + "."; }))))

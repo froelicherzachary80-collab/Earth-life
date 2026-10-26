@@ -5,11 +5,10 @@ import earthlife.core.npc.SkinGenerator;
 import earthlife.mod.npc.NpcEntity;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;
-import net.minecraft.client.model.player.PlayerModel;
 import net.minecraft.client.model.geom.ModelLayers;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.HumanoidMobRenderer;
-import net.minecraft.client.renderer.entity.state.AvatarRenderState;
+import net.minecraft.client.renderer.entity.state.HumanoidRenderState;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.resources.Identifier;
 
@@ -24,13 +23,13 @@ import java.util.Map;
  * DynamicTexture's constructor changed in 1.21.5 - adjust at first compile.
  */
 public final class NpcRenderer extends HumanoidMobRenderer<NpcEntity, NpcRenderer.State, HumanoidModel<NpcRenderer.State>> {
-    public static final class State extends AvatarRenderState { long skin; int uniform; }
+    public static final class State extends HumanoidRenderState { long skin; int uniform; }
 
     private static final Map<Long, Identifier> TEXTURES = new HashMap<>();
 
-    @SuppressWarnings({"unchecked", "rawtypes"})
+    /** Vanilla player mesh (classic arms, with jacket/sleeve/pant overlays as child parts) driven by the humanoid model. */
     public NpcRenderer(EntityRendererProvider.Context ctx) {
-        super(ctx, (HumanoidModel) new PlayerModel(ctx.bakeLayer(ModelLayers.PLAYER), false), 0.5f);
+        super(ctx, new HumanoidModel<>(ctx.bakeLayer(ModelLayers.PLAYER)), 0.5f);
     }
 
     @Override public State createRenderState() { return new State(); }

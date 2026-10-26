@@ -175,7 +175,9 @@ public final class EarthLifeServices implements AutoCloseable {
         var evCfg = new earthlife.core.events.EventEngine.Config(!Boolean.FALSE.equals(ev.get("holidays")), !Boolean.FALSE.equals(ev.get("mlb")),
                 teams, sports, (String) ev.get("ticketmasterKey"), ((Number) ev.getOrDefault("radiusMiles", 50L)).intValue(), ics, time.clock().zone());
         var http = java.net.http.HttpClient.newBuilder().followRedirects(java.net.http.HttpClient.Redirect.NORMAL).connectTimeout(java.time.Duration.ofSeconds(15)).build();
+        boolean offline = Boolean.getBoolean("earthlife.offline") || Boolean.TRUE.equals(cfg.get("offline"));
         events = new earthlife.core.events.EventEngine(evCfg, projection.origin(), 90_000, landmarkList, towns, worldDir.resolve("events-cache.json"), url -> {
+            if (offline) throw new IOException("offline mode (earthlife.offline) - using cached/holiday events only");
             var resp = http.send(java.net.http.HttpRequest.newBuilder(java.net.URI.create(url)).header("User-Agent", "EarthLife/0.3 (Minecraft mod)")
                     .timeout(java.time.Duration.ofSeconds(30)).GET().build(), java.net.http.HttpResponse.BodyHandlers.ofString());
             if (resp.statusCode() / 100 != 2) throw new IOException("HTTP " + resp.statusCode());

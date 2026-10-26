@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "id": "earthlife-gametest",
+  "name": "EarthLife in-game tests",
+  "version": "0.4.0",
+  "environment": "*",
+  "license": "MIT",
+  "entrypoints": {
+    "fabric-client-gametest": [
+      "earthlife.test.EarthLifeClientGameTest"
+    ]
+  },
+  "depends": {
+    "earthlife": "*",
+    "fabric-api": "*"
+  }
+}

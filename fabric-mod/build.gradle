@@ -1,8 +1,7 @@
-// EarthLife Fabric mod. Requires network access to maven.fabricmc.net and Mojang (not available in the
-// environment this was written in, so this build has NOT been run yet - see STATUS.md).
+// EarthLife Fabric mod for Minecraft Java 26.3 (unobfuscated, so no mappings). Built by GitHub Actions
+// (.github/workflows/mod-build.yml); locally: gradle :fabric-mod:build -> build/libs/earthlife-0.4.0.jar
 //
-// Minecraft 26.x ships unobfuscated, so no mappings block is needed. If your Loom version still
-// expects mappings, add:  mappings loom.officialMojangMappings()
+// In-game tests: gradle :fabric-mod:runClientGameTest runs src/gametest in a real client (see STATUS.md).
 plugins {
     id 'net.fabricmc.fabric-loom' version "${loom_version}"
 }
@@ -14,6 +13,26 @@ base { archivesName = 'earthlife' }
 loom { accessWidenerPath = file('src/main/resources/earthlife.accesswidener') }
 
 repositories { mavenCentral() }
+
+fabricApi {
+    configureTests {
+        createSourceSet = true
+        modId = "earthlife-gametest"
+        enableGameTests = false
+        enableClientGameTests = true
+        eula = true
+        clearRunDirectory = false
+    }
+}
+
+loom {
+    runs {
+        clientGameTest {
+            vmArg "-Dearthlife.offline=true"
+            vmArg "-Xmx4G"
+        }
+    }
+}
 
 dependencies {
     minecraft "com.mojang:minecraft:${project.minecraft_version}"

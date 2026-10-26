@@ -81,3 +81,64 @@ jobs:
       - name: Fail if the mod did not build
         if: steps.build.outcome != 'success'
         run: exit 1
+
+  # Runs the mod in a real Minecraft 26.3 client (Fabric client game tests) and publishes the report + screenshots
+  # to the ci-tests branch: earthlife-test-report.json, earthlife-test-log.txt, screenshots/*.png, latest.log.
+  gametest:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: "25"
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: "current"
+      - name: Pin versions
+        run: |
+          python3 tools/ci/resolve_versions.py /tmp/versions.json
+          python3 - <<'PY'
+          import json, re
+          d = json.load(open('/tmp/versions.json'))
+          p = 'fabric-mod/gradle.properties'; s = open(p).read()
+          for k, key in (('minecraft', 'minecraft_version'), ('loader', 'loader_version'), ('fabric_api', 'fabric_version'), ('loom', 'loom_version')):
+              s = re.sub(rf'^{key}=.*$', f'{key}={d[k]}', s, flags=re.M)
+          open(p, 'w').write(s); open('gradle.properties', 'w').write(s)
+          PY
+      - name: Graphics stack (Mesa software rendering + virtual display)
+        run: |
+          sudo apt-get update -q
+          sudo apt-get install -y -q mesa-vulkan-drivers libgl1-mesa-dri libegl1 xvfb
+          mkdir -p fabric-mod/build/run/clientGameTest
+          echo "eula=true" > fabric-mod/build/run/clientGameTest/eula.txt
+          printf 'version:4896\npreferredGraphicsBackend:"opengl"\nonboardAccessibility:false\n' > fabric-mod/build/run/clientGameTest/options.txt
+      - name: Run in-game tests
+        id: gt
+        continue-on-error: true
+        run: |
+          set -o pipefail
+          xvfb-run -a -s "-screen 0 1920x1080x24" gradle :fabric-mod:runClientGameTest --no-daemon --stacktrace 2>&1 | tee gametest.log
+      - name: Publish results to ci-tests branch
+        if: always()
+        run: |
+          R=fabric-mod/build/run/clientGameTest
+          mkdir -p /tmp/out/screenshots
+          cp -r $R/screenshots/* /tmp/out/screenshots/ 2>/dev/null || true
+          cp $R/earthlife-test-report.json $R/earthlife-test-log.txt /tmp/out/ 2>/dev/null || true
+          cp $R/logs/latest.log /tmp/out/latest.log 2>/dev/null || true
+          grep -E "EARTHLIFE-TEST|ERROR|Exception|at earthlife|Caused by" gametest.log | head -400 > /tmp/out/gametest-highlights.txt || true
+          tail -300 gametest.log > /tmp/out/gametest-tail.txt
+          echo "${{ steps.gt.outcome }} ${GITHUB_SHA}" > /tmp/out/RESULT
+          git config user.name "ci"; git config user.email "ci@users.noreply.github.com"
+          git checkout --orphan ci-tests-tmp
+          git rm -rfq . ; rm -rf ./* .github 2>/dev/null || true
+          cp -r /tmp/out/* .
+          git add -A && git commit -qm "In-game test results for ${GITHUB_SHA}"
+          git push -f origin ci-tests-tmp:ci-tests
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: earthlife-ingame-tests
+          path: /tmp/out
