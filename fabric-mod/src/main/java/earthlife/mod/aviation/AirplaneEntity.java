@@ -174,7 +174,7 @@ public final class AirplaneEntity extends Entity {
             sync.add(new int[]{p.getId(), w.mode == Mode.SEATED ? 1 : 0, (int) Math.round(w.x * 1000), (int) Math.round(w.z * 1000)});
         }
         var payload = new Payloads.CabinState(getId(), sync);
-        for (ServerPlayer watcher : PlayerLookup.tracking(this)) ServerPlayNetworking.send(watcher, payload);
+        for (ServerPlayer watcher : PlayerLookup.tracking(this)) earthlife.mod.net.Net.send(watcher, payload);
     }
 
     private void disembark(ServerPlayer p, Walker w) {

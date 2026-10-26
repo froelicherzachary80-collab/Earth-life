@@ -51,10 +51,11 @@ public final class EarthLifeMod implements ModInitializer {
     public static final EntityType<earthlife.mod.vehicle.VehicleEntity> VEHICLE = Registry.register(BuiltInRegistries.ENTITY_TYPE, VEHICLE_KEY,
             EntityType.Builder.<earthlife.mod.vehicle.VehicleEntity>of(earthlife.mod.vehicle.VehicleEntity::new, MobCategory.MISC).sized(2f, 1.6f).clientTrackingRange(16).updateInterval(1).build(VEHICLE_KEY));
 
-    public static final FlightDispatcher FLIGHTS = new FlightDispatcher();
-    public static final earthlife.mod.npc.NpcManager NPCS = new earthlife.mod.npc.NpcManager();
-    public static final earthlife.mod.vehicle.TransitManager TRANSIT = new earthlife.mod.vehicle.TransitManager();
-    public static final earthlife.mod.events.EventManager EVENTS = new earthlife.mod.events.EventManager();
+    // Per-world managers: recreated each time an Earth world starts, so nothing leaks between worlds in one session.
+    public static FlightDispatcher FLIGHTS = new FlightDispatcher();
+    public static earthlife.mod.npc.NpcManager NPCS = new earthlife.mod.npc.NpcManager();
+    public static earthlife.mod.vehicle.TransitManager TRANSIT = new earthlife.mod.vehicle.TransitManager();
+    public static earthlife.mod.events.EventManager EVENTS = new earthlife.mod.events.EventManager();
     private static final Map<UUID, Vec3> lastPos = new HashMap<>();
 
     public static Identifier id(String path) { return Identifier.fromNamespaceAndPath("earthlife", path); }
@@ -76,9 +77,23 @@ public final class EarthLifeMod implements ModInitializer {
         PayloadTypeRegistry.clientboundPlay().register(Payloads.WalletStatus.TYPE, Payloads.WalletStatus.CODEC);
         PayloadTypeRegistry.clientboundPlay().register(Payloads.CabinState.TYPE, Payloads.CabinState.CODEC);
         PayloadTypeRegistry.clientboundPlay().register(Payloads.HudStatus.TYPE, Payloads.HudStatus.CODEC);
+        PayloadTypeRegistry.clientboundPlay().register(Payloads.WorldInfo.TYPE, Payloads.WorldInfo.CODEC);
+        PayloadTypeRegistry.clientboundPlay().register(Payloads.LifeState.TYPE, Payloads.LifeState.CODEC);
+        PayloadTypeRegistry.clientboundPlay().register(Payloads.UiList.TYPE, Payloads.UiList.CODEC);
+        PayloadTypeRegistry.clientboundPlay().register(Payloads.Dialogue.TYPE, Payloads.Dialogue.CODEC);
+        PayloadTypeRegistry.clientboundPlay().register(Payloads.MapPlayers.TYPE, Payloads.MapPlayers.CODEC);
+        PayloadTypeRegistry.clientboundPlay().register(Payloads.OpenScreen.TYPE, Payloads.OpenScreen.CODEC);
         net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry.register(NPC, earthlife.mod.npc.NpcEntity.attributes());
 
-        ServerLifecycleEvents.SERVER_STARTING.register(server -> earthSettings(server).ifPresent(st -> EarthLifeServices.start(server, st)));
+        ServerLifecycleEvents.SERVER_STARTING.register(server -> earthSettings(server).ifPresent(st -> {
+            FLIGHTS = new FlightDispatcher();
+            NPCS = new earthlife.mod.npc.NpcManager();
+            TRANSIT = new earthlife.mod.vehicle.TransitManager();
+            EVENTS = new earthlife.mod.events.EventManager();
+            lastPos.clear();
+            EarthLifeServices.start(server, st);
+            LOG.info("EarthLife: Earth world detected ({}, {}), services started", st.town(), st.state());
+        }));
         ServerLifecycleEvents.SERVER_STARTED.register(server -> {
             if (!EarthLifeServices.running()) return;
             var s = EarthLifeServices.get();
@@ -87,17 +102,20 @@ public final class EarthLifeMod implements ModInitializer {
             LOG.info("EarthLife ready: {} airports, {} bookings restored from ledger", s.airports.size(), s.booking.restoreFromLedger());
             TRANSIT.restoreGarage();
             try { s.time.set(server, s.time.clock().mode(), s.time.clock().minutesPerDay()); } catch (Exception e) { LOG.error("time", e); }
+            firstStart(server, s);
             int residents = s.populations.stream().mapToInt(p -> p.all().size()).sum();
             LOG.info("EarthLife V0.2: {} towns, {} residents, {} buildings ({} estimated), {} airports with terminals", s.towns.size(), residents,
                     s.features.buildings.size(), s.features.buildings.stream().filter(b -> b.prov() == earthlife.core.world.Features.Provenance.ESTIMATED).count(), s.airportLayouts.size());
         });
-        ServerLifecycleEvents.SERVER_STOPPING.register(server -> { NPCS.clear(); EVENTS.shutdown(); EarthLifeServices.stop(); });
+        ServerLifecycleEvents.SERVER_STOPPING.register(server -> { if (!EarthLifeServices.running()) return; NPCS.clear(); EVENTS.shutdown(); EarthLifeServices.stop(); });
+        net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents.DISCONNECT.register((h, server) -> {
+            if (EarthLifeServices.running()) { earthlife.mod.npc.DialogueService.forget(h.getPlayer()); EarthLifeServices.get().life.store.saveDirty(); }
+        });
         ServerTickEvents.END_SERVER_TICK.register(EarthLifeMod::tick);
         ServerPlayConnectionEvents.JOIN.register((h, sender, server) -> {
             ServerPlayer p = h.getPlayer();
             if (!EarthLifeServices.running()) return;
-            enforceSurvival(p);
-            p.sendSystemMessage(Component.literal("Welcome to EarthLife. Daily reward: /earthlife claim daily · Flights: /earthlife flights"));
+            server.execute(() -> EarthLifeServices.get().life.onJoin(p));
         });
         PlayerBlockBreakEvents.AFTER.register((world, player, pos, state, be) -> {
             if (!EarthLifeServices.running()) return;
@@ -114,6 +132,7 @@ public final class EarthLifeMod implements ModInitializer {
         });
         CommandRegistrationCallback.EVENT.register((dispatcher, registry, env) -> V02Commands.register(dispatcher));
         CommandRegistrationCallback.EVENT.register((dispatcher, registry, env) -> V03Commands.register(dispatcher));
+        CommandRegistrationCallback.EVENT.register((dispatcher, registry, env) -> V04Commands.register(dispatcher));
         CommandRegistrationCallback.EVENT.register((dispatcher, registry, env) -> dispatcher.register(Commands.literal("earthlife")
                 .then(Commands.literal("wallet").executes(EarthLifeMod::wallet))
                 .then(Commands.literal("claim").then(Commands.argument("kind", StringArgumentType.word()).executes(EarthLifeMod::claim)))
@@ -122,13 +141,6 @@ public final class EarthLifeMod implements ModInitializer {
                 .then(Commands.literal("book").then(Commands.argument("flight", StringArgumentType.string())
                         .then(Commands.argument("seat", StringArgumentType.word()).executes(EarthLifeMod::book))))
                 .then(Commands.literal("whereami").executes(EarthLifeMod::whereami))));
-    }
-
-    /** Creative/spectator are not part of EarthLife Survival. Operators can opt in to developer tools in config. */
-    static void enforceSurvival(ServerPlayer p) {
-        boolean dev = EarthLifeServices.running() && EarthLifeServices.get().developerTools && McCompat.isOp(p);
-        GameType mode = p.gameMode.getGameModeForPlayer();
-        if (!dev && mode != GameType.SURVIVAL) p.setGameMode(GameType.SURVIVAL);
     }
 
     private static void tick(MinecraftServer server) {
@@ -145,11 +157,8 @@ public final class EarthLifeMod implements ModInitializer {
             s.rewards.tick(id, now);
             viewers.add(new int[]{p.getBlockX(), p.getBlockZ()});
             anyFlying |= p.getVehicle() instanceof AirplaneEntity;
-            if (now % 20 == 0) {
-                enforceSurvival(p);
-                ServerPlayNetworking.send(p, new Payloads.WalletStatus(s.ledger.balance(id), s.rewards.ticksUntilNextHourly(id),
+            if (now % 20 == 0) earthlife.mod.net.Net.send(p, new Payloads.WalletStatus(s.ledger.balance(id), s.rewards.ticksUntilNextHourly(id),
                         s.rewards.hourlyAvailable(id), s.rewards.dailyAvailable(id, System.currentTimeMillis())));
-            }
         }
         if (now % 10 == 0) s.tiles.update(s.region, viewers, anyFlying ? earthlife.core.world.TileStreamer.Rings.FLYING : earthlife.core.world.TileStreamer.Rings.WALKING);
         FLIGHTS.tick(server);
@@ -158,11 +167,42 @@ public final class EarthLifeMod implements ModInitializer {
         TRANSIT.tick(server);
         EVENTS.tick(server);
         earthlife.mod.jobs.JobHooks.tick(server);
-        if (now % 20 == 0) for (ServerPlayer p : server.getPlayerList().getPlayers()) {
-            String job = s.jobs.employment(p.getStringUUID()).map(e -> e.job().title + (s.jobs.shift(p.getStringUUID()).map(sh -> " · on shift, " + sh.tasks().size() + " tasks").orElse(" · off duty"))).orElse("");
-            ServerPlayNetworking.send(p, new Payloads.HudStatus(s.time.describe(earthlife.mod.McCompat.dayTime(server.overworld())), job));
+        if (now % 20 == 0) {
+            java.time.ZoneId zone = s.time.clock().zone();
+            boolean halloween = earthlife.mod.events.Halloween.isSeason(zone);
+            String eventLine = halloween ? earthlife.mod.events.Halloween.countdown(zone) : EVENTS.headline();
+            String clock = s.time.describe(earthlife.mod.McCompat.dayTime(server.overworld()));
+            for (ServerPlayer p : server.getPlayerList().getPlayers()) {
+                String pid = p.getStringUUID();
+                boolean onShift = s.jobs.shift(pid).isPresent();
+                String job = s.jobs.employment(pid).map(e -> e.job().title + " at " + e.employer() + (onShift ? " · on shift, " + s.jobs.shift(pid).get().tasks().size() + " tasks" : " · off duty")).orElse("");
+                earthlife.mod.net.Net.send(p, new Payloads.HudStatus(clock, job));
+                s.life.sendState(p, clock, job, onShift, eventLine, halloween);
+            }
+            if (now % 40 == 0) s.life.sendSharedPlayers(server);
         }
+        if (now % 600 == 0) s.life.store.saveDirty();
         if (now % 6000 == 0) { try { s.rewards.save(); s.tiles.edits().flush(); } catch (Exception e) { LOG.error("EarthLife autosave failed", e); } }
+    }
+
+    /** Once per world: start time from the Customize screen, and the world spawn moved to the safe start point. */
+    static void firstStart(MinecraftServer server, EarthLifeServices s) {
+        java.nio.file.Path marker = s.worldDir.resolve("initialized.json");
+        if (java.nio.file.Files.exists(marker)) return;
+        try {
+            s.life.setWorldSpawn(server);
+            if (s.time.clock().mode() == earthlife.core.time.GameClock.Mode.VANILLA || s.time.clock().mode() == earthlife.core.time.GameClock.Mode.SCALED) {
+                java.time.LocalTime local = java.time.LocalTime.now(s.time.clock().zone());
+                int hour = switch (s.settings.startTimeEnum()) {
+                    case MORNING -> 7; case NOON -> 12; case EVENING -> 18; case NIGHT -> 22; case REAL_TIME -> local.getHour();
+                };
+                int minute = s.settings.startTimeEnum() == earthlife.mod.world.EarthSettings.StartTime.REAL_TIME ? local.getMinute() : 0;
+                // Minecraft day ticks: 0 = 06:00, 1000 ticks per hour.
+                long ticks = Math.floorMod((hour - 6) * 1000L + minute * 1000L / 60, 24000L);
+                earthlife.mod.McCompat.setDayTime(server, ticks);
+            }
+            earthlife.core.world.AtomicFiles.write(marker, ("{\"version\":\"0.4.0\",\"created\":\"" + java.time.Instant.now() + "\"}").getBytes());
+        } catch (Exception e) { LOG.error("EarthLife first start", e); }
     }
 
     // ---- commands ----
@@ -171,6 +211,7 @@ public final class EarthLifeMod implements ModInitializer {
     }
 
     private static int wallet(CommandContext<CommandSourceStack> c) throws com.mojang.brigadier.exceptions.CommandSyntaxException {
+        if (!EarthLifeServices.running()) { c.getSource().sendFailure(Component.literal("EarthLife commands work in Earth worlds.")); return 0; }
         var s = EarthLifeServices.get();
         ServerPlayer p = player(c);
         long left = s.rewards.ticksUntilNextHourly(p.getStringUUID()) / 20;
@@ -180,6 +221,7 @@ public final class EarthLifeMod implements ModInitializer {
     }
 
     private static int claim(CommandContext<CommandSourceStack> c) throws com.mojang.brigadier.exceptions.CommandSyntaxException {
+        if (!EarthLifeServices.running()) { c.getSource().sendFailure(Component.literal("EarthLife commands work in Earth worlds.")); return 0; }
         var s = EarthLifeServices.get();
         ServerPlayer p = player(c);
         String kind = StringArgumentType.getString(c, "kind");
@@ -198,7 +240,9 @@ public final class EarthLifeMod implements ModInitializer {
     }
 
     private static int flights(CommandContext<CommandSourceStack> c) {
+        if (!EarthLifeServices.running()) { c.getSource().sendFailure(Component.literal("EarthLife commands work in Earth worlds.")); return 0; }
         var s = EarthLifeServices.get();
+        if (c.getSource().getPlayer() != null) s.life.complete(c.getSource().getPlayer(), "view_flights");
         long day = earthlife.mod.McCompat.dayTime(c.getSource().getServer().overworld()) / 24000;
         for (var f : s.booking.search(null, null)) {
             if (f.departureGameDay() < day) continue;
@@ -211,6 +255,7 @@ public final class EarthLifeMod implements ModInitializer {
     }
 
     private static int seats(CommandContext<CommandSourceStack> c) {
+        if (!EarthLifeServices.running()) { c.getSource().sendFailure(Component.literal("EarthLife commands work in Earth worlds.")); return 0; }
         var s = EarthLifeServices.get();
         var f = s.booking.flight(StringArgumentType.getString(c, "flight"));
         c.getSource().sendSystemMessage(Component.literal(f == null ? "No such flight." : "Free seats: " + String.join(" ", s.booking.availableSeats(f))));
@@ -218,10 +263,19 @@ public final class EarthLifeMod implements ModInitializer {
     }
 
     private static int book(CommandContext<CommandSourceStack> c) throws com.mojang.brigadier.exceptions.CommandSyntaxException {
+        if (!EarthLifeServices.running()) { c.getSource().sendFailure(Component.literal("EarthLife commands work in Earth worlds.")); return 0; }
         var s = EarthLifeServices.get();
         ServerPlayer p = player(c);
         try {
-            var bp = s.booking.purchase(p.getStringUUID(), StringArgumentType.getString(c, "flight"), StringArgumentType.getString(c, "seat").toUpperCase(Locale.ROOT), p.level().getGameTime());
+            String fid = StringArgumentType.getString(c, "flight"), seat = StringArgumentType.getString(c, "seat").toUpperCase(Locale.ROOT);
+            if (seat.equals("AUTO")) {
+                var f = s.booking.flight(fid);
+                var free = f == null ? List.<String>of() : s.booking.availableSeats(f);
+                if (free.isEmpty()) { p.sendSystemMessage(Component.literal("No free seats on " + fid + ".")); return 0; }
+                seat = free.get(0);
+            }
+            var bp = s.booking.purchase(p.getStringUUID(), fid, seat, p.level().getGameTime());
+            s.life.complete(p, "book_flight");
             p.sendSystemMessage(Component.literal("✓ Booked " + bp.flightNumber() + " " + bp.from() + "→" + bp.to() + ", seat " + bp.seat()
                     + ", gate " + bp.gate() + ". Boarding pass " + bp.code() + ". Paid " + bp.priceLC() + " LC."));
         } catch (Ledger.InsufficientFunds e) {
@@ -233,6 +287,7 @@ public final class EarthLifeMod implements ModInitializer {
     }
 
     private static int whereami(CommandContext<CommandSourceStack> c) throws com.mojang.brigadier.exceptions.CommandSyntaxException {
+        if (!EarthLifeServices.running()) { c.getSource().sendFailure(Component.literal("EarthLife commands work in Earth worlds.")); return 0; }
         var s = EarthLifeServices.get();
         ServerPlayer p = player(c);
         var g = s.projection.fromBlock(p.getX(), p.getZ());

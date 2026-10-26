@@ -33,6 +33,10 @@ public final class V02Commands {
     interface Body { String run(ServerPlayer p, CommandContext<CommandSourceStack> c) throws Exception; }
 
     static int run(CommandContext<CommandSourceStack> c, Body b) {
+        if (!EarthLifeServices.running()) {
+            c.getSource().sendFailure(Component.literal("EarthLife commands work in Earth worlds (Create New World > World Type: Earth - 1:1 Real World)."));
+            return 0;
+        }
         try {
             ServerPlayer p = c.getSource().getPlayerOrException();
             String msg = b.run(p, c);
@@ -72,6 +76,7 @@ public final class V02Commands {
                         if (j.workplace.equals("airport") && !s.airportLayouts.containsKey(employer.toUpperCase(Locale.ROOT))) return "Airport jobs need an airport code: " + s.airportLayouts.keySet();
                         if (j.workplace.equals("airport")) employer = employer.toUpperCase(Locale.ROOT);
                         var e = s.jobs.hire(p.getStringUUID(), j, employer, GameClock.day(earthlife.mod.McCompat.dayTime(p.level())));
+                        s.life.complete(p, "get_job");
                         return "Hired! You're now a " + e.job().title + " at " + e.employer() + ". Clock in with /earthlife job clockin during your shift."; })))))
                 .then(Commands.literal("quit").executes(c -> run(c, (p, x) -> EarthLifeServices.get().jobs.quit(p.getStringUUID(), earthlife.mod.McCompat.dayTime(p.level()), p.level().getGameTime())
                         .map(ps -> JobHooks.payslip(ps) + " You quit.").orElse("You quit your job."))))

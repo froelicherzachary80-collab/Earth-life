@@ -160,7 +160,7 @@ public final class LifeService {
         String summary = String.format("%s, %s · %s quality · buildings %s · roads %s · real terrain %s · transport %s · simulation %s · %s · day length %s",
                 st.town(), st.state(), EarthSettings.pretty(st.qualityEnum()), onOff(st.buildings()), onOff(st.roads()), onOff(st.realTerrain()),
                 onOff(st.transport()), onOff(st.simulation()), EarthSettings.pretty(st.scenarioEnum()), EarthSettings.pretty(st.dayLengthEnum()));
-        ServerPlayNetworking.send(p, new Payloads.WorldInfo(true, s.region, s.projection.origin().lat(), s.projection.origin().lon(),
+        earthlife.mod.net.Net.send(p, new Payloads.WorldInfo(true, s.region, s.projection.origin().lat(), s.projection.origin().lon(),
                 EarthLifeServices.SEA_LEVEL_Y_AT_0M, st.town(), life(p).scenario, s.bundledData, s.attribution, s.allowLocationSharing, !life(p).welcomed, summary, pois));
     }
 
@@ -177,7 +177,7 @@ public final class LifeService {
         for (var w : life.waypoints) wps.add(new Payloads.Poi("waypoint", w.name(), w.x(), w.z()));
         List<String> obj = Objectives.lines(life);
         int done = (int) obj.stream().filter(x -> x.startsWith("✔")).count();
-        ServerPlayNetworking.send(p, new Payloads.LifeState(s.ledger.balance(id), s.rewards.ticksUntilNextHourly(id), s.rewards.hourlyAvailable(id) > 0,
+        earthlife.mod.net.Net.send(p, new Payloads.LifeState(s.ledger.balance(id), s.rewards.ticksUntilNextHourly(id), s.rewards.hourlyAvailable(id) > 0,
                 s.rewards.dailyAvailable(id, System.currentTimeMillis()), clock, job, onShift, placeName(g), g.lat(), g.lon(),
                 s.projection.yToElevation(p.getY()), obj, done, wps, eventLine, life.candy, halloween, life.shareLocation));
     }
@@ -199,6 +199,6 @@ public final class LifeService {
         for (ServerPlayer p : server.getPlayerList().getPlayers())
             if (life(p).shareLocation && p.level() == server.overworld()) shared.add(new Payloads.Poi("player", p.getName().getString(), p.getX(), p.getZ()));
         var pkt = new Payloads.MapPlayers(shared);
-        for (ServerPlayer p : server.getPlayerList().getPlayers()) ServerPlayNetworking.send(p, pkt);
+        for (ServerPlayer p : server.getPlayerList().getPlayers()) earthlife.mod.net.Net.send(p, pkt);
     }
 }

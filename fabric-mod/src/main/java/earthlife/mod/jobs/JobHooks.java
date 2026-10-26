@@ -52,6 +52,7 @@ public final class JobHooks {
         boolean at = e.job() == JobType.JANITOR || Math.hypot(p.getX() - w[0], p.getZ() - w[2]) < 80;
         s.jobs.clockIn(p.getStringUUID(), earthlife.mod.McCompat.dayTime(p.level()), at);
         setUpTasks(p, e);
+        s.life.complete(p, "clock_in");
         return "Clocked in as " + e.job().title + ". Shift ends " + String.format("%02d:00", e.job().shiftEnd) + ".";
     }
 
@@ -72,6 +73,16 @@ public final class JobHooks {
                 }
                 messes.put(id, spots);
                 p.sendSystemMessage(Component.literal(spots.size() + " messes to clean nearby (brown stains). Break them."));
+            }
+            case STORE_CLERK -> {
+                // Stock room: barrels to restock appear beside the clerk (each counts once per game hour).
+                List<BlockPos> spots = new ArrayList<>();
+                for (int i = 0; i < 4; i++) {
+                    BlockPos pos = p.blockPosition().offset(i % 2 == 0 ? 2 : -2, 0, i < 2 ? 2 : -2);
+                    if (level.getBlockState(pos).isAir() && !level.getBlockState(pos.below()).isAir()) { level.setBlockAndUpdate(pos, Blocks.BARREL.defaultBlockState()); spots.add(pos); }
+                    else if (level.getBlockState(pos).is(Blocks.BARREL)) spots.add(pos);
+                }
+                p.sendSystemMessage(Component.literal("Restock the shelves: open each barrel (" + spots.size() + " here) - once per hour each."));
             }
             case DELIVERY_DRIVER -> {
                 List<String> addresses = s.features.buildings.stream().filter(b -> "house".equals(b.kind()))
@@ -115,6 +126,7 @@ public final class JobHooks {
         try {
             if (s.jobs.recordTask(p.getStringUUID(), kind, npc.residentId() + "@" + GameClock.day(earthlife.mod.McCompat.dayTime(p.level())))) {
                 p.sendSystemMessage(Component.literal(kind.equals("checkin") ? "✓ Checked in " + resident.name() + ". Bag tagged." : "✓ Boarding pass scanned: " + resident.name() + "."));
+                s.life.complete(p, "work_task");
                 npc.discard();
             }
         } catch (Exception ex) { EarthLifeMod.LOG.warn("task", ex); }
@@ -145,7 +157,12 @@ public final class JobHooks {
     }
 
     private static void task(ServerPlayer p, String kind, String ref, String msg) {
-        try { if (EarthLifeServices.get().jobs.recordTask(p.getStringUUID(), kind, ref) && msg != null) p.sendOverlayMessage(Component.literal("✓ " + msg)); }
+        try {
+            if (EarthLifeServices.get().jobs.recordTask(p.getStringUUID(), kind, ref)) {
+                if (msg != null) p.sendOverlayMessage(Component.literal("✓ " + msg));
+                EarthLifeServices.get().life.complete(p, "work_task");
+            }
+        }
         catch (Exception ex) { EarthLifeMod.LOG.warn("task", ex); }
     }
 

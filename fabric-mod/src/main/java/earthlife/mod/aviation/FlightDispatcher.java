@@ -128,6 +128,6 @@ public final class FlightDispatcher {
         var payload = new Payloads.FlightTelemetry(plane.flight().number(), t.departure(), t.destination(), t.phase().name(),
                 t.position().lat(), t.position().lon(), t.altitudeMsl(), t.groundSpeed(), t.headingDeg(), t.distanceRemaining(),
                 t.etaSeconds() / plane.sim().timeCompression(), lats, lons);
-        for (Entity p : plane.getPassengers()) if (p instanceof ServerPlayer sp) ServerPlayNetworking.send(sp, payload);
+        for (Entity p : plane.getPassengers()) if (p instanceof ServerPlayer sp) earthlife.mod.net.Net.send(sp, payload);
     }
 }

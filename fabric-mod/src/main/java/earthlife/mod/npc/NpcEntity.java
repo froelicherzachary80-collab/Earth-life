@@ -75,9 +75,10 @@ public final class NpcEntity extends PathfinderMob {
         if (JobHooks.onNpcInteract(sp, this, npc)) return InteractionResult.SUCCESS;   // job tasks (check-in, boarding)
         try {
             long time = earthlife.mod.McCompat.dayTime(level());
-            s.social.interact(sp.getStringUUID(), npc, sp.isShiftKeyDown() ? Social.Action.GREET : Social.Action.CHAT, time);
-            sp.sendSystemMessage(Component.literal("§b" + npc.name() + "§r: " + s.social.line(npc, sp.getStringUUID(), sp.getName().getString(), time)));
-        } catch (Exception e) { return InteractionResult.FAIL; }
+            s.social.interact(sp.getStringUUID(), npc, Social.Action.GREET, time);
+            s.life.complete(sp, "talk");
+            DialogueService.open(sp, this, npc, s.social.line(npc, sp.getStringUUID(), sp.getName().getString(), time));
+        } catch (Exception e) { earthlife.mod.EarthLifeMod.LOG.warn("dialogue", e); return InteractionResult.FAIL; }
         return InteractionResult.SUCCESS;
     }
 

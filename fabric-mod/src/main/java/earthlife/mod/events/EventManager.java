@@ -217,6 +217,22 @@ public final class EventManager {
         return EarthLifeServices.get().events.between(now.minus(Duration.ofHours(1)), now.plus(Duration.ofDays(7)));
     }
 
+    /** One line for the HUD: a live event, else the next one today. */
+    public String headline() {
+        var list = active;
+        if (!list.isEmpty()) return "LIVE: " + list.get(0).event().title();
+        return "";
+    }
+
+    /** Re-fetch event feeds now (operator /earthlife admin reload). */
+    public void shutdownAndRestart() {
+        announced.clear();
+        if (pending == null || pending.isDone()) pending = net.submit(() -> {
+            try { var s = EarthLifeServices.get(); s.events.refresh(Instant.now()); active = s.events.activeAt(Instant.now()); }
+            catch (Exception e) { EarthLifeMod.LOG.warn("events refresh", e); }
+        });
+    }
+
     public void shutdown() {
         net.shutdownNow();
         crowds.values().forEach(l -> l.forEach(NpcEntity::discard));

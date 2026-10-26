@@ -34,6 +34,8 @@ public final class NpcManager {
             for (var pop : s.populations)
                 for (Npc n : pop.nearby(p.getX(), p.getZ(), RADIUS, time, CAP)) { wanted.add(n.id()); byId.put(n.id(), n); }
         }
+        boolean halloween = earthlife.mod.events.Halloween.isSeason(s.time.clock().zone());
+        for (var e : live.entrySet()) earthlife.mod.events.Halloween.dress(e.getValue(), e.getKey(), halloween);
         for (Iterator<Map.Entry<String, NpcEntity>> it = live.entrySet().iterator(); it.hasNext(); ) {
             var e = it.next();
             if (!wanted.contains(e.getKey()) || e.getValue().isRemoved()) { e.getValue().discard(); it.remove(); }
@@ -53,6 +55,8 @@ public final class NpcManager {
             live.put(id, e);
         }
     }
+
+    public int liveCount() { return live.size(); }
 
     public void clear() { live.values().forEach(NpcEntity::discard); live.clear(); }
 }
