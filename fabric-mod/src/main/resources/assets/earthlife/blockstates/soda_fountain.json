@@ -1,0 +1,19 @@
+{
+ "variants": {
+  "facing=north": {
+   "model": "earthlife:block/soda_fountain"
+  },
+  "facing=east": {
+   "model": "earthlife:block/soda_fountain",
+   "y": 90
+  },
+  "facing=south": {
+   "model": "earthlife:block/soda_fountain",
+   "y": 180
+  },
+  "facing=west": {
+   "model": "earthlife:block/soda_fountain",
+   "y": 270
+  }
+ }
+}

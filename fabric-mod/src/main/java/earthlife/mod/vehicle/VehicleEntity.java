@@ -21,7 +21,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
-import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
 import java.util.*;
@@ -112,7 +111,6 @@ public final class VehicleEntity extends Entity {
 
     @Override public boolean isPickable() { return !isRemoved(); }
     @Override public boolean canBeCollidedWith(Entity other) { return false; }
-    @Override public AABB getBoundingBoxForCulling() { return getBoundingBox().inflate(vehicleType().length / 2); }
 
     private void setFlag(int bit, boolean on) {
         int f = entityData.get(DATA_FLAGS);

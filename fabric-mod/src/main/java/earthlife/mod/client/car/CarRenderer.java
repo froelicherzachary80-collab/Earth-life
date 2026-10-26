@@ -47,6 +47,11 @@ public final class CarRenderer extends EntityRenderer<VehicleEntity, CarRenderer
 
     @Override public State createRenderState() { return new State(); }
 
+    /** The model is longer than the entity's hit box: don't cull it while any part may be on screen. */
+    @Override public boolean shouldRender(VehicleEntity e, net.minecraft.client.renderer.culling.Frustum f, double cx, double cy, double cz, float partial) {
+        return e.distanceToSqr(cx, cy, cz) < 200 * 200;
+    }
+
     @Override public void extractRenderState(VehicleEntity e, State s, float partial) {
         super.extractRenderState(e, s, partial);
         s.type = e.vehicleType();
@@ -66,7 +71,7 @@ public final class CarRenderer extends EntityRenderer<VehicleEntity, CarRenderer
         CarModel m = model(s.type);
         var tex = m.texture(s.color);
         poseStack.pushPose();
-        poseStack.mulPose(new Quaternionf().rotateY((float) Math.toRadians(-s.yaw)));
+        poseStack.rotate(new Quaternionf().rotateY((float) Math.toRadians(-s.yaw)));
         final float[] doors = s.doors.clone();
         final float spin = s.spin, steer = s.steer;
         final int light = s.lightCoords;
@@ -86,9 +91,7 @@ public final class CarRenderer extends EntityRenderer<VehicleEntity, CarRenderer
     private static void draw(CarModel m, ModelPart root, PoseStack.Pose pose, VertexConsumer vc, float[] doors, float spin, float steer, int light, int color) {
         m.pose(root, doors, spin, steer);
         PoseStack ps = new PoseStack();
-        ps.last().pose().set(pose.pose());
-        ps.last().normal().set(pose.normal());
-        ps.scale(1, 1, 1);
+        ps.last().set(pose);
         root.render(ps, vc, light, OverlayTexture.NO_OVERLAY, color);
     }
 

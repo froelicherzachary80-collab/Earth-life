@@ -722,6 +722,16 @@ public final class EarthLifeClientGameTest implements FabricClientGameTest {
         attempt(T, "Halloween haunted house", () -> {
             onServer(sp, s -> { McCompat.setDayTime(s, McCompat.dayTime(s.overworld()) / 24000 * 24000 + 13000); return 0; });   // 19:00
             ctx.waitTicks(80);
+            // walk over to the haunted house so its chunk (and the hidden pumpkins in it) are loaded around you
+            onServer(sp, s -> {
+                ServerPlayer p = s.getPlayerList().getPlayers().get(0);
+                EarthLifeMod.HAUNTED.location().ifPresent(l -> {
+                    int y = s.overworld().getChunk((int) Math.floor(l[0]) >> 4, (int) Math.floor(l[1]) >> 4).getHeight(net.minecraft.world.level.levelgen.Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, (int) Math.floor(l[0]) & 15, (int) Math.floor(l[1]) & 15);
+                    p.teleportTo(l[0] + 12, y + 1, l[1] + 12);
+                });
+                return 0;
+            });
+            ctx.waitTicks(60);
             String r = onServer(sp, s -> {
                 ServerPlayer p = s.getPlayerList().getPlayers().get(0);
                 var loc = EarthLifeMod.HAUNTED.location();

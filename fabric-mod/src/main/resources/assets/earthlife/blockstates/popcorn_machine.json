@@ -1,0 +1,19 @@
+{
+ "variants": {
+  "facing=north": {
+   "model": "earthlife:block/popcorn_machine"
+  },
+  "facing=east": {
+   "model": "earthlife:block/popcorn_machine",
+   "y": 90
+  },
+  "facing=south": {
+   "model": "earthlife:block/popcorn_machine",
+   "y": 180
+  },
+  "facing=west": {
+   "model": "earthlife:block/popcorn_machine",
+   "y": 270
+  }
+ }
+}

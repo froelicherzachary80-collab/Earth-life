@@ -1,0 +1,25 @@
+{
+ "parent": "minecraft:item/generated",
+ "textures": {
+  "layer0": "earthlife:item/glasses_3d"
+ },
+ "display": {
+  "head": {
+   "rotation": [
+    0,
+    180,
+    0
+   ],
+   "translation": [
+    0,
+    -2.25,
+    -7.6
+   ],
+   "scale": [
+    0.86,
+    0.86,
+    0.86
+   ]
+  }
+ }
+}

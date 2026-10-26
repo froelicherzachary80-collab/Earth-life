@@ -1,0 +1,19 @@
+{
+ "variants": {
+  "facing=north": {
+   "model": "earthlife:block/ticket_kiosk"
+  },
+  "facing=east": {
+   "model": "earthlife:block/ticket_kiosk",
+   "y": 90
+  },
+  "facing=south": {
+   "model": "earthlife:block/ticket_kiosk",
+   "y": 180
+  },
+  "facing=west": {
+   "model": "earthlife:block/ticket_kiosk",
+   "y": 270
+  }
+ }
+}
