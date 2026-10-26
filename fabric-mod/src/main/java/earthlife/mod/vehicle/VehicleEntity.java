@@ -57,9 +57,9 @@ public final class VehicleEntity extends Entity {
     public String owner() { return owner; }
     public VehicleSim sim() { return sim; }
 
-    @Override public InteractionResult interact(Player player, InteractionHand hand) {
+    @Override public InteractionResult interact(Player player, InteractionHand hand, net.minecraft.world.phys.Vec3 at) {
         if (!(player instanceof ServerPlayer sp) || sim == null) return InteractionResult.PASS;
-        if (getPassengers().size() >= type.seats) { sp.displayClientMessage(Component.literal("Full."), true); return InteractionResult.FAIL; }
+        if (getPassengers().size() >= type.seats) { sp.sendOverlayMessage(Component.literal("Full.")); return InteractionResult.FAIL; }
         if (fare > 0 && !Objects.equals(owner, sp.getStringUUID())) {
             var s = earthlife.mod.EarthLifeServices.get();
             try { s.ledger.debit(sp.getStringUUID(), fare, "FARE", "fare#" + getUUID() + "#" + sp.getStringUUID() + "#" + level().getGameTime() / 1200, type.label + " fare", level().getGameTime()); }
@@ -68,7 +68,7 @@ public final class VehicleEntity extends Entity {
         }
         seatOrder.remove(sp.getUUID());
         seatOrder.add(sp.getUUID());
-        sp.startRiding(this, true);
+        earthlife.mod.McCompat.ride(sp, this);
         return InteractionResult.SUCCESS;
     }
 
@@ -110,7 +110,7 @@ public final class VehicleEntity extends Entity {
                 var in = d.getLastClientInput();
                 double throttle = (in.forward() ? 1 : 0) - (in.backward() ? 1 : 0), steer = (in.right() ? 1 : 0) - (in.left() ? 1 : 0);
                 sim.drive(throttle, steer, in.jump(), 0.05);
-                if (tickCount % 10 == 0) d.displayClientMessage(Component.literal(String.format("%s · %d mph", type.label, Math.round(Math.abs(sim.speed) * 2.237))), true);
+                if (tickCount % 10 == 0) d.sendOverlayMessage(Component.literal(String.format("%s · %d mph", type.label, Math.round(Math.abs(sim.speed) * 2.237))));
             } else sim.drive(0, 0, true, 0.05);
         }
         double y = groundY(server, sim.x, sim.z);
@@ -121,7 +121,7 @@ public final class VehicleEntity extends Entity {
         }
         setPos(sim.x, y, sim.z);
         setYRot((float) (sim.headingDeg + 180));
-        rig.setTagScale("headlight", level().isNight() ? 1f : 0.6f);
+        rig.setTagScale("headlight", level().isDarkOutside() ? 1f : 0.6f);
         rig.pose(server, getX(), getY(), getZ(), getYRot(), 0);
     }
 

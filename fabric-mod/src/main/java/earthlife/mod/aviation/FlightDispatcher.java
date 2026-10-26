@@ -49,7 +49,7 @@ public final class FlightDispatcher {
     public void tick(MinecraftServer server) {
         var s = EarthLifeServices.get();
         ServerLevel overworld = server.overworld();
-        long time = overworld.getDayTime();
+        long time = earthlife.mod.McCompat.dayTime(overworld);
         long day = GameClock.day(time);
         int tod = (int) Math.floorMod(time, GameClock.TICKS_PER_DAY);
         scheduleDay(s, day); scheduleDay(s, day + 1);
@@ -82,7 +82,7 @@ public final class FlightDispatcher {
         for (ServerPlayer p : server.getPlayerList().getPlayers()) {
             if (p.getVehicle() != null || p.distanceToSqr(end[0], end[1], end[2]) > 2.25) continue;
             if (s.booking.verify(f.id(), p.getStringUUID()).isPresent()) plane.board(p, false);
-            else p.displayClientMessage(Component.literal("Boarding pass required for " + f.number() + "."), true);
+            else p.sendOverlayMessage(Component.literal("Boarding pass required for " + f.number() + "."));
         }
     }
 

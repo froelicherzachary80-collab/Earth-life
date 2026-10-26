@@ -74,7 +74,7 @@ public final class NpcEntity extends PathfinderMob {
         if (npc == null) return InteractionResult.PASS;
         if (JobHooks.onNpcInteract(sp, this, npc)) return InteractionResult.SUCCESS;   // job tasks (check-in, boarding)
         try {
-            long time = level().getDayTime();
+            long time = earthlife.mod.McCompat.dayTime(level());
             s.social.interact(sp.getStringUUID(), npc, sp.isShiftKeyDown() ? Social.Action.GREET : Social.Action.CHAT, time);
             sp.sendSystemMessage(Component.literal("§b" + npc.name() + "§r: " + s.social.line(npc, sp.getStringUUID(), sp.getName().getString(), time)));
         } catch (Exception e) { return InteractionResult.FAIL; }
@@ -97,7 +97,7 @@ public final class NpcEntity extends PathfinderMob {
             repath = 40;
             var npc = EarthLifeServices.get().npc(mob.residentId).orElse(null);
             if (npc == null) return;
-            var place = npc.placeFor(npc.activityAt(mob.level().getDayTime()));
+            var place = npc.placeFor(npc.activityAt(earthlife.mod.McCompat.dayTime(mob.level())));
             double dx = place.x() - mob.getX(), dz = place.z() - mob.getZ();
             double d = Math.hypot(dx, dz);
             if (d < 4) { if (mob.getRandom().nextInt(4) == 0) mob.getNavigation().moveTo(place.x() + mob.getRandom().nextInt(9) - 4, mob.getY(), place.z() + mob.getRandom().nextInt(9) - 4, 0.6); return; }

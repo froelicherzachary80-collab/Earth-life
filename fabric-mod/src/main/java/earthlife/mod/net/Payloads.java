@@ -3,15 +3,15 @@ package earthlife.mod.net;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import java.util.*;
 
-/** Server -> client packets. UNVERIFIED: ResourceLocation may be renamed (Identifier) in 26.x. */
+/** Server -> client packets. UNVERIFIED: Identifier may be renamed (Identifier) in 26.x. */
 public final class Payloads {
     private Payloads() {}
 
-    static ResourceLocation id(String p) { return ResourceLocation.fromNamespaceAndPath("earthlife", p); }
+    static Identifier id(String p) { return Identifier.fromNamespaceAndPath("earthlife", p); }
 
     /** Live aircraft state for the seatback screen. ETA is already in real seconds (time compression applied). */
     public record FlightTelemetry(String flight, String from, String to, String phase, double lat, double lon, double altitudeM,

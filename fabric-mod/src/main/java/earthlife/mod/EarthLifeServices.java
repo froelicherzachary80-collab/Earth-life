@@ -58,43 +58,77 @@ public final class EarthLifeServices implements AutoCloseable {
     public final boolean developerTools;
     public final String attribution;
 
-    private EarthLifeServices(MinecraftServer server) throws IOException {
+    /** Y of 0 m above sea level. Y 63 (vanilla sea level) = 74 m, the surface of Lake Ontario. */
+    public static final int SEA_LEVEL_Y_AT_0M = 63 - 74;
+    /** Region origin of the bundled Western NY dataset (features.json coordinates are relative to it). */
+    public static final GeoPoint WESTERN_NY_ORIGIN = new GeoPoint(43.2237, -77.1861);
+
+    public final earthlife.mod.world.EarthSettings settings;
+    /** Where new players arrive: the chosen start town, snapped later to a safe surface block. */
+    public final double spawnX, spawnZ;
+    public final boolean bundledData;
+
+    private EarthLifeServices(MinecraftServer server, earthlife.mod.world.EarthSettings settings) throws IOException {
+        this.settings = settings;
         worldDir = server.getWorldPath(LevelResource.ROOT).resolve("earthlife");
+        Files.createDirectories(worldDir);
         Path cfgDir = server.getServerDirectory().resolve("config/earthlife");
         Map<String, Object> cfg = readJson(cfgDir.resolve("earthlife.json"), Map.of());
-        double lat = ((Number) cfg.getOrDefault("originLat", 43.2237)).doubleValue();
-        double lon = ((Number) cfg.getOrDefault("originLon", -77.1861)).doubleValue();
-        region = (String) cfg.getOrDefault("region", "western-ny");
         developerTools = Boolean.TRUE.equals(cfg.get("developerTools"));
-        projection = new LocalProjection(new GeoPoint(lat, lon), 63, 1.0);
+        bundledData = settings.inWesternNy();
+        GeoPoint origin = bundledData ? WESTERN_NY_ORIGIN : new GeoPoint(settings.lat(), settings.lon());
+        region = bundledData ? "western-ny" : String.format(java.util.Locale.ROOT, "custom_%.3f_%.3f", settings.lat(), settings.lon()).replace('-', 'm');
+        projection = new LocalProjection(origin, SEA_LEVEL_Y_AT_0M, 1.0);
+        var spawn = projection.toBlock(settings.lat(), settings.lon());
+        spawnX = spawn.x(); spawnZ = spawn.z();
 
-        // Region data: one features file can now cover many towns (Williamson -> Rochester -> Geneva ...).
+        // Map data: a features file in config/earthlife/regions/<region>/ overrides the starter data bundled in the jar.
         Path regionDir = cfgDir.resolve("regions").resolve(region);
-        if (!Files.exists(regionDir) && Files.exists(cfgDir.resolve("regions/williamson"))) regionDir = cfgDir.resolve("regions/williamson");
-        features = Files.exists(regionDir.resolve("features.json")) ? Features.load(regionDir.resolve("features.json"))
-                : new Features("No region data installed - procedural estimate only");
+        String featuresJson = null;
+        if (Files.exists(regionDir.resolve("features.json"))) featuresJson = Files.readString(regionDir.resolve("features.json"));
+        else if (bundledData) featuresJson = bundled("regions/western-ny/features.json.gz");
+        Features loaded = featuresJson != null ? Features.parse(featuresJson) : new Features("No map data for this area - estimated terrain and buildings");
+        features = filtered(loaded, settings);
         attribution = features.attribution;
-        towns = Towns.load(resourceOrOverride(cfgDir, "towns.json"));
+        towns = bundledData ? Towns.load(resourceOrOverride(cfgDir, "towns.json")) : List.of(new Towns.Town(settings.town(), Towns.Kind.TOWN, origin, 0, false));
 
         List<ProceduralInfill.Centre> centres = new ArrayList<>();
         for (Towns.Town t : towns) {
             var b = projection.toBlock(t.centre().lat(), t.centre().lon());
             centres.add(new ProceduralInfill.Centre(t.name(), b.x(), b.z(), t.kind().radiusM(), t.kind() == Towns.Kind.CITY));
         }
-        if (!Boolean.FALSE.equals(cfg.get("estimatedInfill"))) features.buildings.addAll(ProceduralInfill.infill(features, centres, 0xEA27L));
+        if (settings.buildings() && !Boolean.FALSE.equals(cfg.get("estimatedInfill"))) features.buildings.addAll(ProceduralInfill.infill(features, centres, 0xEA27L));
 
-        ElevationSource fallback = new ElevationSource.Procedural(95, 25, 0xEA27L);
-        ElevationSource elevation = Files.exists(regionDir.resolve("dem.eldg")) ? ElevationSource.Grid.load(regionDir.resolve("dem.eldg"), fallback) : fallback;
+        // Elevation: bundled/override DEM grid when available; otherwise gentle estimated hills. "Real terrain" off = flat land.
+        ElevationSource fallback = new ElevationSource.Procedural(bundledData ? 110 : 95, 20, 0xEA27L);
+        ElevationSource elevation = fallback;
+        if (Files.exists(regionDir.resolve("dem.eldg"))) elevation = ElevationSource.Grid.load(regionDir.resolve("dem.eldg"), fallback);
+        else if (bundledData) {
+            byte[] dem = bundledBytes("regions/western-ny/dem.eldg.gz");
+            if (dem != null) {
+                Path tmp = worldDir.resolve("dem-cache.eldg");
+                if (!Files.exists(tmp) || Files.size(tmp) != dem.length) AtomicFiles.write(tmp, dem);
+                elevation = ElevationSource.Grid.load(tmp, fallback);
+            }
+        }
+        if (!settings.realTerrain()) {
+            double flat = elevation.elevationAt(spawnX, spawnZ);
+            elevation = (x, z) -> flat;
+        }
+        this.elevationSource = elevation;
         generator = new TileGenerator(new FeatureIndex(features), elevation, projection, 0xEA27L);
 
-        // Airports: every airport in airports.json gets a generated terminal beside its real runway(s).
-        for (Airport a : Airport.loadAll(resourceOrOverride(cfgDir, "airports.json")).values()) {
+        // Airports: every airport with a runway of 900 m+ gets a generated terminal beside its real runway(s).
+        Map<String, Airport> allAirports = settings.transport() ? Airport.loadAll(resourceOrOverride(cfgDir, "airports.json")) : Map.of();
+        for (Airport a : allAirports.values()) {
+            var ab = projection.toBlock(a.ref().lat(), a.ref().lon());
+            if (Math.hypot(ab.x(), ab.z()) > 150_000) continue;         // outside this world's region
             if (a.mainRunway().lengthM() < 900) { EarthLifeMod.LOG.info("{}: runway under 900 m, no terminal generated", a.icao()); continue; }
             AirportLayout l = new AirportLayout(a, projection, cabin);
             airportLayouts.put(a.icao(), l);
             airports.put(a.icao(), a.withGate(l.stands.get(0).geo()));
             for (var ring : l.siteRings()) generator.addSite(new TileGenerator.Site(a.icao(), ring, l.baseY, TileData.Surface.CONCRETE));
-            for (Airport.Runway r : a.runways()) {   // level each runway strip to field elevation so aircraft roll on it
+            for (Airport.Runway r : a.runways()) {
                 var t0 = projection.toBlock(r.threshold().lat(), r.threshold().lon()); var t1 = projection.toBlock(r.end().lat(), r.end().lon());
                 double len = Math.hypot(t1.x() - t0.x(), t1.z() - t0.z()), nx = -(t1.z() - t0.z()) / len, nz = (t1.x() - t0.x()) / len, w = r.widthM() / 2 + 8;
                 generator.addSite(new TileGenerator.Site(a.icao() + "-" + r.ident(), List.of(
@@ -104,8 +138,8 @@ public final class EarthLifeServices implements AutoCloseable {
         }
 
         for (var a : airportLayouts.values()) structures.add(a.placed);
-        // Landmarks: built at their real coordinates (verified ones from OSM; hand-entered ones are approximate).
-        List<earthlife.core.build.Landmarks.Landmark> landmarkList = earthlife.core.build.Landmarks.load(resourceOrOverride(cfgDir, "landmarks.json"));
+        List<earthlife.core.build.Landmarks.Landmark> landmarkList = bundledData && settings.buildings()
+                ? earthlife.core.build.Landmarks.load(resourceOrOverride(cfgDir, "landmarks.json")) : List.of();
         for (var lm : landmarkList) {
             var placed = earthlife.core.build.Landmarks.build(lm, projection, elevation);
             landmarks.put(lm.id(), placed);
@@ -114,7 +148,7 @@ public final class EarthLifeServices implements AutoCloseable {
         }
 
         String dataHash = hash(Json.write(Map.of("lm", landmarks.keySet().toString(), "f", features.roads.size() + "/" + features.buildings.size() + "/" + features.areas.size(),
-                "a", airportLayouts.keySet().toString(), "dem", Files.exists(regionDir.resolve("dem.eldg")), "v", "0.3")));
+                "a", airportLayouts.keySet().toString(), "dem", String.valueOf(elevation.getClass().getSimpleName()), "s", settings.toString(), "v", "0.4")));
         tiles = new TileStreamer(generator, worldDir.resolve("tilecache").resolve(dataHash), new ModificationStore(worldDir.resolve("edits")),
                 Math.max(2, Runtime.getRuntime().availableProcessors() / 2), 4096, null);
 
@@ -123,12 +157,11 @@ public final class EarthLifeServices implements AutoCloseable {
         booking = new Booking(ledger, Booking.PricingConfig.defaults());
         jobs = new JobService(ledger, worldDir.resolve("jobs.json"));
         social = new Social(worldDir.resolve("social.json"));
-        @SuppressWarnings("unchecked") Map<String, Object> timeCfg = (Map<String, Object>) cfg.getOrDefault("time", Map.of());
-        time = new TimeSync(worldDir, timeCfg);
+        time = new TimeSync(worldDir, timeDefaults(settings));
 
         roadGraph = RoadGraph.roads(features);
         railGraph = RoadGraph.rails(features);
-        buildPopulations();
+        if (settings.simulation()) buildPopulations();
 
         // Real-time events (holidays computed locally; MLB / Ticketmaster / iCal fetched on this PC, cached for offline play).
         @SuppressWarnings("unchecked") Map<String, Object> ev = (Map<String, Object>) cfg.getOrDefault("events", Map.of());
@@ -185,6 +218,45 @@ public final class EarthLifeServices implements AutoCloseable {
         return Optional.empty();
     }
 
+    public final ElevationSource elevationSource;
+
+    /** Day-length choice from the Customize screen; applied the first time the world opens (then /earthlife time). */
+    private static Map<String, Object> timeDefaults(earthlife.mod.world.EarthSettings s) {
+        Map<String, Object> m = new HashMap<>();
+        switch (s.dayLengthEnum()) {
+            case REAL_TIME -> { m.put("mode", "REALTIME"); m.put("minutesPerDay", 1440L); }
+            case TWO_HOURS -> { m.put("mode", "SCALED"); m.put("minutesPerDay", 120L); }
+            case ONE_HOUR -> { m.put("mode", "SCALED"); m.put("minutesPerDay", 60L); }
+            default -> { m.put("mode", "VANILLA"); m.put("minutesPerDay", 20L); }
+        }
+        m.put("zone", s.inWesternNy() ? "America/New_York" : java.time.ZoneId.systemDefault().getId());
+        return m;
+    }
+
+    /** Applies the world's building/road toggles to raw map data. */
+    private static Features filtered(Features in, earthlife.mod.world.EarthSettings s) {
+        if (s.buildings() && s.roads()) return in;
+        Features out = new Features(in.attribution);
+        out.areas.addAll(in.areas); out.water.addAll(in.water);
+        if (s.buildings()) out.buildings.addAll(in.buildings);
+        for (var r : in.roads) if (s.roads() || r.cls() == Features.RoadClass.RUNWAY || r.cls() == Features.RoadClass.TAXIWAY) out.roads.add(r);
+        return out;
+    }
+
+    static String bundled(String path) throws IOException {
+        byte[] b = bundledBytes(path);
+        return b == null ? null : new String(b, StandardCharsets.UTF_8);
+    }
+
+    /** Reads /data/earthlife/<path> from the jar, un-gzipping *.gz. Null when not bundled. */
+    static byte[] bundledBytes(String path) throws IOException {
+        try (InputStream in = EarthLifeServices.class.getResourceAsStream("/data/earthlife/" + path)) {
+            if (in == null) return null;
+            InputStream src = path.endsWith(".gz") ? new java.util.zip.GZIPInputStream(in) : in;
+            return src.readAllBytes();
+        }
+    }
+
     private static String resourceOrOverride(Path cfgDir, String name) throws IOException {
         Path override = cfgDir.resolve(name);
         if (Files.exists(override)) return Files.readString(override);
@@ -203,8 +275,8 @@ public final class EarthLifeServices implements AutoCloseable {
         catch (Exception e) { return "nohash"; }
     }
 
-    public static synchronized void start(MinecraftServer server) {
-        try { current = new EarthLifeServices(server); }
+    public static synchronized void start(MinecraftServer server, earthlife.mod.world.EarthSettings settings) {
+        try { current = new EarthLifeServices(server, settings); }
         catch (IOException e) { throw new IllegalStateException("EarthLife failed to start: " + e.getMessage(), e); }
     }
 

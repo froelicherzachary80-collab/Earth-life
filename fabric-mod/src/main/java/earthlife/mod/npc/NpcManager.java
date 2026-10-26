@@ -26,7 +26,7 @@ public final class NpcManager {
         if (server.getTickCount() % 40 != 0) return;
         var s = EarthLifeServices.get();
         ServerLevel level = server.overworld();
-        long time = level.getDayTime();
+        long time = earthlife.mod.McCompat.dayTime(level);
         Set<String> wanted = new HashSet<>();
         Map<String, Npc> byId = new HashMap<>();
         for (ServerPlayer p : server.getPlayerList().getPlayers()) {

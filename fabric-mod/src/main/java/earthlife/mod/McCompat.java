@@ -1,19 +1,63 @@
 package earthlife.mod;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.Identifier;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.clock.WorldClocks;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.ChunkAccess;
 
-/**
- * Every Minecraft call whose signature has changed between recent versions is routed through here,
- * so adapting to the exact 26.3 API (or a later version) is a one-file job.
- * UNVERIFIED: written against the 1.21.x-era Mojang-named API; check each method at first compile.
- */
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
+/** Every Minecraft call whose shape changed in 26.x goes through here (checked against the 26.3 API dump). */
 public final class McCompat {
     private McCompat() {}
 
-    /** ChunkAccess.setBlockState: (pos, state, int flags) since 1.21.5; earlier (pos, state, boolean moved). */
-    public static void set(ChunkAccess chunk, BlockPos.MutableBlockPos pos, BlockState state) {
-        chunk.setBlockState(pos, state, 0);
+    public static void set(ChunkAccess chunk, BlockPos.MutableBlockPos pos, BlockState state) { chunk.setBlockState(pos, state, 0); }
+
+    /** Overworld clock ticks (26.x replaced Level#getDayTime with world clocks). */
+    public static long dayTime(Level level) { return level.getOverworldClockTime(); }
+
+    public static void setDayTime(MinecraftServer server, long ticks) {
+        var clock = server.registryAccess().lookupOrThrow(Registries.WORLD_CLOCK).getOrThrow(WorldClocks.OVERWORLD);
+        server.overworld().clockManager().setTotalTicks(clock, ticks);
+    }
+
+    public static boolean isNight(Level level) { return level.isDarkOutside(); }
+
+    public static void overlay(ServerPlayer p, String text) { p.sendOverlayMessage(Component.literal(text)); }
+
+    public static boolean ride(Entity rider, Entity vehicle) { return rider.startRiding(vehicle, true, true); }
+
+    /** Operator check (permission level 2, "gamemaster"); 26.x replaced int levels with PermissionSet. */
+    public static boolean isOp(net.minecraft.commands.CommandSourceStack src) {
+        return src.permissions().hasPermission(net.minecraft.server.permissions.Permissions.COMMANDS_GAMEMASTER);
+    }
+    public static boolean isOp(ServerPlayer p) { return p.permissions().hasPermission(net.minecraft.server.permissions.Permissions.COMMANDS_GAMEMASTER); }
+
+    public static Identifier id(String path) { return Identifier.fromNamespaceAndPath("earthlife", path); }
+
+    private static final Map<String, BlockState> BLOCKS = new ConcurrentHashMap<>();
+
+    /** Block by registry id ("minecraft:light_gray_concrete"); unknown ids fall back to stone and are logged once. */
+    public static BlockState block(String id) {
+        return BLOCKS.computeIfAbsent(id, k -> {
+            Identifier rl = Identifier.tryParse(k);
+            Block b = rl == null ? null : BuiltInRegistries.BLOCK.getValue(rl);
+            if (b == null || (b == Blocks.AIR && !k.endsWith("air"))) {
+                EarthLifeMod.LOG.warn("EarthLife: unknown block id {}, using stone", k);
+                return Blocks.STONE.defaultBlockState();
+            }
+            return b.defaultBlockState();
+        });
     }
 }

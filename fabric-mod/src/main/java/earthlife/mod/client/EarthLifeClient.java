@@ -1,18 +1,16 @@
 package earthlife.mod.client;
 
-import com.mojang.blaze3d.platform.InputConstants;
 import earthlife.mod.EarthLifeMod;
 import earthlife.mod.net.Payloads;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
-import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
+import net.fabricmc.fabric.api.client.keymapping.v1.KeyMappingHelper;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
-import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
+import net.fabricmc.fabric.api.client.rendering.v1.hud.HudElementRegistry;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.NoopRenderer;
-import org.lwjgl.glfw.GLFW;
 
 /**
  * Client: seatback map [M], wallet/booking [L], and a small HUD showing LifeCoins and the hourly countdown.
@@ -36,26 +34,27 @@ public final class EarthLifeClient implements net.fabricmc.api.ClientModInitiali
         ClientPlayNetworking.registerGlobalReceiver(Payloads.FlightTelemetry.TYPE, (p, ctx) -> { telemetry = p; telemetryAtMs = System.currentTimeMillis(); });
         ClientPlayNetworking.registerGlobalReceiver(Payloads.WalletStatus.TYPE, (p, ctx) -> wallet = p);
 
-        KeyMapping seatback = KeyBindingHelper.registerKeyBinding(new KeyMapping("key.earthlife.seatback", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_M, "key.categories.earthlife"));
-        KeyMapping walletKey = KeyBindingHelper.registerKeyBinding(new KeyMapping("key.earthlife.wallet", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_L, "key.categories.earthlife"));
+        KeyMapping.Category cat = KeyMapping.Category.register(EarthLifeMod.id("earthlife"));
+        KeyMapping seatback = KeyMappingHelper.registerKeyMapping(new KeyMapping("key.earthlife.seatback", 77, cat));
+        KeyMapping walletKey = KeyMappingHelper.registerKeyMapping(new KeyMapping("key.earthlife.wallet", 76, cat));
         ClientTickEvents.END_CLIENT_TICK.register(mc -> {
-            while (seatback.consumeClick()) mc.setScreen(new SeatbackScreen());
-            while (walletKey.consumeClick()) mc.setScreen(new WalletScreen());
+            while (seatback.consumeClick()) mc.gui.setScreen(new SeatbackScreen());
+            while (walletKey.consumeClick()) mc.gui.setScreen(new WalletScreen());
         });
 
-        HudRenderCallback.EVENT.register((g, delta) -> {
+        HudElementRegistry.addLast(EarthLifeMod.id("hud"), (g, delta) -> {
             var w = wallet;
             Minecraft mc = Minecraft.getInstance();
-            if (w == null || mc.options.hideGui) return;
+            if (w == null || mc.gui.hud.isHidden()) return;
             long s = w.ticksUntilHourly() / 20;
             String line = String.format("%,d LC", w.balance()) + (w.hourlyReady() > 0 ? "  ★ hourly ready [L]" : String.format("  next +150 in %d:%02d", s / 60, s % 60))
                     + (w.dailyReady() ? "  ★ daily ready" : "");
             int x = mc.getWindow().getGuiScaledWidth() - mc.font.width(line) - 6;
-            g.drawString(mc.font, line, x, 6, 0xFFFFD54F, true);
+            g.text(mc.font, line, x, 6, 0xFFFFD54F, true);
             var h = hud;
             if (h != null) {
-                g.drawString(mc.font, h.clock(), mc.getWindow().getGuiScaledWidth() - mc.font.width(h.clock()) - 6, 18, 0xFFB3E5FC, true);
-                if (!h.job().isEmpty()) g.drawString(mc.font, h.job(), mc.getWindow().getGuiScaledWidth() - mc.font.width(h.job()) - 6, 30, 0xFFC8E6C9, true);
+                g.text(mc.font, h.clock(), mc.getWindow().getGuiScaledWidth() - mc.font.width(h.clock()) - 6, 18, 0xFFB3E5FC, true);
+                if (!h.job().isEmpty()) g.text(mc.font, h.job(), mc.getWindow().getGuiScaledWidth() - mc.font.width(h.job()) - 6, 30, 0xFFC8E6C9, true);
             }
         });
     }

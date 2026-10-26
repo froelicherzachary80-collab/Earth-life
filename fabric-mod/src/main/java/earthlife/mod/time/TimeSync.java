@@ -5,7 +5,7 @@ import earthlife.core.util.Json;
 import earthlife.core.world.AtomicFiles;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.level.GameRules;
+import net.minecraft.world.level.gamerules.GameRules;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -52,12 +52,12 @@ public final class TimeSync {
         clock.configure(mode, minutesPerDay, clock.zone());
         ServerLevel ow = server.overworld();
         var rules = ow.getGameRules();
-        rules.getRule(GameRules.RULE_DAYLIGHT).set(mode == GameClock.Mode.VANILLA, server);
+        rules.set(GameRules.ADVANCE_TIME, mode == GameClock.Mode.VANILLA, server);
         if (mode == GameClock.Mode.REALTIME && before != GameClock.Mode.REALTIME) {
-            savedSleepPercent = rules.getInt(GameRules.RULE_PLAYERS_SLEEPING_PERCENTAGE);
-            rules.getRule(GameRules.RULE_PLAYERS_SLEEPING_PERCENTAGE).set(101, server);
+            savedSleepPercent = rules.get(GameRules.PLAYERS_SLEEPING_PERCENTAGE);
+            rules.set(GameRules.PLAYERS_SLEEPING_PERCENTAGE, 101, server);
         } else if (mode != GameClock.Mode.REALTIME && before == GameClock.Mode.REALTIME) {
-            rules.getRule(GameRules.RULE_PLAYERS_SLEEPING_PERCENTAGE).set(savedSleepPercent, server);
+            rules.set(GameRules.PLAYERS_SLEEPING_PERCENTAGE, savedSleepPercent, server);
         }
         save();
     }
@@ -66,9 +66,9 @@ public final class TimeSync {
     public void tick(MinecraftServer server) {
         if (!clock.drivesTime()) return;
         ServerLevel ow = server.overworld();
-        long now = ow.getDayTime();
+        long now = earthlife.mod.McCompat.dayTime(ow);
         long next = clock.next(System.currentTimeMillis(), now);
-        if (next != now) for (ServerLevel l : server.getAllLevels()) l.setDayTime(next);
+        if (next != now) earthlife.mod.McCompat.setDayTime(server, next);
     }
 
     public String describe(long dayTime) {

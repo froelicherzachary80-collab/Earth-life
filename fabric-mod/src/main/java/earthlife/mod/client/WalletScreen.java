@@ -1,6 +1,6 @@
 package earthlife.mod.client;
 
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.Screen;
@@ -41,16 +41,16 @@ public final class WalletScreen extends Screen {
         if (minecraft != null && minecraft.player != null) minecraft.player.connection.sendCommand(c);
     }
 
-    @Override public void render(GuiGraphics g, int mx, int my, float d) {
-        super.render(g, mx, my, d);
+    @Override public void extractRenderState(GuiGraphicsExtractor g, int mx, int my, float d) {
+        super.extractRenderState(g, mx, my, d);
         var w = EarthLifeClient.wallet;
         String bal = w == null ? "…" : String.format("%,d LC", w.balance());
-        g.drawCenteredString(font, "LifeCoins balance: " + bal, width / 2, height / 2 - 90, 0xFFFFD54F);
+        g.centeredText(font, "LifeCoins balance: " + bal, width / 2, height / 2 - 90, 0xFFFFD54F);
         if (w != null) {
             long s = w.ticksUntilHourly() / 20;
-            g.drawCenteredString(font, w.hourlyReady() > 0 ? "Hourly reward ready!" : String.format("Next hourly reward in %d:%02d of active play", s / 60, s % 60), width / 2, height / 2 - 76, 0xFFFFFFFF);
+            g.centeredText(font, w.hourlyReady() > 0 ? "Hourly reward ready!" : String.format("Next hourly reward in %d:%02d of active play", s / 60, s % 60), width / 2, height / 2 - 76, 0xFFFFFFFF);
         }
-        g.drawCenteredString(font, "LifeCoins are a fictional in-game currency. They can't be bought or cashed out.", width / 2, height / 2 + 112, 0xFF9E9E9E);
+        g.centeredText(font, "LifeCoins are a fictional in-game currency. They can't be bought or cashed out.", width / 2, height / 2 + 112, 0xFF9E9E9E);
     }
 
     @Override public boolean isPauseScreen() { return false; }

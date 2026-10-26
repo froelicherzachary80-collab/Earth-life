@@ -50,7 +50,7 @@ public final class JobHooks {
         var e = s.jobs.employment(p.getStringUUID()).orElseThrow(() -> new JobService.JobException("No job yet: /earthlife job apply <job> <employer>"));
         double[] w = workplace(e).orElseThrow(() -> new JobService.JobException("Unknown workplace " + e.employer()));
         boolean at = e.job() == JobType.JANITOR || Math.hypot(p.getX() - w[0], p.getZ() - w[2]) < 80;
-        s.jobs.clockIn(p.getStringUUID(), p.level().getDayTime(), at);
+        s.jobs.clockIn(p.getStringUUID(), earthlife.mod.McCompat.dayTime(p.level()), at);
         setUpTasks(p, e);
         return "Clocked in as " + e.job().title + ". Shift ends " + String.format("%02d:00", e.job().shiftEnd) + ".";
     }
@@ -58,7 +58,7 @@ public final class JobHooks {
     private static void setUpTasks(ServerPlayer p, JobService.Employment e) {
         var s = EarthLifeServices.get();
         ServerLevel level = (ServerLevel) p.level();
-        long day = GameClock.day(level.getDayTime());
+        long day = GameClock.day(earthlife.mod.McCompat.dayTime(level));
         String id = p.getStringUUID();
         switch (e.job()) {
             case JANITOR -> {
@@ -68,7 +68,7 @@ public final class JobHooks {
                     int x = (int) p.getX() + r.nextInt(31) - 15, z = (int) p.getZ() + r.nextInt(31) - 15;
                     int y = level.getHeight(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, x, z);
                     BlockPos pos = new BlockPos(x, y, z);
-                    if (level.getBlockState(pos).isAir()) { level.setBlockAndUpdate(pos, Blocks.BROWN_CARPET.defaultBlockState()); spots.add(pos); }
+                    if (level.getBlockState(pos).isAir()) { level.setBlockAndUpdate(pos, earthlife.mod.McCompat.block("minecraft:brown_carpet")); spots.add(pos); }
                 }
                 messes.put(id, spots);
                 p.sendSystemMessage(Component.literal(spots.size() + " messes to clean nearby (brown stains). Break them."));
@@ -113,7 +113,7 @@ public final class JobHooks {
         String kind = e.job() == JobType.CHECKIN_AGENT ? "checkin" : e.job() == JobType.GATE_AGENT ? "board" : null;
         if (kind == null) return false;
         try {
-            if (s.jobs.recordTask(p.getStringUUID(), kind, npc.residentId() + "@" + GameClock.day(p.level().getDayTime()))) {
+            if (s.jobs.recordTask(p.getStringUUID(), kind, npc.residentId() + "@" + GameClock.day(earthlife.mod.McCompat.dayTime(p.level())))) {
                 p.sendSystemMessage(Component.literal(kind.equals("checkin") ? "✓ Checked in " + resident.name() + ". Bag tagged." : "✓ Boarding pass scanned: " + resident.name() + "."));
                 npc.discard();
             }
@@ -136,16 +136,16 @@ public final class JobHooks {
         var s = EarthLifeServices.get();
         var e = s.jobs.employment(p.getStringUUID()).orElse(null);
         if (e != null && e.job() == JobType.STORE_CLERK && p.level().getBlockState(pos).is(Blocks.BARREL))
-            task(p, "restock", pos.toShortString() + "@" + GameClock.hour(p.level().getDayTime()), "Shelf restocked.");
+            task(p, "restock", pos.toShortString() + "@" + GameClock.hour(earthlife.mod.McCompat.dayTime(p.level())), "Shelf restocked.");
     }
 
     public static void onBusStop(ServerPlayer p, VehicleEntity bus, String stop) {
         var e = EarthLifeServices.get().jobs.employment(p.getStringUUID()).orElse(null);
-        if (e != null && e.job() == JobType.BUS_DRIVER) task(p, "bus_stop", stop + "@" + p.level().getDayTime() / 1000, "Stop served: " + stop);
+        if (e != null && e.job() == JobType.BUS_DRIVER) task(p, "bus_stop", stop + "@" + earthlife.mod.McCompat.dayTime(p.level()) / 1000, "Stop served: " + stop);
     }
 
     private static void task(ServerPlayer p, String kind, String ref, String msg) {
-        try { if (EarthLifeServices.get().jobs.recordTask(p.getStringUUID(), kind, ref) && msg != null) p.displayClientMessage(Component.literal("✓ " + msg), true); }
+        try { if (EarthLifeServices.get().jobs.recordTask(p.getStringUUID(), kind, ref) && msg != null) p.sendOverlayMessage(Component.literal("✓ " + msg)); }
         catch (Exception ex) { EarthLifeMod.LOG.warn("task", ex); }
     }
 
@@ -181,7 +181,7 @@ public final class JobHooks {
             }
         }
         try {
-            for (var e : s.jobs.autoClockOut(server.overworld().getDayTime(), server.overworld().getGameTime()).entrySet()) {
+            for (var e : s.jobs.autoClockOut(earthlife.mod.McCompat.dayTime(server.overworld()), server.overworld().getGameTime()).entrySet()) {
                 var p = server.getPlayerList().getPlayer(UUID.fromString(e.getKey()));
                 if (p != null) p.sendSystemMessage(Component.literal(payslip(e.getValue())));
             }

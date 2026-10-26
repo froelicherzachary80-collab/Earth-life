@@ -70,7 +70,7 @@ public final class AirplaneEntity extends Entity {
         w.seat = asCaptain ? null : pass.map(Booking.BoardingPass::seat).orElse(null);
         if (asCaptain) captain = p.getStringUUID();
         walkers.put(p.getUUID(), w);
-        p.startRiding(this, true);
+        earthlife.mod.McCompat.ride(p, this);
         p.sendSystemMessage(Component.literal(asCaptain ? "Captain on board. Work the checklist with /earthlife pilot <item>." :
                 "Welcome aboard " + flight.number() + ". Your seat is " + w.seat + ": walk to your row and jump to sit. [M] seatback map."));
         return true;
@@ -123,7 +123,7 @@ public final class AirplaneEntity extends Entity {
         if (!(level() instanceof ServerLevel server)) return;
         if (sim == null) { discard(); return; }                    // stale entity from a previous session
         for (Iterator<UUID> it = remount.iterator(); it.hasNext(); ) {
-            if (server.getEntity(it.next()) instanceof ServerPlayer p && p.isAlive()) p.startRiding(this, true);
+            if (server.getEntity(it.next()) instanceof ServerPlayer p && p.isAlive()) earthlife.mod.McCompat.ride(p, this);
             it.remove();
         }
         sim.tick(0.05);
@@ -168,7 +168,7 @@ public final class AirplaneEntity extends Entity {
                 if (jumpPressed && w.seat != null) {
                     var seat = cabin.seat(w.seat);
                     if (seat != null && Math.abs(w.z - seat.z()) < 0.8 && Math.abs(w.x) < 0.6) { w.x = seat.x(); w.z = seat.z(); w.mode = Mode.SEATED; }
-                    else p.displayClientMessage(Component.literal("Your seat " + w.seat + " is in row " + seat.row() + "."), true);
+                    else p.sendOverlayMessage(Component.literal("Your seat " + w.seat + " is in row " + seat.row() + "."));
                 }
             }
             sync.add(new int[]{p.getId(), w.mode == Mode.SEATED ? 1 : 0, (int) Math.round(w.x * 1000), (int) Math.round(w.z * 1000)});

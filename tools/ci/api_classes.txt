@@ -70,3 +70,14 @@ net.minecraft.world.item.ItemStack
 net.minecraft.core.component.DataComponents
 net.minecraft.network.chat.Component
 net.minecraft.world.level.levelgen.SamplerContext
+com.mojang.blaze3d.platform.NativeImage
+com.mojang.blaze3d.platform.InputConstants
+com.mojang.blaze3d.platform.Window
+com.mojang.serialization.Codec
+com.mojang.serialization.MapCodec
+com.mojang.serialization.codecs.RecordCodecBuilder
+com.mojang.brigadier.arguments.StringArgumentType
+net.minecraft.client.gui.screens.worldselection.PresetEditor
+net.minecraft.client.gui.screens.worldselection.CreateWorldScreen
+net.minecraft.client.gui.screens.worldselection.WorldCreationContext
+net.minecraft.client.gui.screens.worldselection.WorldCreationUiState

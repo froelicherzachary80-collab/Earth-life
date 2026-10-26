@@ -21,7 +21,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.EntityType;
@@ -57,21 +57,32 @@ public final class EarthLifeMod implements ModInitializer {
     public static final earthlife.mod.events.EventManager EVENTS = new earthlife.mod.events.EventManager();
     private static final Map<UUID, Vec3> lastPos = new HashMap<>();
 
-    public static ResourceLocation id(String path) { return ResourceLocation.fromNamespaceAndPath("earthlife", path); }
+    public static Identifier id(String path) { return Identifier.fromNamespaceAndPath("earthlife", path); }
+
+    /** Earth world settings if the running server's overworld is an Earth world, else empty (Default worlds are untouched). */
+    public static Optional<earthlife.mod.world.EarthSettings> earthSettings(MinecraftServer server) {
+        try {
+            var stems = server.registryAccess().lookupOrThrow(Registries.LEVEL_STEM);
+            var ow = stems.getValue(net.minecraft.world.level.dimension.LevelStem.OVERWORLD);
+            if (ow != null && ow.generator() instanceof VoxelEarthChunkGenerator g) return Optional.of(g.settings());
+        } catch (Exception e) { LOG.warn("EarthLife: could not read world dimensions", e); }
+        return Optional.empty();
+    }
 
     @Override
     public void onInitialize() {
         Registry.register(BuiltInRegistries.CHUNK_GENERATOR, id("voxel_earth"), VoxelEarthChunkGenerator.CODEC);
-        PayloadTypeRegistry.playS2C().register(Payloads.FlightTelemetry.TYPE, Payloads.FlightTelemetry.CODEC);
-        PayloadTypeRegistry.playS2C().register(Payloads.WalletStatus.TYPE, Payloads.WalletStatus.CODEC);
-        PayloadTypeRegistry.playS2C().register(Payloads.CabinState.TYPE, Payloads.CabinState.CODEC);
-        PayloadTypeRegistry.playS2C().register(Payloads.HudStatus.TYPE, Payloads.HudStatus.CODEC);
+        PayloadTypeRegistry.clientboundPlay().register(Payloads.FlightTelemetry.TYPE, Payloads.FlightTelemetry.CODEC);
+        PayloadTypeRegistry.clientboundPlay().register(Payloads.WalletStatus.TYPE, Payloads.WalletStatus.CODEC);
+        PayloadTypeRegistry.clientboundPlay().register(Payloads.CabinState.TYPE, Payloads.CabinState.CODEC);
+        PayloadTypeRegistry.clientboundPlay().register(Payloads.HudStatus.TYPE, Payloads.HudStatus.CODEC);
         net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry.register(NPC, earthlife.mod.npc.NpcEntity.attributes());
 
-        ServerLifecycleEvents.SERVER_STARTING.register(EarthLifeServices::start);
+        ServerLifecycleEvents.SERVER_STARTING.register(server -> earthSettings(server).ifPresent(st -> EarthLifeServices.start(server, st)));
         ServerLifecycleEvents.SERVER_STARTED.register(server -> {
+            if (!EarthLifeServices.running()) return;
             var s = EarthLifeServices.get();
-            long day = server.overworld().getDayTime() / 24000;
+            long day = earthlife.mod.McCompat.dayTime(server.overworld()) / 24000;
             FLIGHTS.scheduleDay(s, day); FLIGHTS.scheduleDay(s, day + 1);
             LOG.info("EarthLife ready: {} airports, {} bookings restored from ledger", s.airports.size(), s.booking.restoreFromLedger());
             TRANSIT.restoreGarage();
@@ -84,6 +95,7 @@ public final class EarthLifeMod implements ModInitializer {
         ServerTickEvents.END_SERVER_TICK.register(EarthLifeMod::tick);
         ServerPlayConnectionEvents.JOIN.register((h, sender, server) -> {
             ServerPlayer p = h.getPlayer();
+            if (!EarthLifeServices.running()) return;
             enforceSurvival(p);
             p.sendSystemMessage(Component.literal("Welcome to EarthLife. Daily reward: /earthlife claim daily · Flights: /earthlife flights"));
         });
@@ -114,7 +126,7 @@ public final class EarthLifeMod implements ModInitializer {
 
     /** Creative/spectator are not part of EarthLife Survival. Operators can opt in to developer tools in config. */
     static void enforceSurvival(ServerPlayer p) {
-        boolean dev = EarthLifeServices.running() && EarthLifeServices.get().developerTools && p.hasPermissions(2);
+        boolean dev = EarthLifeServices.running() && EarthLifeServices.get().developerTools && McCompat.isOp(p);
         GameType mode = p.gameMode.getGameModeForPlayer();
         if (!dev && mode != GameType.SURVIVAL) p.setGameMode(GameType.SURVIVAL);
     }
@@ -148,7 +160,7 @@ public final class EarthLifeMod implements ModInitializer {
         earthlife.mod.jobs.JobHooks.tick(server);
         if (now % 20 == 0) for (ServerPlayer p : server.getPlayerList().getPlayers()) {
             String job = s.jobs.employment(p.getStringUUID()).map(e -> e.job().title + (s.jobs.shift(p.getStringUUID()).map(sh -> " · on shift, " + sh.tasks().size() + " tasks").orElse(" · off duty"))).orElse("");
-            ServerPlayNetworking.send(p, new Payloads.HudStatus(s.time.describe(server.overworld().getDayTime()), job));
+            ServerPlayNetworking.send(p, new Payloads.HudStatus(s.time.describe(earthlife.mod.McCompat.dayTime(server.overworld())), job));
         }
         if (now % 6000 == 0) { try { s.rewards.save(); s.tiles.edits().flush(); } catch (Exception e) { LOG.error("EarthLife autosave failed", e); } }
     }
@@ -187,7 +199,7 @@ public final class EarthLifeMod implements ModInitializer {
 
     private static int flights(CommandContext<CommandSourceStack> c) {
         var s = EarthLifeServices.get();
-        long day = c.getSource().getServer().overworld().getDayTime() / 24000;
+        long day = earthlife.mod.McCompat.dayTime(c.getSource().getServer().overworld()) / 24000;
         for (var f : s.booking.search(null, null)) {
             if (f.departureGameDay() < day) continue;
             long dep = f.departureTimeTicks();

@@ -3,7 +3,7 @@ package earthlife.mod.model;
 import com.mojang.math.Transformation;
 import earthlife.core.model.Part;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Display;
 import net.minecraft.world.entity.EntitySpawnReason;
@@ -50,7 +50,7 @@ public final class DisplayRig {
 
     private void spawn(ServerLevel level, double x, double y, double z) {
         for (Part p : parts) {
-            Display.BlockDisplay d = EntityType.BLOCK_DISPLAY.create(level, EntitySpawnReason.TRIGGERED);
+            Display.BlockDisplay d = net.minecraft.world.entity.EntityTypes.BLOCK_DISPLAY.create(level, EntitySpawnReason.TRIGGERED);
             if (d == null) continue;
             d.setBlockState(state(p.block()));
             d.setPosRotInterpolationDuration(2);
@@ -62,7 +62,7 @@ public final class DisplayRig {
     }
 
     static BlockState state(String id) {
-        return BuiltInRegistries.BLOCK.getValue(ResourceLocation.parse(id)).defaultBlockState();
+        return earthlife.mod.McCompat.block(id);
     }
 
     public void remove() { displays.forEach(d -> d.discard()); displays.clear(); }

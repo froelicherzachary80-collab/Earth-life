@@ -48,15 +48,15 @@ public final class V02Commands {
     public static void register(CommandDispatcher<CommandSourceStack> d) {
         d.register(Commands.literal("earthlife")
             .then(Commands.literal("time")
-                .then(Commands.literal("show").executes(c -> run(c, (p, x) -> EarthLifeServices.get().time.describe(p.level().getDayTime()))))
-                .then(Commands.literal("realtime").requires(src -> src.hasPermission(2) || src.getServer().isSingleplayer())
-                    .executes(c -> run(c, (p, x) -> { EarthLifeServices.get().time.set(p.getServer(), GameClock.Mode.REALTIME, 1440); return "Clock now follows real time: 1 day = 1 day. Sleeping can't skip nights in this mode."; })))
-                .then(Commands.literal("vanilla").requires(src -> src.hasPermission(2) || src.getServer().isSingleplayer())
-                    .executes(c -> run(c, (p, x) -> { EarthLifeServices.get().time.set(p.getServer(), GameClock.Mode.VANILLA, 20); return "Vanilla day/night cycle (20 minutes)."; })))
-                .then(Commands.literal("speed").requires(src -> src.hasPermission(2) || src.getServer().isSingleplayer())
+                .then(Commands.literal("show").executes(c -> run(c, (p, x) -> EarthLifeServices.get().time.describe(earthlife.mod.McCompat.dayTime(p.level())))))
+                .then(Commands.literal("realtime").requires(src -> earthlife.mod.McCompat.isOp(src) || src.getServer().isSingleplayer())
+                    .executes(c -> run(c, (p, x) -> { EarthLifeServices.get().time.set(p.level().getServer(), GameClock.Mode.REALTIME, 1440); return "Clock now follows real time: 1 day = 1 day. Sleeping can't skip nights in this mode."; })))
+                .then(Commands.literal("vanilla").requires(src -> earthlife.mod.McCompat.isOp(src) || src.getServer().isSingleplayer())
+                    .executes(c -> run(c, (p, x) -> { EarthLifeServices.get().time.set(p.level().getServer(), GameClock.Mode.VANILLA, 20); return "Vanilla day/night cycle (20 minutes)."; })))
+                .then(Commands.literal("speed").requires(src -> earthlife.mod.McCompat.isOp(src) || src.getServer().isSingleplayer())
                     .then(Commands.argument("minutesPerDay", DoubleArgumentType.doubleArg(1, 1440))
                         .executes(c -> run(c, (p, x) -> { double m = DoubleArgumentType.getDouble(x, "minutesPerDay");
-                            EarthLifeServices.get().time.set(p.getServer(), GameClock.Mode.SCALED, m);
+                            EarthLifeServices.get().time.set(p.level().getServer(), GameClock.Mode.SCALED, m);
                             return String.format("1 game day now lasts %.0f real minutes%s.", m, m >= 1440 ? " (real-length days)" : ""); })))))
             .then(Commands.literal("job")
                 .then(Commands.literal("list").executes(c -> run(c, (p, x) -> {
@@ -71,12 +71,12 @@ public final class V02Commands {
                         var s = EarthLifeServices.get();
                         if (j.workplace.equals("airport") && !s.airportLayouts.containsKey(employer.toUpperCase(Locale.ROOT))) return "Airport jobs need an airport code: " + s.airportLayouts.keySet();
                         if (j.workplace.equals("airport")) employer = employer.toUpperCase(Locale.ROOT);
-                        var e = s.jobs.hire(p.getStringUUID(), j, employer, GameClock.day(p.level().getDayTime()));
+                        var e = s.jobs.hire(p.getStringUUID(), j, employer, GameClock.day(earthlife.mod.McCompat.dayTime(p.level())));
                         return "Hired! You're now a " + e.job().title + " at " + e.employer() + ". Clock in with /earthlife job clockin during your shift."; })))))
-                .then(Commands.literal("quit").executes(c -> run(c, (p, x) -> EarthLifeServices.get().jobs.quit(p.getStringUUID(), p.level().getDayTime(), p.level().getGameTime())
+                .then(Commands.literal("quit").executes(c -> run(c, (p, x) -> EarthLifeServices.get().jobs.quit(p.getStringUUID(), earthlife.mod.McCompat.dayTime(p.level()), p.level().getGameTime())
                         .map(ps -> JobHooks.payslip(ps) + " You quit.").orElse("You quit your job."))))
                 .then(Commands.literal("clockin").executes(c -> run(c, (p, x) -> JobHooks.clockIn(p))))
-                .then(Commands.literal("clockout").executes(c -> run(c, (p, x) -> JobHooks.payslip(EarthLifeServices.get().jobs.clockOut(p.getStringUUID(), p.level().getDayTime(), p.level().getGameTime())))))
+                .then(Commands.literal("clockout").executes(c -> run(c, (p, x) -> JobHooks.payslip(EarthLifeServices.get().jobs.clockOut(p.getStringUUID(), earthlife.mod.McCompat.dayTime(p.level()), p.level().getGameTime())))))
                 .then(Commands.literal("status").executes(c -> run(c, (p, x) -> {
                     var s = EarthLifeServices.get();
                     return s.jobs.employment(p.getStringUUID()).map(e -> e.job().title + " at " + e.employer() + s.jobs.shift(p.getStringUUID())

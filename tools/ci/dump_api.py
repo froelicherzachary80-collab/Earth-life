@@ -37,7 +37,16 @@ for j in fabric:
     except Exception:
         pass
 open(os.path.join(out, "fabric-classes.txt"), "w").write("\n".join(sorted(fab_names)))
-cp = os.pathsep.join([mc] + fabric)
+alljars = glob.glob(home + "/**/*.jar", recursive=True)
+open(os.path.join(out, "jars.txt"), "w").write("\n".join(sorted(alljars)))
+cp = os.pathsep.join([mc] + fabric + [j for j in alljars if any(k in j for k in ("datafixerupper", "brigadier", "lwjgl", "joml", "fastutil", "gson", "guava", "authlib"))])
+# Vanilla data files we mirror (dimension type, presets, tags) so EarthLife's JSON matches the 26.3 format exactly.
+with zipfile.ZipFile(mc) as z:
+    for n in z.namelist():
+        if n.startswith(("data/minecraft/dimension_type/", "data/minecraft/worldgen/world_preset/", "data/minecraft/tags/worldgen/world_preset/",
+                         "data/minecraft/world_clock/", "data/minecraft/timeline/")) and n.endswith(".json"):
+            dst = os.path.join(out, "vanilla", n); os.makedirs(os.path.dirname(dst), exist_ok=True)
+            open(dst, "wb").write(z.read(n))
 with open(os.path.join(out, "api.txt"), "w") as f:
     for c in classes:
         r = subprocess.run(["javap", "-public", "-cp", cp, c.replace("$", "$")], capture_output=True, text=True)
@@ -56,6 +65,8 @@ print("dumped", len(classes), "classes from", mc)
 
 # Full public-signature dump of every net.minecraft class (text only, gzipped) for offline porting.
 import gzip
+if os.environ.get("FULL_DUMP") != "1":
+    sys.exit(0)
 with gzip.open(os.path.join(out, "api-all.txt.gz"), "wt") as g:
     batch = 300
     for i in range(0, len(names), batch):
