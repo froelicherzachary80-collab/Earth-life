@@ -6,6 +6,8 @@ name: Fabric mod build
 on:
   push:
     branches: [main]
+  pull_request:
+    branches: [main]
   workflow_dispatch:
 
 permissions:
@@ -76,7 +78,7 @@ jobs:
           if-no-files-found: error
 
       - name: Publish logs to ci-logs branch
-        if: always()
+        if: always() && github.event_name != 'pull_request'
         run: |
           echo "${{ steps.build.outcome }}" > ci-out/RESULT
           ls fabric-mod/build/libs >> ci-out/RESULT 2>/dev/null || true
@@ -131,7 +133,7 @@ jobs:
           set -o pipefail
           xvfb-run -a -s "-screen 0 1920x1080x24" gradle :fabric-mod:runClientGameTest --no-daemon --stacktrace 2>&1 | tee gametest.log
       - name: Publish results to ci-tests branch
-        if: always()
+        if: always() && github.event_name != 'pull_request'
         run: |
           R=fabric-mod/build/run/clientGameTest
           mkdir -p /tmp/out/screenshots
