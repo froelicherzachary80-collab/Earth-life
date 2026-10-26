@@ -103,12 +103,15 @@ public final class MapRaster {
         double bpp = BPP[zoom];
         double x0 = tx * TILE * bpp, z0 = tz * TILE * bpp;
         int[] px = new int[TILE * TILE];
+        if (d.packs != null && bpp > 16) return overview(d, x0, z0, bpp, layers, px);
         // Terrain: elevation-tinted land, water below the Lake Ontario surface (74.2 m).
         for (int y = 0; y < TILE; y++) for (int x = 0; x < TILE; x++) {
             double wx = x0 + (x + 0.5) * bpp, wz = z0 + (y + 0.5) * bpp;
             double e = d.elevation.elevationAt(wx, wz);
+            // water: starter maps flood below the Lake Ontario surface (74.2 m); Northeast maps use the terrain's sea/lake mask
+            double surface = d.packs == null ? 74.2 : d.elevation.waterLevel(wx, wz);
             int c;
-            if (layers.water && e < 74.2) c = layers.satellite ? blend(0xFF1E3F5C, 0xFF0E2238, Math.min(1, (74.2 - e) / 40)) : depthBlue(74.2 - e);
+            if (layers.water && !Double.isNaN(surface) && e < surface) c = layers.satellite ? blend(0xFF1E3F5C, 0xFF0E2238, Math.min(1, (surface - e) / 40)) : depthBlue(surface - e);
             else if (!layers.terrain) c = 0xFFE8E4D8;
             else {
                 double shade = d.elevation.elevationAt(wx - bpp * 2, wz - bpp * 2) - e;   // light from the north-west
@@ -143,6 +146,19 @@ public final class MapRaster {
                 if (pass == 0) line(px, r.line(), x0, z0, bpp, wPx + 1.2, casing(cls));
                 else line(px, r.line(), x0, z0, bpp, wPx, roadColor(cls));
             }
+        }
+        return px;
+    }
+
+    /** Northeast map zoomed out (region / state): land colour, then the major roads of all four states. */
+    static int[] overview(ClientMapData d, double x0, double z0, double bpp, Layers layers, int[] px) {
+        java.util.Arrays.fill(px, layers.satellite ? 0xFF4E6B3F : 0xFFE6E2D3);
+        double x1 = x0 + TILE * bpp, z1 = z0 + TILE * bpp;
+        for (Object o : d.query(x0, z0, x1, z1)) if (o instanceof ClientMapData.NamedRoad nr) {
+            var cls = nr.road().cls();
+            if (bpp > 128 && cls != Features.RoadClass.MOTORWAY) continue;
+            if (bpp > 32 && !(cls == Features.RoadClass.MOTORWAY || cls == Features.RoadClass.PRIMARY)) continue;
+            line(px, nr.road().line(), x0, z0, bpp, cls == Features.RoadClass.MOTORWAY ? 2.2 : 1.4, roadColor(cls));
         }
         return px;
     }

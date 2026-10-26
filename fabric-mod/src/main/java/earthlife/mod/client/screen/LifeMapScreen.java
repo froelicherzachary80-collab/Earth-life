@@ -169,10 +169,9 @@ public final class LifeMapScreen extends Screen {
         ClientState.routeLabel = label;
         ClientState.route = List.of(new Features.Pt(fx, fz), new Features.Pt(tx, tz));   // straight line until the road route is ready
         ClientMapData d = ClientMapData.get();
-        if (d == null || d.roads.isEmpty()) return;
+        if (d == null || (d.roads.isEmpty() && d.packs == null)) return;
         CompletableFuture.supplyAsync(() -> {
-            RoadGraph g = d.graph();
-            List<Features.Pt> path = new ArrayList<>(g.route(fx, fz, tx, tz));
+            List<Features.Pt> path = new ArrayList<>(d.route(fx, fz, tx, tz));
             if (path.isEmpty()) return List.<Features.Pt>of(new Features.Pt(fx, fz), new Features.Pt(tx, tz));
             path.add(0, new Features.Pt(fx, fz));
             path.add(new Features.Pt(tx, tz));

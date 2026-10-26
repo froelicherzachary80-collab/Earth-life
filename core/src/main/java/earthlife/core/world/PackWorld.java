@@ -31,6 +31,9 @@ public final class PackWorld {
     private final List<Consumer<Cell>> listeners = new CopyOnWriteArrayList<>();
     /** Max time tile generation waits for a pack download (ms). */
     public long waitMs = 180_000;
+    /** Optional world options applied to each cell's features (e.g. roads or buildings turned off). */
+    public volatile java.util.function.UnaryOperator<Features> filter;
+    private final ThreadLocal<Map<Long, Cell>> announcing = ThreadLocal.withInitial(HashMap::new);
 
     public PackWorld(RegionPacks packs, LocalProjection proj, String attribution, long weightBudget) {
         this.packs = packs; this.proj = proj; this.attribution = attribution; this.budget = weightBudget;
@@ -49,6 +52,8 @@ public final class PackWorld {
     /** A loaded cell, loading it (blocking) if needed; null if outside the map or unavailable. */
     public Cell cell(int lat8, int lon8) {
         long k = key(lat8, lon8);
+        Cell own = announcing.get().get(k);                  // a load listener asking about the cell it is announcing
+        if (own != null) return own;
         synchronized (cells) { Cell c = cells.get(k); if (c != null) return c; }
         if (missing.contains(k) || !packs.covered(lat8, lon8)) return null;
         Object lock = loading.computeIfAbsent(k, q -> new Object());
@@ -59,11 +64,16 @@ public final class PackWorld {
                 if (b == null) { missing.add(k); return null; }
                 RegionCell rc = RegionCell.parse(b);
                 Features f = rc.project(proj, attribution);
+                var flt = filter;
+                if (flt != null) f = flt.apply(f);
                 FeatureIndex idx = new FeatureIndex(f);
                 int weight = 1 + f.buildings.size() + f.roads.size() + f.areas.size() / 2 + rc.demN * rc.demN / 400;
                 rc.roads.clear(); rc.buildings.clear(); rc.areas.clear(); rc.water.clear();       // keep only terrain + POIs
                 Cell c = new Cell(lat8, lon8, rc.tier, rc, f, idx, weight);
-                for (var l : listeners) try { l.accept(c); } catch (RuntimeException ignored) {}
+                // listeners (e.g. cinemas registering their sites) run before any other thread can see the cell
+                announcing.get().put(k, c);
+                try { for (var l : listeners) try { l.accept(c); } catch (RuntimeException ignored) {} }
+                finally { announcing.get().remove(k); }
                 synchronized (cells) {
                     cells.put(k, c);
                     used += weight;

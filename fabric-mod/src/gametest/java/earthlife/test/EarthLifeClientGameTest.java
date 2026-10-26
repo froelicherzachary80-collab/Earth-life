@@ -422,8 +422,8 @@ public final class EarthLifeClientGameTest implements FabricClientGameTest {
         });
         attempt(T, "offline startup", () -> {
             String r = onServer(sp, s -> "events loaded " + EarthLifeServices.get().events.all().size() + ", feed errors: " + EarthLifeServices.get().events.errors()
-                    + ", map data source: " + EarthLifeServices.get().attribution);
-            record(T, "offline startup", "PASSED", "map + terrain data load from inside the jar with no network; the run uses -Dearthlife.offline=true so event feeds are not contacted: " + r);
+                    + ", map data source: " + EarthLifeServices.get().attribution + (EarthLifeServices.get().packMode ? ", Northeast packs: " + EarthLifeServices.get().packWorld.packs.status : ""));
+            record(T, "offline startup", "PASSED", "event feeds are not contacted (-Dearthlife.offline=true); Northeast worlds fetch map packs (cached afterwards), starter worlds read the jar: " + r);
         });
     }
 
@@ -755,6 +755,14 @@ public final class EarthLifeClientGameTest implements FabricClientGameTest {
             String r = onServer(sp, s -> {
                 var cs = earthlife.mod.cinema.CinemaService.get();
                 ServerPlayer p = s.getPlayerList().getPlayers().get(0);
+                var es = EarthLifeServices.get();
+                if (es.packMode && cs != null) {
+                    // Northeast worlds build a theater when its map cell loads: load the nearest listed cinema's cell
+                    var here = es.projection.fromBlock(p.getX(), p.getZ());
+                    cs.listed.stream().filter(m -> es.packWorld.packs.covered(earthlife.core.world.RegionCell.cellLat(((Number) m.get("lat")).doubleValue()), earthlife.core.world.RegionCell.cellLon(((Number) m.get("lon")).doubleValue())))
+                            .min(java.util.Comparator.comparingDouble(m -> new GeoPoint(((Number) m.get("lat")).doubleValue(), ((Number) m.get("lon")).doubleValue()).distanceTo(here)))
+                            .ifPresent(m -> es.packWorld.cell(earthlife.core.world.RegionCell.cellLat(((Number) m.get("lat")).doubleValue()), earthlife.core.world.RegionCell.cellLon(((Number) m.get("lon")).doubleValue())));
+                }
                 if (cs == null || cs.cinemas.isEmpty()) return "no cinemas in this world|false";
                 var c = cs.nearestCinema(p.getX(), p.getZ()).get();
                 audKey[0] = c.auds().stream().filter(a -> !a.motion()).findFirst().map(a -> a.key()).orElse(null);

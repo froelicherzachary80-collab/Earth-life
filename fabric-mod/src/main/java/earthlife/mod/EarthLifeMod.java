@@ -181,6 +181,7 @@ public final class EarthLifeMod implements ModInitializer {
         TRANSIT.tick(server);
         EVENTS.tick(server);
         HAUNTED.tick(server);
+        EarthLifeServices.get().tickPacks(server);
         if (earthlife.mod.cinema.CinemaService.get() != null) earthlife.mod.cinema.CinemaService.get().tick(server);
         earthlife.mod.jobs.JobHooks.tick(server);
         if (now % 20 == 0) {

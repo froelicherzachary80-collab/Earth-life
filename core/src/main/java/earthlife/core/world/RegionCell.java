@@ -179,9 +179,12 @@ public final class RegionCell {
     // ------------------------------------------------------------------ projection to block coordinates
 
     /** Block-coordinate features for a world (ids keep their OpenStreetMap ids, so pieces of one way stay one way). */
-    public Features project(LocalProjection proj, String attribution) {
+    public Features project(LocalProjection proj, String attribution) { return project(proj, attribution, false); }
+
+    /** @param exact project every point exactly (for the state-wide major-roads file, which isn't a 1/8-degree cell) */
+    public Features project(LocalProjection proj, String attribution, boolean exact) {
         Features f = new Features(attribution);
-        Projector p = new Projector(proj, south(), west(), 1.0 / CELLS_PER_DEG);
+        Projector p = exact ? new Projector(proj) : new Projector(proj, south(), west(), 1.0 / CELLS_PER_DEG);
         for (GeoRoad r : roads) {
             f.roads.add(new Features.Road(r.id, r.cls, r.widthM, line(p, r.lat, r.lon), Features.Provenance.VERIFIED));
             if (r.name != null) f.names.put(r.id, r.name);
@@ -226,7 +229,10 @@ public final class RegionCell {
     static final class Projector {
         final double s, w, h;
         final double[] xs = new double[9], zs = new double[9];
+        final LocalProjection exact;
+        Projector(LocalProjection p) { exact = p; s = w = h = 0; }
         Projector(LocalProjection p, double south, double west, double size) {
+            exact = null;
             s = south; w = west; h = size;
             for (int j = 0; j < 3; j++) for (int i = 0; i < 3; i++) {
                 var b = p.toBlock(south + j * size / 2, west + i * size / 2);
@@ -237,6 +243,7 @@ public final class RegionCell {
             out[0] = 2 * (t - 0.5) * (t - 1); out[1] = -4 * t * (t - 1); out[2] = 2 * t * (t - 0.5);
         }
         Features.Pt at(double lat, double lon) {
+            if (exact != null) { var b = exact.toBlock(lat, lon); return new Features.Pt(b.x(), b.z()); }
             double[] by = new double[3], bx = new double[3];
             basis((lat - s) / h, by); basis((lon - w) / h, bx);
             double x = 0, z = 0;

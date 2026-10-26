@@ -52,8 +52,10 @@ public final class CinemaService {
     public static final int TICKET_LC = 12, TICKET_3D_LC = 15, TICKET_4D_LC = 20;
 
     private static CinemaService current;
-    public final List<Cinema> cinemas = new ArrayList<>();
-    public final Map<String, Aud> auds = new LinkedHashMap<>();
+    public final List<Cinema> cinemas = new java.util.concurrent.CopyOnWriteArrayList<>();
+    public final Map<String, Aud> auds = new java.util.concurrent.ConcurrentHashMap<>();
+    /** Every cinema in the bundled list (lat/lon), placed or not yet (Northeast worlds place them as their map cell loads). */
+    public final List<Map<String, Object>> listed = new ArrayList<>();
     public final Map<String, Showing> showings = new HashMap<>();
     private final Map<String, CinemaScreenEntity> screens = new HashMap<>();
     /** Admin override for the 4D season: null = automatic (Oct 29 - Nov 3), true/false = forced. */
@@ -67,10 +69,11 @@ public final class CinemaService {
         current = c;
         if (!s.settings.buildings()) return c;
         List<Map<String, Object>> list = load();
+        c.listed.addAll(list);
         int idx = 0;
         for (var m : list) {
             try {
-                Cinema cin = c.place(s, gen, m, idx++);
+                Cinema cin = c.place(s, gen, m, idx++, s.features);
                 if (cin == null) continue;
                 c.cinemas.add(cin);
                 structures.add(cin.placed);
@@ -80,6 +83,42 @@ public final class CinemaService {
             }
         }
         EarthLifeMod.LOG.info("EarthLife cinemas: {} theaters with {} auditoriums in this world (of {} listed)", c.cinemas.size(), c.auds.size(), list.size());
+        return c;
+    }
+
+    /**
+     * Northeast worlds: each cinema is built when the map cell it stands in is loaded (before any of that cell's tiles
+     * are generated), so all ~900 theaters in the four states exist without loading the whole map up front.
+     */
+    public static CinemaService startPacks(EarthLifeServices s, TileGenerator gen, List<Blueprint.Placed> structures, earthlife.core.world.PackWorld pw) {
+        CinemaService c = new CinemaService();
+        current = c;
+        if (!s.settings.buildings()) return c;
+        List<Map<String, Object>> list = load();
+        c.listed.addAll(list);
+        Map<Long, List<Integer>> byCell = new HashMap<>();
+        for (int i = 0; i < list.size(); i++) {
+            var m = list.get(i);
+            long k = ((long) earthlife.core.world.RegionCell.cellLat(Json.num(m.get("lat"))) << 32) ^ (earthlife.core.world.RegionCell.cellLon(Json.num(m.get("lon"))) & 0xffffffffL);
+            byCell.computeIfAbsent(k, q -> new ArrayList<>()).add(i);
+        }
+        pw.onLoad(cell -> {
+            var ids = byCell.get(((long) cell.lat8() << 32) ^ (cell.lon8() & 0xffffffffL));
+            if (ids == null) return;
+            for (int i : ids) {
+                try {
+                    Cinema cin = c.place(s, gen, list.get(i), i, cell.features());
+                    if (cin == null) continue;
+                    c.cinemas.add(cin);
+                    structures.add(cin.placed);
+                    for (Aud a : cin.auds) c.auds.put(a.key, a);
+                    EarthLifeMod.LOG.info("cinema placed: {} ({} auditoriums)", cin.name(), cin.auds.size());
+                } catch (RuntimeException e) {
+                    EarthLifeMod.LOG.warn("cinema {} not placed: {}", list.get(i).get("name"), e.toString());
+                }
+            }
+        });
+        EarthLifeMod.LOG.info("EarthLife cinemas: {} listed in NY/PA/NJ/VT; each is built when its map area loads", list.size());
         return c;
     }
 
@@ -97,7 +136,7 @@ public final class CinemaService {
         }
     }
 
-    private Cinema place(EarthLifeServices s, TileGenerator gen, Map<String, Object> m, int idx) {
+    private Cinema place(EarthLifeServices s, TileGenerator gen, Map<String, Object> m, int idx, Features src) {
         double lat = Json.num(m.get("lat")), lon = Json.num(m.get("lon"));
         var b = s.projection.toBlock(lat, lon);
         if (Math.hypot(b.x(), b.z()) > s.worldRadiusM()) return null;               // outside this world's map
@@ -109,7 +148,7 @@ public final class CinemaService {
             var q = s.projection.toBlock(Json.num(a.get(0)), Json.num(a.get(1)));
             ring.add(new Features.Pt(q.x(), q.z()));
         }
-        if (ring.size() < 3) for (Features.Building bd : s.features.buildings) {
+        if (ring.size() < 3) for (Features.Building bd : src.buildings) {
             if (Features.pointInRing(bd.footprint(), b.x(), b.z())) { ring = bd.footprint(); break; }
         }
         BuildingStyle.Obb o = ring.size() >= 3 ? BuildingStyle.obb(ring) : null;
@@ -124,7 +163,7 @@ public final class CinemaService {
         double best = Double.MAX_VALUE; double[] front = sides[0];
         for (double[] sd : sides) {
             double mx = o.cx() + sd[0] * sd[2], mz = o.cz() + sd[1] * sd[2];
-            double d = nearestRoad(s, mx, mz);
+            double d = nearestRoad(src, mx, mz);
             if (d < best) { best = d; front = sd; }
         }
         double nx = front[0], nz = front[1];                    // outward normal of the entrance side
@@ -163,9 +202,9 @@ public final class CinemaService {
         return cin;
     }
 
-    static double nearestRoad(EarthLifeServices s, double x, double z) {
+    static double nearestRoad(Features src, double x, double z) {
         double best = 400;
-        for (var r : s.features.roads) {
+        for (var r : src.roads) {
             if (!r.cls().drivable()) continue;
             var l = r.line();
             double[] bb = Features.bbox(l, 0);
@@ -349,6 +388,19 @@ public final class CinemaService {
     /** Rows for the EarthLife menu "Cinema" tab: showtimes of the nearest theater, then the concession menu. */
     public String rows(ServerPlayer p, List<Payloads.Row> rows) {
         var c = nearestCinema(p.getX(), p.getZ());
+        // the nearest listed cinema may not be built yet (Northeast worlds build them as you get close)
+        var here = EarthLifeServices.get().projection.fromBlock(p.getX(), p.getZ());
+        var listedNearest = listed.stream().min(Comparator.comparingDouble(m -> new GeoPoint(Json.num(m.get("lat")), Json.num(m.get("lon"))).distanceTo(here)));
+        if (listedNearest.isPresent()) {
+            var m = listedNearest.get();
+            var b = EarthLifeServices.get().projection.toBlock(Json.num(m.get("lat")), Json.num(m.get("lon")));
+            double dl = Math.hypot(b.x() - p.getX(), b.z() - p.getZ());
+            if (c.isEmpty() || dl + 500 < Math.hypot(c.get().kiosk[0] - p.getX(), c.get().kiosk[2] - p.getZ())) {
+                rows.add(new Payloads.Row(String.valueOf(m.get("name")), String.format("Nearest movie theater, %.1f km away - drive there to see showtimes", dl / 1000),
+                        "Route", String.format(Locale.ROOT, "earthlife map route xz %.1f %.1f", b.x(), b.z())));
+                if (c.isEmpty()) return "Cinema";
+            }
+        }
         if (c.isEmpty()) { rows.add(new Payloads.Row("No movie theaters in this world", "Cinemas come from OpenStreetMap for NY, PA, NJ and VT", "", "")); return "Cinema"; }
         Cinema cin = c.get();
         var s = EarthLifeServices.get();

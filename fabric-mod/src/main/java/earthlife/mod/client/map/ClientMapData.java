@@ -36,6 +36,10 @@ public final class ClientMapData {
     /** Hamlets and villages from OpenStreetMap place nodes (map labels and search). */
     public final List<Payloads.Poi> places = new ArrayList<>();
     private RoadGraph graph;
+    /** Northeast worlds: the region packs (null in starter/custom worlds) and the state-wide major roads. */
+    public final earthlife.core.world.PackWorld packs;
+    public final List<NamedRoad> majors = new ArrayList<>();
+    private final Map<Long, List<Object>> majorCells = new HashMap<>();
     static final int CELL = 512;
     private final Map<Long, List<Object>> cells = new HashMap<>();
 
@@ -63,11 +67,49 @@ public final class ClientMapData {
     private ClientMapData(Payloads.WorldInfo i, ClientMapData base) {
         info = i; projection = base.projection; features = base.features; roads.addAll(base.roads); coastline.addAll(base.coastline);
         elevation = base.elevation; towns = base.towns; graph = base.graph; cells.putAll(base.cells); places.addAll(base.places);
+        packs = base.packs; majors.addAll(base.majors); majorCells.putAll(base.majorCells);
     }
 
     private ClientMapData(Payloads.WorldInfo info) throws Exception {
         this.info = info;
-        projection = new LocalProjection(new GeoPoint(info.originLat(), info.originLon()), info.seaLevelYAt0m(), 1.0);
+        boolean ne = "northeast".equals(info.region());
+        projection = new LocalProjection(new GeoPoint(info.originLat(), info.originLon()), info.seaLevelYAt0m(), 1.0, ne);
+        if (ne) {
+            var rp = earthlife.core.world.RegionPacks.shared(net.fabricmc.loader.api.FabricLoader.getInstance().getGameDir().resolve("earthlife").resolve("regions"),
+                    System.getProperty("earthlife.regionPackUrl", earthlife.core.world.RegionPacks.DEFAULT_BASE), !Boolean.getBoolean("earthlife.offlineMaps"));
+            rp.loadIndex();
+            packs = new earthlife.core.world.PackWorld(rp, projection, "Map data (c) OpenStreetMap contributors, ODbL 1.0", 1_200_000);
+            features = new Features("Map data (c) OpenStreetMap contributors, ODbL 1.0");
+            elevation = packs.elevation(new ElevationSource.Procedural(110, 20, 0xEA27L));
+            List<Towns.Town> ts = new ArrayList<>();
+            try {
+                byte[] gz = rp.global("places.json.gz", 7L * 24 * 3600_000);
+                String pj = new String(new GZIPInputStream(new java.io.ByteArrayInputStream(gz)).readAllBytes(), StandardCharsets.UTF_8);
+                for (Object o : Json.arr(Json.obj(Json.parse(pj)).get("places"))) {
+                    var m = Json.obj(o);
+                    var b = projection.toBlock(Json.num(m.get("lat")), Json.num(m.get("lon")));
+                    String kind = Json.str(m, "kind");
+                    places.add(new Payloads.Poi("place:" + kind, Json.str(m, "name") + ", " + Json.str(m, "state"), b.x(), b.z()));
+                    Towns.Kind k = switch (kind) { case "CITY" -> Towns.Kind.CITY; case "TOWN" -> Towns.Kind.TOWN; case "VILLAGE", "SUBURB" -> Towns.Kind.VILLAGE; default -> Towns.Kind.HAMLET; };
+                    ts.add(new Towns.Town(Json.str(m, "name"), k, new GeoPoint(Json.num(m.get("lat")), Json.num(m.get("lon"))), m.get("population") == null ? 0 : (int) Json.num(m.get("population")), true));
+                }
+            } catch (Exception e) { EarthLifeMod.LOG.warn("EarthLife map: place list unavailable: {}", e.toString()); }
+            towns = ts.isEmpty() ? List.of(new Towns.Town(info.startTown(), Towns.Kind.TOWN, projection.origin(), 0, false)) : ts;
+            try {
+                var mj = earthlife.core.world.RegionCell.parse(rp.global("major.elc", 7L * 24 * 3600_000)).project(projection, "", true);
+                for (Features.Road r : mj.roads) {
+                    NamedRoad nr = new NamedRoad(r, mj.names.get(r.id()));
+                    majors.add(nr);
+                    if (r.line().isEmpty()) continue;
+                    double[] bb = Features.bbox(r.line(), 0);
+                    for (int cx = Math.floorDiv((int) bb[0], 8192); cx <= Math.floorDiv((int) bb[2], 8192); cx++)
+                        for (int cz = Math.floorDiv((int) bb[1], 8192); cz <= Math.floorDiv((int) bb[3], 8192); cz++) majorCells.computeIfAbsent(key(cx, cz), k -> new ArrayList<>()).add(nr);
+                }
+            } catch (Exception e) { EarthLifeMod.LOG.warn("EarthLife map: major roads unavailable: {}", e.toString()); }
+            EarthLifeMod.LOG.info("EarthLife map (Northeast 1:1): {} places, {} major roads; streets and buildings load per area", places.size(), majors.size());
+            return;
+        }
+        packs = null;
         String json = info.bundledData() ? text("regions/western-ny/features.json.gz") : null;
         features = json != null ? Features.parse(json) : new Features("estimated");
         if (json != null) {
@@ -137,6 +179,7 @@ public final class ClientMapData {
 
     /** All features whose bounding box touches [x0,x1]x[z0,z1] (no duplicates). */
     public Collection<Object> query(double x0, double z0, double x1, double z1) {
+        if (packs != null) return packQuery(x0, z0, x1, z1);
         Set<Object> out = Collections.newSetFromMap(new IdentityHashMap<>());
         for (int cx = Math.floorDiv((int) x0, CELL); cx <= Math.floorDiv((int) x1, CELL); cx++)
             for (int cz = Math.floorDiv((int) z0, CELL); cz <= Math.floorDiv((int) z1, CELL); cz++) {
@@ -144,6 +187,74 @@ public final class ClientMapData {
                 if (l != null) out.addAll(l);
             }
         return out;
+    }
+
+    // ------------------------------------------------------------------ Northeast packs
+
+    private final Map<Long, Map<Long, List<Object>>> cellIndex = Collections.synchronizedMap(new LinkedHashMap<>(32, 0.75f, true) {
+        @Override protected boolean removeEldestEntry(Map.Entry<Long, Map<Long, List<Object>>> e) { return size() > 24; }
+    });
+
+    /** Map objects of one cell bucketed by 512-block squares (built once per loaded cell). */
+    private Map<Long, List<Object>> cellObjects(int lat8, int lon8) {
+        long ck = key(lat8, lon8);
+        var have = cellIndex.get(ck);
+        if (have != null) return have;
+        var c = packs.cell(lat8, lon8);
+        Map<Long, List<Object>> idx = new HashMap<>();
+        if (c != null) {
+            Features f = c.features();
+            java.util.function.BiConsumer<Object, List<Features.Pt>> add = (o, pts) -> {
+                if (pts.isEmpty()) return;
+                double[] b = Features.bbox(pts, 0);
+                for (int cx = Math.floorDiv((int) b[0], CELL); cx <= Math.floorDiv((int) b[2], CELL); cx++)
+                    for (int cz = Math.floorDiv((int) b[1], CELL); cz <= Math.floorDiv((int) b[3], CELL); cz++) idx.computeIfAbsent(key(cx, cz), k -> new ArrayList<>()).add(o);
+            };
+            for (Features.Road r : f.roads) add.accept(new NamedRoad(r, f.names.get(r.id())), r.line());
+            for (Features.Building b : f.buildings) add.accept(b, b.footprint());
+            for (Features.Area a : f.areas) add.accept(a, a.ring());
+            for (Features.Water w : f.water) add.accept(w, w.ring());
+        }
+        cellIndex.put(ck, idx);
+        return idx;
+    }
+
+    private Collection<Object> packQuery(double x0, double z0, double x1, double z1) {
+        Set<Object> out = Collections.newSetFromMap(new IdentityHashMap<>());
+        double span = Math.max(x1 - x0, z1 - z0);
+        if (span <= 4096) {
+            // streets and buildings: from the cells under the box (loads them; map tiles are drawn off-thread)
+            for (int[] c : packs.cellsFor(x0, z0, x1, z1, 0)) {
+                var idx = cellObjects(c[0], c[1]);
+                for (int cx = Math.floorDiv((int) x0, CELL); cx <= Math.floorDiv((int) x1, CELL); cx++)
+                    for (int cz = Math.floorDiv((int) z0, CELL); cz <= Math.floorDiv((int) z1, CELL); cz++) { var l = idx.get(key(cx, cz)); if (l != null) out.addAll(l); }
+            }
+        } else {
+            // zoomed out: the state-wide major roads only
+            for (int cx = Math.floorDiv((int) x0, 8192); cx <= Math.floorDiv((int) x1, 8192); cx++)
+                for (int cz = Math.floorDiv((int) z0, 8192); cz <= Math.floorDiv((int) z1, 8192); cz++) { var l = majorCells.get(key(cx, cz)); if (l != null) out.addAll(l); }
+        }
+        return out;
+    }
+
+    /**
+     * A road route. Starter worlds: the bundled road graph. Northeast worlds: the major roads of all four states plus
+     * every street within 2.5 km of the start and the destination.
+     */
+    public List<Features.Pt> route(double fx, double fz, double tx, double tz) {
+        if (packs == null) return graph().route(fx, fz, tx, tz);
+        var g = new earthlife.core.transport.CompactGraph();
+        double d = Math.hypot(tx - fx, tz - fz);
+        for (NamedRoad r : majors) {
+            var cls = r.road().cls();
+            if (d > 60_000 && !(cls == Features.RoadClass.MOTORWAY || cls == Features.RoadClass.PRIMARY)) continue;
+            g.addWay(r.road().line(), RoadGraph.speedFor(cls));
+        }
+        for (double[] p : new double[][]{{fx, fz}, {tx, tz}}) {
+            var f = packs.featuresNear(p[0], p[1], Math.min(2500, Math.max(800, d / 2)));
+            for (Features.Road r : f.roads) if (r.cls().drivable()) g.addWay(r.line(), RoadGraph.speedFor(r.cls()));
+        }
+        return g.route(fx, fz, tx, tz);
     }
 
     public synchronized RoadGraph graph() {
@@ -167,11 +278,11 @@ public final class ClientMapData {
             String label = pl.town() + ", " + pl.state();
             if (!label.toLowerCase(Locale.ROOT).contains(s) || out.stream().anyMatch(o -> o.name().startsWith(pl.town()))) continue;
             var b = projection.toBlock(pl.lat(), pl.lon());
-            boolean far = Math.hypot(b.x(), b.z()) > 150_000;
+            boolean far = Math.hypot(b.x(), b.z()) > (packs != null ? 900_000 : 150_000);
             out.add(new Payloads.Poi(far ? "far" : "town", label + (far ? String.format(Locale.ROOT, " (%.4f, %.4f)", pl.lat(), pl.lon()) : ""), b.x(), b.z()));
         }
         Set<String> seenStreets = new HashSet<>();
-        for (NamedRoad r : roads) {
+        for (NamedRoad r : packs != null ? majors : roads) {
             if (r.name() == null || !r.name().toLowerCase(Locale.ROOT).contains(s) || !seenStreets.add(r.name())) continue;
             var mid = r.road().line().get(r.road().line().size() / 2);
             out.add(new Payloads.Poi("street", r.name(), mid.x(), mid.z()));

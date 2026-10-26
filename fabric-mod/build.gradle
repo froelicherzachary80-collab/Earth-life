@@ -29,6 +29,7 @@ loom {
     runs {
         clientGameTest {
             vmArg "-Dearthlife.offline=true"
+            vmArg "-Dearthlife.regionPackUrl=https://github.com/froelicherzachary80-collab/Earth-life/releases/download/regions-test/"
             vmArg "-Xmx4G"
         }
     }

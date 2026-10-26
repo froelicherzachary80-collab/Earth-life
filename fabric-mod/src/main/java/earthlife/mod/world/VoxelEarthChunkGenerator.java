@@ -87,6 +87,7 @@ public final class VoxelEarthChunkGenerator extends ChunkGenerator {
         EarthSettings.Quality q = settings.qualityEnum();
         boolean lowQ = q == EarthSettings.Quality.PERFORMANCE;
         var opt = settings.options();
+        boolean packs = settings.regionPacks();
         for (int dz = 0; dz < 16; dz++) for (int dx = 0; dx < 16; dx++) {
             int x = cx + dx, z = cz + dz;
             if (t == null) { fallbackColumn(chunk, pos, x, z, minY); continue; }
@@ -105,9 +106,11 @@ public final class VoxelEarthChunkGenerator extends ChunkGenerator {
                         : y < top ? (surf == Surface.SAND ? Blocks.SAND.defaultBlockState() : Blocks.DIRT.defaultBlockState()) : surfaceBlock(surf);
                 McCompat.set(chunk, pos.set(x, y, z), st);
             }
-            // Water: mapped lakes/rivers are carved basins filled 2 deep; anything below the lake datum floods to sea level.
-            if (water) for (int y = top + 1; y <= top + 2; y++) McCompat.set(chunk, pos.set(x, y, z), Blocks.WATER.defaultBlockState());
-            if (top < SEA - 1)
+            // Water: mapped lakes/rivers are carved basins filled 2 deep; sea and Great Lakes (terrain mask) fill up to their
+            // real surface. Starter worlds: anything below the Lake Ontario datum also floods to sea level (Y 63).
+            int wy = t.waterY[i];
+            if (water) for (int y = top + 1; y <= (wy > top ? wy - 1 : top + 2); y++) McCompat.set(chunk, pos.set(x, y, z), Blocks.WATER.defaultBlockState());
+            if (!packs && top < SEA - 1)
                 for (int y = top + 1; y < SEA; y++) McCompat.set(chunk, pos.set(x, y, z), Blocks.WATER.defaultBlockState());
             if (surf == Surface.FARMLAND && !road && Math.floorMod(x, 4) != 0)
                 McCompat.set(chunk, pos.set(x, top + 1, z), Blocks.WHEAT.defaultBlockState());
