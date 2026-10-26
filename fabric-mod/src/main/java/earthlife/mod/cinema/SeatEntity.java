@@ -31,6 +31,22 @@ public final class SeatEntity extends Entity {
         move.accept(passenger, getX() + Math.sin(yaw) * 0.12, getY() + 0.44 - 0.70, getZ() - Math.cos(yaw) * 0.12);
     }
 
+    /** Sitting down: you face the way the seat faces (the screen). */
+    @Override protected void addPassenger(Entity e) {
+        super.addPassenger(e);
+        e.setYRot(getYRot()); e.yRotO = getYRot(); e.setXRot(5);
+        if (e instanceof LivingEntity le) { le.setYHeadRot(getYRot()); le.yBodyRot = getYRot(); }
+    }
+
+    /** You can look around, but your body stays in the seat (like a boat: within 100 degrees of the seat). */
+    @Override public void onPassengerTurned(Entity e) {
+        float f = net.minecraft.util.Mth.wrapDegrees(e.getYRot() - getYRot());
+        float g = net.minecraft.util.Mth.clamp(f, -100f, 100f);
+        e.yRotO += g - f;
+        e.setYRot(e.getYRot() + g - f);
+        e.setYHeadRot(e.getYRot());
+    }
+
     @Override public void tick() {
         super.tick();
         if (!(level() instanceof ServerLevel sl)) return;

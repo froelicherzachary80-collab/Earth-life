@@ -62,6 +62,8 @@ public final class CinemaLayout {
         bp.box(1, HEIGHT + 1, -hw + 1, lobby - 1, HEIGHT + 1, hw - 1, "minecraft:white_concrete");
         for (int u = 3; u < lobby; u += 4) for (int v = -hw + 3; v <= hw - 3; v += 5) bp.set(u, HEIGHT + 1, v, LIGHT);
         bp.box(1, 1, -hw + 1, lobby - 1, HEIGHT, hw - 1, AIR);
+        // bright lobby: wall lights along both sides
+        for (int u = 2; u < lobby; u += 3) { bp.set(u, 3, -hw, LIGHT); bp.set(u, 3, hw, LIGHT); bp.set(u, 7, -hw, LIGHT); bp.set(u, 7, hw, LIGHT); }
         double[] kiosk = {2.5, 1, -Math.min(4, hw - 2) + 0.5};
         bp.set(2, 1, -Math.min(4, hw - 2), "earthlife:ticket_kiosk@u-");
         bp.set(2, 1, Math.min(4, hw - 2), "earthlife:ticket_kiosk@u-");
@@ -138,6 +140,9 @@ public final class CinemaLayout {
             for (int u = us - 1; u <= Math.min(a1 - 1, us + (r == rows - 1 ? 8 : 0)); u++)
                 for (int v = b0 + 1; v <= b1 - 1; v++) {
                     for (int y = 1; y <= r; y++) bp.set(u, y, v, FLOOR);
+                    // aisle step lights (under the carpet) at the front edge of every row
+                    boolean aisle = v <= b0 + 2 || v >= b1 - 2;
+                    if (aisle && u == us - 1 && r > 0) bp.set(u, r, v, LIGHT);
                     bp.set(u, r + 1, v, CARPET);
                 }
             for (int v = b0 + 3; v <= b1 - 3; v++) {
