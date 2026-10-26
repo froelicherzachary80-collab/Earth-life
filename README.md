@@ -13,7 +13,7 @@ touched. **Read [STATUS.md](STATUS.md)** for exactly what is tested, how, and wh
 1. Minecraft Java Edition 26.3 (the official launcher).
 2. Fabric Loader for 26.3: run the installer from https://fabricmc.net/use/installer/ and pick 26.3.
 3. Put two files in your `.minecraft/mods` folder:
-   - `earthlife-0.4.0.jar` (from this repo's GitHub Actions → *Fabric mod build* → artifact **earthlife-mod**, or build it yourself, below)
+   - `earthlife-0.4.0.jar` (from a successful *Fabric mod build* GitHub Actions run with the **earthlife-mod** artifact, or build it yourself below)
    - Fabric API for 26.3 (0.165.0+26.3 or newer) from https://modrinth.com/mod/fabric-api
 4. Start the "fabric-loader-26.3" profile in the Minecraft Launcher.
 
@@ -102,7 +102,7 @@ gradle :core:runTests                 # engine tests (also: ./build.sh with only
 gradle :fabric-mod:runClientGameTest  # in-game tests in a real client (see STATUS.md)
 ```
 
-GitHub Actions does all three on every push (`.github/workflows/mod-build.yml`); the jar is the **earthlife-mod**
+GitHub Actions builds the jar and runs core and in-game tests on every push (`.github/workflows/mod-build.yml`); the jar is the **earthlife-mod**
 artifact, the in-game test report and screenshots are pushed to the `ci-tests` branch.
 
 ## Licence
