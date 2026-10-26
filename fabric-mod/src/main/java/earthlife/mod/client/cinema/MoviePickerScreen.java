@@ -90,9 +90,13 @@ public final class MoviePickerScreen extends Screen {
     }
 
     String startLabel() {
+        if (!earthlife.mod.client.ClientState.earth()) return "Start the film" + (fourD ? " (4DX)" : "") + (room3d ? " · 3D room" : "");
         int price = fourD ? 20 : FORMATS[formatIdx].equals("2D") ? 12 : 15;
         return "Start the film · ticket " + price + " LC" + (fourD ? " (4D motion)" : "");
     }
+
+    /** ZMF 3D rooms: ordinary films are converted to 3D automatically. */
+    public boolean room3d;
 
     int formatRow(int x0, int y, int w) {
         addRenderableWidget(Button.builder(Component.literal("Picture: " + FORMAT_NAMES[formatIdx]), b -> { formatIdx = (formatIdx + 1) % FORMATS.length; rebuildWidgets(); })
@@ -184,6 +188,7 @@ public final class MoviePickerScreen extends Screen {
 
     void start(String source, String title, String format) {
         if (key.isEmpty()) { message = "To play this film, choose an auditorium at a cinema's ticket kiosk."; return; }
+        if (room3d && "2D".equals(format)) format = "AUTO3D";
         String src = "\"" + source.replace("\\", "\\\\").replace("\"", "\\\"") + "\"";
         EarthLifeClient.command("earthlife cinema start " + key + " " + format + " " + src + " " + title.replaceAll("[\\r\\n]", " "));
         onClose();

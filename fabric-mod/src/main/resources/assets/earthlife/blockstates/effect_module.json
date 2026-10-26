@@ -1,0 +1,19 @@
+{
+ "variants": {
+  "facing=north": {
+   "model": "earthlife:block/effect_module"
+  },
+  "facing=east": {
+   "model": "earthlife:block/effect_module",
+   "y": 90
+  },
+  "facing=south": {
+   "model": "earthlife:block/effect_module",
+   "y": 180
+  },
+  "facing=west": {
+   "model": "earthlife:block/effect_module",
+   "y": 270
+  }
+ }
+}

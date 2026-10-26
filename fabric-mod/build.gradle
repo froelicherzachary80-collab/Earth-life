@@ -1,5 +1,5 @@
 // EarthLife Fabric mod for Minecraft Java 26.3 (unobfuscated, so no mappings). Built by GitHub Actions
-// (.github/workflows/mod-build.yml); locally: gradle :fabric-mod:build -> build/libs/earthlife-0.4.0.jar
+// (.github/workflows/mod-build.yml); locally: gradle :fabric-mod:build -> build/libs/earthlife-0.5.0.jar
 //
 // In-game tests: gradle :fabric-mod:runClientGameTest runs src/gametest in a real client (see STATUS.md).
 plugins {

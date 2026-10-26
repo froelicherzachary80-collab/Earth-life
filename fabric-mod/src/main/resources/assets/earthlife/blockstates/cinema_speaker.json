@@ -1,0 +1,19 @@
+{
+ "variants": {
+  "facing=north": {
+   "model": "earthlife:block/cinema_speaker"
+  },
+  "facing=east": {
+   "model": "earthlife:block/cinema_speaker",
+   "y": 90
+  },
+  "facing=south": {
+   "model": "earthlife:block/cinema_speaker",
+   "y": 180
+  },
+  "facing=west": {
+   "model": "earthlife:block/cinema_speaker",
+   "y": 270
+  }
+ }
+}

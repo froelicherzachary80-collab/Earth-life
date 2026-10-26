@@ -43,6 +43,14 @@ public final class CinemaContent {
     public static final CounterBlock POPCORN_MACHINE = block("popcorn_machine", p -> new CounterBlock(p, "concessions"), BlockBehaviour.Properties.of().strength(1.5f).sound(SoundType.METAL).noOcclusion().lightLevel(s -> 9));
     public static final CounterBlock SODA_FOUNTAIN = block("soda_fountain", p -> new CounterBlock(p, "concessions"), BlockBehaviour.Properties.of().strength(1.5f).sound(SoundType.METAL).noOcclusion());
     public static final CounterBlock TICKET_KIOSK = block("ticket_kiosk", p -> new CounterBlock(p, "tickets"), BlockBehaviour.Properties.of().strength(1.5f).sound(SoundType.METAL).noOcclusion().lightLevel(s -> 6));
+    // ZMF Cinema multiplex furniture and equipment
+    public static final SeatBlock LUXURY_RECLINER = block("luxury_recliner", p -> new SeatBlock(p, false), BlockBehaviour.Properties.of().strength(1.4f).sound(SoundType.WOOL).noOcclusion());
+    public static final SeatBlock LOUNGE_SOFA = block("lounge_sofa", p -> new SeatBlock(p, false), BlockBehaviour.Properties.of().strength(1.0f).sound(SoundType.WOOL).noOcclusion());
+    public static final CounterBlock CANDY_DISPLAY = block("candy_display", p -> new CounterBlock(p, "concessions"), BlockBehaviour.Properties.of().strength(1.2f).sound(SoundType.GLASS).noOcclusion().lightLevel(s -> 5));
+    public static final CounterBlock SNACK_SHELF = block("snack_shelf", p -> new CounterBlock(p, "concessions"), BlockBehaviour.Properties.of().strength(1.2f).sound(SoundType.WOOD).noOcclusion());
+    public static final DecorBlock PROJECTOR = block("projector", p -> new DecorBlock(p, Block.box(2, 0, 1, 14, 12, 15)), BlockBehaviour.Properties.of().strength(2f).sound(SoundType.METAL).noOcclusion().lightLevel(s -> 9));
+    public static final DecorBlock CINEMA_SPEAKER = block("cinema_speaker", p -> new DecorBlock(p, Block.box(3, 0, 3, 13, 16, 13)), BlockBehaviour.Properties.of().strength(1.5f).sound(SoundType.WOOD).noOcclusion());
+    public static final DecorBlock EFFECT_MODULE = block("effect_module", p -> new DecorBlock(p, Block.box(1, 1, 1, 15, 15, 15)), BlockBehaviour.Properties.of().strength(1.5f).sound(SoundType.METAL).noOcclusion().lightLevel(s -> 3));
 
     public static final Item POPCORN = food("popcorn", 5, 0.4f, false, 8);
     public static final Item LARGE_POPCORN = food("large_popcorn", 8, 0.45f, false, 11);
@@ -62,6 +70,7 @@ public final class CinemaContent {
     public static final Item GLASSES_3D = item("glasses_3d", new Item.Properties().stacksTo(1).component(DataComponents.EQUIPPABLE,
             Equippable.builder(EquipmentSlot.HEAD).setEquipSound(SoundEvents.ARMOR_EQUIP_GENERIC).setCameraOverlay(EarthLifeMod.id("misc/glasses_3d_overlay")).build()), 0);
     public static final Item MOVIE_TICKET = item("movie_ticket", new Item.Properties().stacksTo(16), 0);
+    public static final Item CINEMA_LOCATOR = itemOf("cinema_locator", earthlife.mod.zmf.LocatorItem::new, new Item.Properties().stacksTo(1));
 
     public static final ResourceKey<EntityType<?>> SEAT_KEY = ResourceKey.create(Registries.ENTITY_TYPE, EarthLifeMod.id("seat"));
     public static final EntityType<SeatEntity> SEAT = Registry.register(BuiltInRegistries.ENTITY_TYPE, SEAT_KEY,
@@ -94,6 +103,13 @@ public final class CinemaContent {
         Item i = Registry.register(BuiltInRegistries.ITEM, key, new Item(p.setId(key)));
         TAB_ITEMS.add(i);
         if (price > 0) PRICES.put(name, price);
+        return i;
+    }
+
+    private static Item itemOf(String name, Function<Item.Properties, Item> f, Item.Properties p) {
+        ResourceKey<Item> key = ResourceKey.create(Registries.ITEM, EarthLifeMod.id(name));
+        Item i = Registry.register(BuiltInRegistries.ITEM, key, f.apply(p.setId(key)));
+        TAB_ITEMS.add(i);
         return i;
     }
 

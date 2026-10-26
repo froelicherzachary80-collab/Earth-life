@@ -1,0 +1,34 @@
+{
+ "variants": {
+  "facing=north,reclined=false": {
+   "model": "earthlife:block/luxury_recliner"
+  },
+  "facing=north,reclined=true": {
+   "model": "earthlife:block/luxury_recliner_reclined"
+  },
+  "facing=east,reclined=false": {
+   "model": "earthlife:block/luxury_recliner",
+   "y": 90
+  },
+  "facing=east,reclined=true": {
+   "model": "earthlife:block/luxury_recliner_reclined",
+   "y": 90
+  },
+  "facing=south,reclined=false": {
+   "model": "earthlife:block/luxury_recliner",
+   "y": 180
+  },
+  "facing=south,reclined=true": {
+   "model": "earthlife:block/luxury_recliner_reclined",
+   "y": 180
+  },
+  "facing=west,reclined=false": {
+   "model": "earthlife:block/luxury_recliner",
+   "y": 270
+  },
+  "facing=west,reclined=true": {
+   "model": "earthlife:block/luxury_recliner_reclined",
+   "y": 270
+  }
+ }
+}

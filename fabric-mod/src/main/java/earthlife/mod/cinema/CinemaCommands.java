@@ -5,6 +5,7 @@ import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import earthlife.mod.EarthLifeServices;
 import earthlife.mod.McCompat;
+import earthlife.mod.EarthLifeMod;
 import earthlife.mod.net.Net;
 import earthlife.mod.net.Payloads;
 import net.minecraft.commands.CommandSourceStack;
@@ -33,7 +34,7 @@ public final class CinemaCommands {
     interface Body { String run(ServerPlayer p, CommandContext<CommandSourceStack> c) throws Exception; }
 
     static int run(CommandContext<CommandSourceStack> c, Body b) {
-        if (!EarthLifeServices.running() || CinemaService.get() == null) { c.getSource().sendFailure(Component.literal("Cinemas work in Earth worlds.")); return 0; }
+        if (CinemaService.get() == null) { c.getSource().sendFailure(Component.literal("There are no cinemas in this world yet.")); return 0; }
         ServerPlayer p = c.getSource().getPlayer();
         if (p == null) { c.getSource().sendFailure(Component.literal("Players only.")); return 0; }
         try {
@@ -57,10 +58,11 @@ public final class CinemaCommands {
             .then(Commands.literal("pick").then(Commands.argument("aud", StringArgumentType.string()).executes(c -> run(c, (p, x) -> {
                 var a = CinemaService.get().auds.get(aud(x));
                 if (a == null) return "Unknown auditorium.";
-                if (a.motion() && !CinemaService.fourDOpen(EarthLifeServices.get().time.clock().zone()))
+                if (CinemaService.seasonal(a) && EarthLifeServices.running() && !CinemaService.fourDOpen(EarthLifeServices.get().time.clock().zone()))
                     return "The 4D motion auditorium " + CinemaService.fourDOpening(EarthLifeServices.get().time.clock().zone()) + ".";
                 if (!Net.hasClientMod(p)) return "Choosing a film needs EarthLife on your client (it streams and plays the film on your computer).";
-                Net.send(p, new Payloads.OpenScreen("cinema:pick:" + a.key() + ":" + (a.motion() ? "4d" : "std") + ":" + a.cinema().name() + " - " + a.name()));
+                if (a.zmf() && !earthlife.mod.zmf.ZmfEconomy.mayStartPrivateShowing(p)) return "Private showings are switched off on this server - buy a ticket for a scheduled screening instead.";
+                Net.send(p, new Payloads.OpenScreen("cinema:pick:" + a.key() + ":" + (a.motion() ? "4d" : "std") + (a.has("3D") ? "3d" : "") + ":" + a.cinema().name() + " - " + a.name()));
                 return null;
             }))))
             .then(Commands.literal("start").then(Commands.argument("aud", StringArgumentType.string()).then(Commands.argument("format", StringArgumentType.word())

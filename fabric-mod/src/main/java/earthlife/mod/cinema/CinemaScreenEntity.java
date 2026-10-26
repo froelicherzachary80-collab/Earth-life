@@ -20,11 +20,22 @@ public final class CinemaScreenEntity extends Entity {
     private static final EntityDataAccessor<String> LABEL = SynchedEntityData.defineId(CinemaScreenEntity.class, EntityDataSerializers.STRING);
     private static final EntityDataAccessor<Float> W = SynchedEntityData.defineId(CinemaScreenEntity.class, EntityDataSerializers.FLOAT);
     private static final EntityDataAccessor<Float> H = SynchedEntityData.defineId(CinemaScreenEntity.class, EntityDataSerializers.FLOAT);
+    /** ZMF rendering data: "kind=screen;fmt=IMAX+3D;box=...;side=..;depth=..;floor=..;ceil=..;curved=1" (empty for plain screens). */
+    private static final EntityDataAccessor<String> DATA = SynchedEntityData.defineId(CinemaScreenEntity.class, EntityDataSerializers.STRING);
 
     public CinemaScreenEntity(EntityType<? extends CinemaScreenEntity> t, Level level) { super(t, level); noPhysics = true; }
 
-    void configure(String key, float w, float h, String label) {
+    public void configure(String key, float w, float h, String label) {
         entityData.set(KEY, key); entityData.set(W, w); entityData.set(H, h); entityData.set(LABEL, label);
+    }
+
+    public void data(String d) { entityData.set(DATA, d == null ? "" : d); }
+    public String data() { return entityData.get(DATA); }
+
+    /** One value of the data string ("" if absent). */
+    public String dataValue(String name) {
+        for (String kv : data().split(";")) { int i = kv.indexOf('='); if (i > 0 && kv.substring(0, i).equals(name)) return kv.substring(i + 1); }
+        return "";
     }
 
     public String key() { return entityData.get(KEY); }
@@ -32,7 +43,7 @@ public final class CinemaScreenEntity extends Entity {
     public float screenWidth() { return entityData.get(W); }
     public float screenHeight() { return entityData.get(H); }
 
-    @Override protected void defineSynchedData(SynchedEntityData.Builder b) { b.define(KEY, "").define(LABEL, "").define(W, 8f).define(H, 3.6f); }
+    @Override protected void defineSynchedData(SynchedEntityData.Builder b) { b.define(KEY, "").define(LABEL, "").define(W, 8f).define(H, 3.6f).define(DATA, ""); }
     @Override public boolean hurtServer(ServerLevel level, DamageSource s, float a) { return false; }
     @Override protected void readAdditionalSaveData(ValueInput in) {}
     @Override protected void addAdditionalSaveData(ValueOutput out) {}

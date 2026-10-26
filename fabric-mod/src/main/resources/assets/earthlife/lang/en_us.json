@@ -13,7 +13,7 @@
   "entity.earthlife.resident": "Resident",
   "entity.earthlife.vehicle": "Vehicle",
   "block.earthlife.recliner": "Cinema Recliner",
-  "block.earthlife.motion_seat": "4D Motion Seat",
+  "block.earthlife.motion_seat": "4DX Motion Seat",
   "block.earthlife.popcorn_machine": "Popcorn Machine",
   "block.earthlife.soda_fountain": "Soda Fountain",
   "block.earthlife.ticket_kiosk": "Ticket Kiosk",
@@ -34,5 +34,15 @@
   "item.earthlife.soft_pretzel": "Soft Pretzel",
   "item.earthlife.glasses_3d": "3D Glasses (red/cyan)",
   "item.earthlife.movie_ticket": "Movie Ticket",
-  "itemGroup.earthlife.cinema": "EarthLife Cinema"
+  "itemGroup.earthlife.cinema": "EarthLife + ZMF Cinema",
+  "block.earthlife.luxury_recliner": "Luxury Cinema Recliner",
+  "block.earthlife.lounge_sofa": "Lobby Lounge Sofa",
+  "block.earthlife.candy_display": "Candy Display",
+  "block.earthlife.snack_shelf": "Snack Shelf",
+  "block.earthlife.projector": "Cinema Projector",
+  "block.earthlife.cinema_speaker": "Cinema Speaker",
+  "block.earthlife.effect_module": "4DX Effect Module",
+  "item.earthlife.cinema_locator": "Cinema Locator",
+  "key.earthlife.zmf": "ZMF Cinema menu / web browser",
+  "key.earthlife.fx_stop": "4DX + TactSuit emergency stop"
 }

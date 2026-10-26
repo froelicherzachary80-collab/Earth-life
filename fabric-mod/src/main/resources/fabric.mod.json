@@ -3,7 +3,7 @@
   "id": "earthlife",
   "version": "${version}",
   "name": "EarthLife",
-  "description": "Play a life on a 1:1 real-world Earth: Earth world type (starting in Williamson, NY), LifeMap (M), jobs, residents, LifeCoins, vehicles, airports and real-time events.",
+  "description": "Play a life on a 1:1 real-world Earth: Earth world type (starting in Williamson, NY), LifeMap (M), jobs, residents, LifeCoins, vehicles, airports and real-time events. Includes ZMF Cinema: 12-32 screen multiplexes in every world with Jellyfin films, web cinemas (with MCEF Modern), automatic 3D and 4DX.",
   "license": "MIT",
   "environment": "*",
   "entrypoints": {
@@ -22,8 +22,12 @@
   },
   "accessWidener": "earthlife.accesswidener",
   "mixins": [
-    "earthlife.mixins.json"
+    "earthlife.mixins.json",
+    "earthlife.mcef.mixins.json"
   ],
+  "suggests": {
+    "mcef-modern": ">=0.3.3"
+  },
   "contact": {
     "sources": "https://github.com/froelicherzachary80-collab/Earth-life"
   },
