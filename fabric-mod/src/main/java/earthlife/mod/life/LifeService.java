@@ -167,7 +167,12 @@ public final class LifeService {
 
     public void sendWorldInfo(ServerPlayer p) {
         List<Payloads.Poi> pois = new ArrayList<>();
-        for (Towns.Town t : s.towns) { var b = s.projection.toBlock(t.centre().lat(), t.centre().lon()); pois.add(new Payloads.Poi("town:" + t.kind().name().toLowerCase(Locale.ROOT), t.name(), b.x(), b.z())); }
+        // Northeast worlds list thousands of places (the client reads them from the packs); send the 300 nearest here
+        var here = s.projection.fromBlock(p.getX(), p.getZ());
+        s.towns.stream().sorted(java.util.Comparator.comparingDouble(t -> t.centre().distanceTo(here))).limit(300).forEach(t -> {
+            var b = s.projection.toBlock(t.centre().lat(), t.centre().lon());
+            pois.add(new Payloads.Poi("town:" + t.kind().name().toLowerCase(Locale.ROOT), t.name(), b.x(), b.z()));
+        });
         for (var e : s.airportLayouts.entrySet()) { double[] m = e.getValue().placed.marker("agent:checkin:1"); pois.add(new Payloads.Poi("airport", e.getKey() + " " + s.airports.get(e.getKey()).name(), m[0], m[2])); }
         for (var l : s.landmarks.values()) { var b = s.projection.toBlock(l.landmark().pos().lat(), l.landmark().pos().lon()); pois.add(new Payloads.Poi("landmark", l.landmark().name(), b.x(), b.z())); }
         EarthSettings st = s.settings;

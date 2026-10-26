@@ -1,5 +1,60 @@
 # Changelog
 
+## 0.4.1 — Northeast 1:1, cars with doors, movie theaters (2026-10-26)
+
+### Added
+- **1:1 New York, Pennsylvania, New Jersey and Vermont** (new worlds; *Map data* in Customize):
+  - `region-packs` GitHub workflow: Geofabrik OSM state extracts → 1/8° cells (roads with names, buildings with
+    height/levels/roof/colours, land cover, water with islands, POIs) + AWS Terrain Tiles per cell with a sea / Lake
+    Ontario / Lake Erie mask → 1/2° zip packs, index with SHA-256, places, state-wide major roads and cinemas, published
+    as the `regions-v1` release.
+  - Detail tiers per cell: CITY (big cities; ~15 m terrain, 2.5 m sidewalks, street trees), TOWN (~25 m terrain,
+    1.5 m sidewalks), RURAL (~45 m), TERRAIN (no map features, ~90 m).
+  - In the game: packs download on demand (prefetched around players, cached in `.minecraft/earthlife/regions/`,
+    shared by client and integrated server), cells load into an LRU, tiles are generated from them; sea and Great Lakes
+    fill to their real surface (no more "everything below 74 m floods" in Northeast worlds).
+  - One Williamson-centred azimuthal-equidistant projection for all four states (scale within ~0.1%).
+  - LifeMap/GPS on the Northeast map: places of all four states in search, major roads when zoomed out, streets and
+    buildings per area, long routes over the major-road network joined to local streets.
+  - New start towns: NYC, Buffalo, Syracuse, Albany, Ithaca, Lake Placid, Philadelphia, Pittsburgh, Harrisburg, Erie,
+    Scranton, Newark, Jersey City, Atlantic City, Princeton, Burlington, Montpelier.
+- **Cars**: original sedan, taxi and crew-cab pickup models drawn by the client — body, glass, head/tail/brake/reverse
+  lights, interior (seats, dashboard, steering wheel, centre console), wheels that roll and steer — with **four hinged
+  doors** that swing open when you get in (nearest door; the owner takes the driver's seat) and when you get out (you
+  step out beside the door). Seats sit you inside the cabin at a real eye height.
+- **In-car GPS**: heading-up moving map on the dashboard screen (route, car arrow, next turn, distance, speed) and a
+  turn-by-turn banner (street names, remaining distance and time), chimes before turns, automatic re-routing.
+- **Movie theaters** at every OpenStreetMap cinema in the four states (Northeast worlds build each one when its map
+  area loads; starter worlds get those within 70 km): glass entrance, ticket kiosks, concession counter, corridor,
+  stadium auditoriums with recliners, one 4D motion auditorium; the big screen is an entity drawn by the client.
+- **Cinema player** (client): FFmpeg decodes the film to the screen texture, sound plays through Minecraft's OpenAL
+  device and is the film's clock; sources: Jellyfin (sign-in, several servers combined), Internet Archive public-domain
+  feature films (search), direct links, local files. Showings are shared: everyone in the room sees the same moment.
+- **3D**: side-by-side / top-and-bottom 3D films become red/cyan anaglyph while you wear the **3D glasses** item
+  (camera overlay with thin lens rims), 2D otherwise.
+- **4D motion auditorium** open **Oct 29 – Nov 3**: motion seats; seat rumble, kicks, sway (view motion), wind, mist and
+  flashes derived from the film's sound and picture, or from an authored `film.4d.json`; **bHaptics TactSuit** frames
+  through the local bHaptics Player.
+- Blocks and items (original models and pixel art): cinema recliner, 4D motion seat, popcorn machine, soda fountain,
+  ticket kiosk; popcorn, large popcorn, nachos, hot dog, soft pretzel, cola, lemon-lime soda, orange soda, blue
+  raspberry slushie, bottled water, chocolate bar, gummy bears, sour gummy worms, licorice twists, candy mix (all
+  edible / drinkable); 3D glasses; movie tickets. Creative tab "EarthLife Cinema".
+- Menu tab **Cinema** (showtimes, concessions, route to the nearest theater) and *Films & 4D settings* (FFmpeg,
+  Jellyfin, picture quality, volume, 4D strength, TactSuit test). Commands: `/earthlife cinema ...`.
+
+### Changed
+- Tiles store a water surface per column (cache format ELT3, generator version 4: cached tiles are regenerated).
+- Roads crossing water run on a causeway just above the water instead of at the bottom.
+- CI: the jar is uploaded before the logs branch is published; version-independent jar check; FFmpeg and synthetic
+  test films for the in-game cinema checks; car, cinema and region-pack checks added.
+
+### Known limits
+- Bridges and tunnels aren't modelled (causeways at water level). Building interiors are gameplay layouts.
+- Films need FFmpeg on the player's computer. Jellyfin films play for players signed in to that server; local files only
+  for their owner. The bHaptics integration uses the Player's local WebSocket API and has not been tested with a
+  physical suit in CI.
+- Pack downloads happen while you explore; a slow connection can pause chunk generation in a new area.
+
 ## 0.4.0 — "First Playable Life" (2026-10-25)
 
 First version that is an actual, compiled Fabric mod (`earthlife-0.4.0.jar`) running in Minecraft Java 26.3.
