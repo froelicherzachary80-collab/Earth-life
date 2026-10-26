@@ -82,6 +82,14 @@ public final class VehicleEntity extends Entity {
     /** Vehicles drawn with the client-side model instead of block displays. */
     public static boolean clientModel(VehicleType t) { return t == VehicleType.CAR || t == VehicleType.TAXI || t == VehicleType.PICKUP; }
 
+    /** Puts the vehicle somewhere (e.g. parked on a road), facing a compass heading. */
+    public void park(double x, double z, double headingDeg) {
+        if (sim == null) return;
+        sim.x = x; sim.z = z; sim.headingDeg = headingDeg; sim.speed = 0;
+        setPos(x, getY(), z);
+        setYRot((float) (headingDeg + 180));
+    }
+
     public VehicleEntity onTrain(TrainSim t, double offset) { this.train = t; this.trainOffset = offset; return this; }
     public void setAutoRoute(List<Features.Pt> route) { this.autoRoute = route; sim.follow(route); }
     public VehicleType vehicleType() { return level().isClientSide() ? VehicleType.values()[Math.floorMod(entityData.get(DATA_TYPE), VehicleType.values().length)] : type; }

@@ -248,6 +248,7 @@ public final class EarthLifeClientGameTest implements FabricClientGameTest {
             life(ctx, sp);
             haunted(ctx, sp);
             cinema(ctx, sp);
+            northeast(ctx, sp);
             aviation(ctx, sp);
             // something to verify after reload
             onServer(sp, s -> { ServerPlayer p = s.getPlayerList().getPlayers().get(0);
@@ -654,7 +655,19 @@ public final class EarthLifeClientGameTest implements FabricClientGameTest {
                 var cars = p.level().getEntitiesOfClass(earthlife.mod.vehicle.VehicleEntity.class, p.getBoundingBox().inflate(16));
                 if (cars.isEmpty()) return "no car|false";
                 var car = cars.get(0);
-                // stand on the car's left (driver) side, then right-click it
+                // park it on the longest straight stretch of a nearby street, then stand at the driver's door and right-click it
+                var es = EarthLifeServices.get();
+                double best = 0; double[] spot = null;
+                for (var road : es.features.roads) {
+                    if (!road.cls().drivable() || road.cls() == earthlife.core.world.Features.RoadClass.SERVICE) continue;
+                    var l = road.line();
+                    for (int k = 1; k < l.size(); k++) {
+                        var a = l.get(k - 1); var c2 = l.get(k);
+                        double len = Math.hypot(c2.x() - a.x(), c2.z() - a.z()), d = Math.hypot(a.x() - p.getX(), a.z() - p.getZ());
+                        if (d < 300 && len > best && len > 40) { best = len; spot = new double[]{a.x() + (c2.x() - a.x()) * 0.2, a.z() + (c2.z() - a.z()) * 0.2, Math.toDegrees(Math.atan2(c2.x() - a.x(), -(c2.z() - a.z())))}; }
+                    }
+                }
+                if (spot != null) car.park(spot[0], spot[1], spot[2]);
                 double yaw = Math.toRadians(car.getYRot());
                 p.teleportTo(car.getX() + Math.cos(yaw) * 2.2, car.getY(), car.getZ() + Math.sin(yaw) * 2.2);
                 var res = car.interact(p, net.minecraft.world.InteractionHand.MAIN_HAND, net.minecraft.world.phys.Vec3.ZERO);
@@ -784,12 +797,14 @@ public final class EarthLifeClientGameTest implements FabricClientGameTest {
                 if (es.packMode && cs != null) {
                     // Northeast worlds build a theater when its map cell loads: load the nearest listed cinema's cell
                     var here = es.projection.fromBlock(p.getX(), p.getZ());
-                    cs.listed.stream().filter(m -> es.packWorld.packs.covered(earthlife.core.world.RegionCell.cellLat(((Number) m.get("lat")).doubleValue()), earthlife.core.world.RegionCell.cellLon(((Number) m.get("lon")).doubleValue())))
+                    cs.listed.stream().filter(m -> String.valueOf(m.get("screens")).matches("\\d+") && Integer.parseInt(String.valueOf(m.get("screens"))) >= 6)
+                            .filter(m -> es.packWorld.packs.covered(earthlife.core.world.RegionCell.cellLat(((Number) m.get("lat")).doubleValue()), earthlife.core.world.RegionCell.cellLon(((Number) m.get("lon")).doubleValue())))
                             .min(java.util.Comparator.comparingDouble(m -> new GeoPoint(((Number) m.get("lat")).doubleValue(), ((Number) m.get("lon")).doubleValue()).distanceTo(here)))
                             .ifPresent(m -> es.packWorld.cell(earthlife.core.world.RegionCell.cellLat(((Number) m.get("lat")).doubleValue()), earthlife.core.world.RegionCell.cellLon(((Number) m.get("lon")).doubleValue())));
                 }
                 if (cs == null || cs.cinemas.isEmpty()) return "no cinemas in this world|false";
-                var c = cs.nearestCinema(p.getX(), p.getZ()).get();
+                var c = cs.cinemas.stream().filter(x -> x.auds().size() >= 3).min(java.util.Comparator.comparingDouble(x -> Math.hypot(x.kiosk()[0] - p.getX(), x.kiosk()[2] - p.getZ())))
+                        .orElse(cs.nearestCinema(p.getX(), p.getZ()).get());
                 audKey[0] = c.auds().stream().filter(a -> !a.motion()).findFirst().map(a -> a.key()).orElse(null);
                 audKey[1] = c.auds().stream().filter(a -> a.motion()).findFirst().map(a -> a.key()).orElse(null);
                 var g = EarthLifeServices.get().projection.fromBlock(c.kiosk()[0], c.kiosk()[2]);
@@ -921,6 +936,68 @@ public final class EarthLifeClientGameTest implements FabricClientGameTest {
             ctx.takeScreenshot("33_cinema_4d_motion");
             check(T, "4D motion seat effects", r.endsWith("|true"), r.substring(0, r.lastIndexOf('|')));
             onServer(sp, s -> { ServerPlayer p = s.getPlayerList().getPlayers().get(0); p.stopRiding(); s.getCommands().performPrefixedCommand(p.createCommandSourceStack(), "earthlife cinema 4d auto"); return 0; });
+        });
+    }
+
+    /** V0.4.1 1:1 Northeast map: big-city detail, sea level water, other states. Downloads real packs from regions-v1. */
+    void northeast(ClientGameTestContext ctx, TestSingleplayerContext sp) {
+        String T = "Test 16 - Northeast 1:1";
+        if (!onServer(sp, s -> EarthLifeServices.get().packMode)) { record(T, "Northeast map", "BLOCKED", "this test world uses the starter data"); return; }
+        // name, lat, lon, what to check
+        Object[][] places = {
+                {"Empire State Building, Manhattan", 40.74844, -73.98566, "tall"},
+                {"Upper New York Bay (sea level)", 40.6700, -74.0450, "sea"},
+                {"Philadelphia City Hall, PA", 39.95240, -75.16360, "building"},
+                {"Burlington, VT (Church Street)", 44.47640, -73.21280, "building"},
+                {"Atlantic City boardwalk, NJ", 39.35580, -74.43740, "any"}};
+        for (Object[] pl : places) {
+            String name = (String) pl[0];
+            attempt(T, name, () -> {
+                String r = onServer(sp, s -> {
+                    var es = EarthLifeServices.get();
+                    var b = es.projection.toBlock((double) pl[1], (double) pl[2]);
+                    int x = (int) Math.floor(b.x()), z = (int) Math.floor(b.z());
+                    long t0 = System.currentTimeMillis();
+                    TileData t = es.tiles.request(TileKey.containing(es.region, x, z, 0)).join();
+                    int i = t.idx(x - t.key.minX(), z - t.key.minZ());
+                    var tier = es.packWorld.packs.tier(earthlife.core.world.RegionCell.cellLat((double) pl[1]), earthlife.core.world.RegionCell.cellLon((double) pl[2]));
+                    // nearby: tallest building column within 60 m
+                    int tallest = 0; int buildings = 0;
+                    for (int dz = -60; dz <= 60; dz += 2) for (int dx = -60; dx <= 60; dx += 2) {
+                        int xx = x + dx, zz = z + dz;
+                        TileData tt = (xx >= t.key.minX() && xx < t.key.minX() + 256 && zz >= t.key.minZ() && zz < t.key.minZ() + 256) ? t : es.tiles.request(TileKey.containing(es.region, xx, zz, 0)).join();
+                        int k = tt.idx(xx - tt.key.minX(), zz - tt.key.minZ());
+                        if ((tt.flags[k] & TileData.FLAG_BUILDING) != 0) { buildings++; tallest = Math.max(tallest, tt.structureTopY[k] - tt.terrainY[k]); }
+                    }
+                    boolean water = (t.flags[i] & TileData.FLAG_WATER) != 0;
+                    String ev = String.format("block %d, %d (%.0f km from Williamson); cell tier %s; ground Y %d (%.0f m); water %s (surface Y %d); %d building columns within 60 m, tallest %d m; tile in %d ms",
+                            x, z, Math.hypot(b.x(), b.z()) / 1000, tier.map(Enum::name).orElse("none"), t.terrainY[i], es.projection.yToElevation(t.terrainY[i]), water, t.waterY[i], buildings, tallest, System.currentTimeMillis() - t0);
+                    boolean ok = switch ((String) pl[3]) {
+                        case "tall" -> tallest >= 150;
+                        case "sea" -> water && t.waterY[i] == es.projection.elevationToY(0);
+                        case "building" -> buildings > 20;
+                        default -> true;
+                    };
+                    return ev + "|" + ok;
+                });
+                check(T, name, r.endsWith("|true"), r.substring(0, r.lastIndexOf('|')));
+            });
+        }
+        attempt(T, "Manhattan in game", () -> {
+            onServer(sp, s -> {
+                ServerPlayer p = s.getPlayerList().getPlayers().get(0);
+                p.stopRiding();
+                var b = EarthLifeServices.get().projection.toBlock(40.7527, -73.9772);      // Grand Central, looking south-west along Park Ave
+                int y = s.overworld().getChunk((int) Math.floor(b.x()) >> 4, (int) Math.floor(b.z()) >> 4).getHeight(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, (int) Math.floor(b.x()) & 15, (int) Math.floor(b.z()) & 15);
+                p.teleportTo(s.overworld(), b.x(), y + 60, b.z(), java.util.Set.of(), 200, 20, false);
+                p.getAbilities().mayfly = true; p.getAbilities().flying = true; p.onUpdateAbilities();
+                McCompat.setDayTime(s, McCompat.dayTime(s.overworld()) / 24000 * 24000 + 6000);
+                return 0;
+            });
+            ctx.getInput().lookAt(200f, 20f);
+            ctx.waitTicks(400);
+            ctx.takeScreenshot("40_manhattan");
+            record(T, "Manhattan in game", "PASSED", "screenshot 40_manhattan from 60 m above Grand Central");
         });
     }
 

@@ -98,7 +98,7 @@ public final class CinemaLayout {
             for (int i = 0; i < inRow; i++, k++) {
                 int b0 = -hw + i * span, b1 = i == inRow - 1 ? hw : b0 + span;
                 if (rows == 2 && i == inRow - 1) b1 = hw - 4;           // leave the hallway along the +v wall
-                boolean motion = fourD && motionIdx < 0 && i == 0 && row == 0;
+                boolean motion = fourD && n >= 3 && motionIdx < 0 && i == 0 && row == 0;   // 4D room only in multiplexes
                 if (motion) motionIdx = k;
                 auds.add(auditorium(bp, k, motion, a0, a1, b0, b1));
             }
