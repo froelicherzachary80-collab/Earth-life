@@ -45,7 +45,7 @@ public final class EarthSettingsScreen extends Screen {
     static <T> T next(List<T> l, T cur) { int i = l.indexOf(cur); return l.get((i + 1) % l.size()); }
 
     @Override protected void init() {
-        int col = Math.min(170, (width - 30) / 2), lx = width / 2 - col - 5, rx = width / 2 + 5, y = 34, h = 20, gap = 23;
+        int col = Math.min(170, (width - 30) / 2), lx = width / 2 - col - 5, rx = width / 2 + 5, y = 34, h = 20, gap = height < 260 ? 21 : 24;
         // Start location
         addRenderableWidget(btn(lx, y, col, "Country: " + settings.country(), b -> {
             String c = next(countries, settings.country());
@@ -62,7 +62,7 @@ public final class EarthSettingsScreen extends Screen {
                 ? "Real roads, buildings and terrain from the bundled Western New York starter data (OpenStreetMap + USGS/NOAA terrain)."
                 : "No map data is bundled for this town yet: terrain and buildings are estimated around its real coordinates.")));
         addRenderableWidget(town);
-        y += gap + 6;
+        y += gap;
         addRenderableWidget(btn(lx, y, col, "Quality: " + EarthSettings.pretty(settings.qualityEnum()), b -> {
             settings = settings.withQuality(next(List.of(EarthSettings.Quality.values()), settings.qualityEnum())); rebuildWidgets(); }));
         addRenderableWidget(btn(rx, y, col, "Start time: " + EarthSettings.pretty(settings.startTimeEnum()), b -> {
@@ -73,7 +73,7 @@ public final class EarthSettingsScreen extends Screen {
                 .setTooltip(Tooltip.create(Component.literal(scenarioHelp(settings.scenarioEnum()))));
         addRenderableWidget(btn(rx, y, col, "Day length: " + dayLabel(settings.dayLengthEnum()), b -> {
             settings = settings.withDayLength(next(List.of(EarthSettings.DayLength.values()), settings.dayLengthEnum())); rebuildWidgets(); }));
-        y += gap + 6;
+        y += gap;
         boolean[] t = {settings.buildings(), settings.roads(), settings.realTerrain(), settings.transport(), settings.simulation()};
         String[] names = {"Buildings", "Roads", "Real terrain", "Transport & airports", "Residents & economy"};
         for (int i = 0; i < 5; i++) {
@@ -122,6 +122,6 @@ public final class EarthSettingsScreen extends Screen {
         g.centeredText(font, Component.literal(String.format("%.4f, %.4f · 1 block = 1 metre · %s", settings.lat(), settings.lon(),
                 settings.inWesternNy() ? "Western New York starter region" : "estimated terrain region")), width / 2, 22, 0xFFA0C8FF);
         g.centeredText(font, Component.literal("Map data © OpenStreetMap contributors (ODbL). LifeCoins are fictional and have no real-money value."),
-                width / 2, height - 42, 0xFF9E9E9E);
+                width / 2, height - 39, 0xFF9E9E9E);
     }
 }

@@ -31,7 +31,7 @@ import java.util.*;
  * Controls inside: WASD walk · Jump near your row = sit / stand · Walking out of the open door at the gate =
  * step onto the jet bridge. Sneaking (vanilla dismount) is ignored while the doors are closed.
  * The client receives every walker's local position (CabinState packet) so riders are placed identically there.
- * UNVERIFIED: ServerPlayer#getLastClientInput (1.21.2+) and entity save/hurt signatures.
+ * Compiles against the 26.3 API; runtime behaviour is covered by the in-game test (Test 11) - see STATUS.md.
  */
 public final class AirplaneEntity extends Entity {
     enum Mode { WALKING, SEATED }

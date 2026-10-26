@@ -41,7 +41,6 @@ import java.util.concurrent.*;
  *    customary times over town centres and the lakeshore;
  *  - announcements when something starts near you; /earthlife events lists today and what's coming.
  * Times are always real (wall-clock) times, whatever the in-game clock mode.
- * UNVERIFIED: TextDisplay#setText (access-widened), Fireworks data components (1.20.5+ API).
  */
 public final class EventManager {
     private final ExecutorService net = Executors.newSingleThreadExecutor(r -> { Thread t = new Thread(r, "EarthLife-Events"); t.setDaemon(true); return t; });

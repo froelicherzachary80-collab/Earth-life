@@ -5,7 +5,7 @@ import earthlife.core.time.GameClock;
 import earthlife.core.world.Towns;
 import earthlife.mod.EarthLifeServices;
 import earthlife.mod.McCompat;
-import earthlife.mod.life.PlayerLife;
+import earthlife.core.life.PlayerLife;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
@@ -40,23 +40,14 @@ public final class Halloween {
 
     public static LocalDate today(ZoneId zone) { return LocalDate.now(zone); }
 
-    public static boolean isSeason(ZoneId zone) {
-        if (forced) return true;
-        LocalDate d = today(zone);
-        return (d.getMonth() == Month.OCTOBER && d.getDayOfMonth() >= 24) || (d.getMonth() == Month.NOVEMBER && d.getDayOfMonth() == 1);
-    }
+    public static boolean isSeason(ZoneId zone) { return forced || earthlife.core.events.HalloweenCalendar.isSeason(today(zone)); }
 
-    public static boolean isEvening(long dayTime) { int h = GameClock.hour(dayTime); return forced || (h >= 17 && h <= 22); }
+    public static boolean isEvening(long dayTime) { return forced || earthlife.core.events.HalloweenCalendar.isEveningHour(GameClock.hour(dayTime)); }
 
     /** "Halloween in 6 days", "Halloween tonight!", or empty out of season. */
     public static String countdown(ZoneId zone) {
-        LocalDate d = today(zone);
-        LocalDate h = LocalDate.of(d.getYear(), 10, 31);
-        long days = java.time.temporal.ChronoUnit.DAYS.between(d, h);
-        if (days == 0) return "🎃 Halloween today! Trick-or-treat 17:00-23:00";
-        if (days > 0 && days <= 7) return "🎃 Halloween in " + days + " day" + (days == 1 ? "" : "s") + " - trick-or-treat and contests are on";
-        if (days == -1) return "🎃 Halloween week wraps up today";
-        return forced ? "🎃 Halloween (forced on by an operator)" : "";
+        String c = earthlife.core.events.HalloweenCalendar.countdown(today(zone));
+        return c.isEmpty() && forced ? "🎃 Halloween (forced on by an operator)" : c;
     }
 
     static final Item[] COSTUMES = {Items.CARVED_PUMPKIN, Items.SKELETON_SKULL, Items.ZOMBIE_HEAD, Items.CREEPER_HEAD, Items.PIGLIN_HEAD, Blocks.JACK_O_LANTERN.asItem()};
@@ -136,7 +127,7 @@ public final class Halloween {
         List<Integer> others = new ArrayList<>();
         for (int i = 0; i < 6; i++) others.add(2 + r.nextInt(9));
         int place = 1 + (int) others.stream().filter(o -> o > mine).count();
-        long prize = switch (place) { case 1 -> 200; case 2 -> 100; case 3 -> 50; default -> 10; };
+        long prize = earthlife.core.events.HalloweenCalendar.costumePrize(place);
         life.contests.add(key); life.markDirty();
         s.ledger.credit(p.getStringUUID(), prize, "CONTEST", "contest#costume#" + key, "Halloween costume contest, " + town.name(), p.level().getGameTime());
         s.life.complete(p, "event");
@@ -159,7 +150,7 @@ public final class Halloween {
             if (st.is(Blocks.CARVED_PUMPKIN) || st.is(Blocks.JACK_O_LANTERN)) count++;
         }
         if (count == 0) return "No carved pumpkins or jack o'lanterns within 12 blocks of your home yet. Carve pumpkins with shears!";
-        long prize = Math.min(10, count) * 15L;
+        long prize = earthlife.core.events.HalloweenCalendar.carvingPrize(count);
         life.contests.add(key); life.markDirty();
         s.ledger.credit(p.getStringUUID(), prize, "CONTEST", "contest#carving#" + key, "Pumpkin-carving contest (" + count + " lanterns)", p.level().getGameTime());
         s.life.complete(p, "event");

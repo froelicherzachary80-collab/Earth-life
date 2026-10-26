@@ -1,4 +1,4 @@
-package earthlife.mod.life;
+package earthlife.core.life;
 
 import earthlife.core.util.Json;
 
@@ -7,7 +7,7 @@ import java.util.*;
 /** Everything EarthLife remembers about one player in one world (saved as earthlife/players/<uuid>.json). */
 public final class PlayerLife {
     public record Waypoint(String name, String kind, double x, double y, double z) {
-        Map<String, Object> toJson() { return new LinkedHashMap<>(Map.of("name", name, "kind", kind, "x", x, "y", y, "z", z)); }
+        public Map<String, Object> toJson() { return new LinkedHashMap<>(Map.of("name", name, "kind", kind, "x", x, "y", y, "z", z)); }
         static Waypoint of(Object o) {
             var m = Json.obj(o);
             return new Waypoint(Json.str(m, "name"), Objects.requireNonNullElse(Json.str(m, "kind"), "pin"), Json.num(m.get("x")), Json.num(m.getOrDefault("y", 64)), Json.num(m.get("z")));
@@ -26,7 +26,7 @@ public final class PlayerLife {
     public final Set<String> treated = new HashSet<>();      // "<year>:<residentId>" houses that already gave candy
     public final Set<String> contests = new HashSet<>();     // "<year>:costume", "<year>:carving"
     public int version = 4;
-    boolean dirty;
+    public boolean dirty;
 
     public PlayerLife(String uuid) { this.uuid = uuid; }
 
@@ -38,7 +38,7 @@ public final class PlayerLife {
         return waypoints.stream().filter(w -> w.name().equalsIgnoreCase(name)).findFirst();
     }
 
-    Map<String, Object> toJson() {
+    public Map<String, Object> toJson() {
         Map<String, Object> m = new LinkedHashMap<>();
         m.put("version", version); m.put("uuid", uuid); m.put("arrived", arrived); m.put("welcomed", welcomed); m.put("scenario", scenario);
         m.put("objectivesDone", new ArrayList<>(objectivesDone));
@@ -50,7 +50,7 @@ public final class PlayerLife {
         return m;
     }
 
-    static PlayerLife fromJson(String uuid, Map<String, Object> m) {
+    public static PlayerLife fromJson(String uuid, Map<String, Object> m) {
         PlayerLife p = new PlayerLife(uuid);
         p.arrived = Boolean.TRUE.equals(m.get("arrived"));
         p.welcomed = Boolean.TRUE.equals(m.get("welcomed"));

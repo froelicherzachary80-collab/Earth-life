@@ -1,6 +1,8 @@
 package earthlife.mod.life;
 
 import earthlife.core.geo.GeoPoint;
+import earthlife.core.life.Objectives;
+import earthlife.core.life.PlayerLife;
 import earthlife.core.world.TileData;
 import earthlife.core.world.TileKey;
 import earthlife.core.world.Towns;

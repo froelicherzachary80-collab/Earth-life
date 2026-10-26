@@ -5,7 +5,7 @@ import earthlife.core.npc.Social;
 import earthlife.mod.EarthLifeServices;
 import earthlife.mod.McCompat;
 import earthlife.mod.events.Halloween;
-import earthlife.mod.life.PlayerLife;
+import earthlife.core.life.PlayerLife;
 import earthlife.mod.net.Payloads;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.network.chat.Component;

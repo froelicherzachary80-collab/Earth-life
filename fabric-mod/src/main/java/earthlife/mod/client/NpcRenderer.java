@@ -19,8 +19,6 @@ import java.util.Map;
 /**
  * Draws residents with the vanilla player model (classic arms) and a skin painted on the client from the
  * resident's synced seed, so the server never sends textures and every client sees the same face.
- * UNVERIFIED: renderer generics follow the 1.21.4+ render-state API; PlayerModel's constructor/state type and
- * DynamicTexture's constructor changed in 1.21.5 - adjust at first compile.
  */
 public final class NpcRenderer extends HumanoidMobRenderer<NpcEntity, NpcRenderer.State, HumanoidModel<NpcRenderer.State>> {
     public static final class State extends HumanoidRenderState { long skin; int uniform; }

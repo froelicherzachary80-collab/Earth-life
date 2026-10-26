@@ -126,6 +126,7 @@ public final class EarthLifeClientGameTest implements FabricClientGameTest {
         save();
         long failed = report.values().stream().flatMap(m -> m.values().stream()).filter(v -> v.toString().startsWith("FAILED")).count();
         System.out.println("EARTHLIFE-TEST SUMMARY: " + failed + " failed checks");
+        if (failed > 0) throw new AssertionError(failed + " EarthLife in-game checks failed - see earthlife-test-report.json");
     }
 
     // ---------------------------------------------------------------- Test 3
@@ -142,9 +143,10 @@ public final class EarthLifeClientGameTest implements FabricClientGameTest {
             });
             check(T, "Earth listed in Create New World", found != null, "world type list entry: " + found);
             ctx.runOnClient(mc -> selectEarth(((CreateWorldScreen) mc.gui.screen()).getUiState()));
-            ctx.getInput().holdControl();
-            ctx.getInput().pressKey(InputConstants.KEY_2);
-            ctx.getInput().releaseControl();
+            // click the "World" tab (middle of the three tabs at the top of the screen)
+            double[] tab = ctx.computeOnClient(mc -> new double[]{mc.getWindow().getGuiScaledWidth() / 2.0 * mc.getWindow().getGuiScale(), 12.0 * mc.getWindow().getGuiScale()});
+            ctx.getInput().setCursorPos(tab[0], tab[1]);
+            ctx.getInput().pressMouse(InputConstants.MOUSE_BUTTON_LEFT);
             ctx.waitTicks(5);
             ctx.takeScreenshot("02_create_world_earth_selected");
             boolean hasEditor = ctx.computeOnClient(mc -> ((CreateWorldScreen) mc.gui.screen()).getUiState().getPresetEditor() != null);

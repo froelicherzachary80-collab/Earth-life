@@ -1,5 +1,6 @@
 package earthlife.mod.life;
 
+import earthlife.core.life.PlayerLife;
 import earthlife.core.util.Json;
 import earthlife.core.world.AtomicFiles;
 import earthlife.mod.EarthLifeMod;

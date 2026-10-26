@@ -104,7 +104,7 @@ public final class EarthLifeMod implements ModInitializer {
             try { s.time.set(server, s.time.clock().mode(), s.time.clock().minutesPerDay()); } catch (Exception e) { LOG.error("time", e); }
             firstStart(server, s);
             int residents = s.populations.stream().mapToInt(p -> p.all().size()).sum();
-            LOG.info("EarthLife V0.2: {} towns, {} residents, {} buildings ({} estimated), {} airports with terminals", s.towns.size(), residents,
+            LOG.info("EarthLife: {} towns, {} residents, {} buildings ({} estimated), {} airports with terminals", s.towns.size(), residents,
                     s.features.buildings.size(), s.features.buildings.stream().filter(b -> b.prov() == earthlife.core.world.Features.Provenance.ESTIMATED).count(), s.airportLayouts.size());
         });
         ServerLifecycleEvents.SERVER_STOPPING.register(server -> { if (!EarthLifeServices.running()) return; NPCS.clear(); EVENTS.shutdown(); EarthLifeServices.stop(); });

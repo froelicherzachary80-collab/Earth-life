@@ -19,7 +19,7 @@ import java.util.function.Predicate;
  * Renders a core {@link Part} model (airliner, car, bus, train...) with vanilla block-display entities, so models
  * need no client-side mod code and look the same to every player. All displays sit at the vehicle's origin; each
  * one's transformation places, rotates and scales its block. Interpolation (2 ticks) smooths motion between updates.
- * Uses the access-widened Display setters (see earthlife.accesswidener). UNVERIFIED against 26.3.
+ * Uses the access-widened Display setters (see earthlife.accesswidener). (26.3 access widener, official names).
  */
 public final class DisplayRig {
     private final List<Part> parts;

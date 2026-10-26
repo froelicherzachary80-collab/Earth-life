@@ -28,7 +28,6 @@ import java.util.*;
  * brake/reverse, A/D steer, Space handbrake, Sneak to leave. Ground vehicles follow the terrain height and stop
  * if the next position is inside a solid block (no driving through houses). Buses/trains/ferries run on autopilot
  * and passengers pay a fare when they board.
- * UNVERIFIED: getLastClientInput, save/hurt signatures (see McCompat notes).
  */
 public final class VehicleEntity extends Entity {
     private VehicleType type = VehicleType.CAR;

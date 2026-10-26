@@ -1,4 +1,4 @@
-package earthlife.mod.life;
+package earthlife.core.life;
 
 import java.util.*;
 

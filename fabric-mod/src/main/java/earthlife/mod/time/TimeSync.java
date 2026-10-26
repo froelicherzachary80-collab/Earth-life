@@ -20,7 +20,7 @@ import java.util.*;
  *
  * REALTIME: 1 Minecraft day = 1 real day, showing the real local time. Sleeping can't skip the night in this mode
  * (it would desync), so the sleep percentage gamerule is raised to 101; it is restored when leaving REALTIME.
- * UNVERIFIED: GameRules API names (26.x may rename/restructure gamerules).
+ * 26.x: time is a world clock (see McCompat.setDayTime); daylight cycle = the ADVANCE_TIME game rule.
  */
 public final class TimeSync {
     private final GameClock clock;

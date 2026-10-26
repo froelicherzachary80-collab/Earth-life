@@ -42,6 +42,13 @@ public final class McCompat {
     public static boolean isOp(net.minecraft.commands.CommandSourceStack src) {
         return src.permissions().hasPermission(net.minecraft.server.permissions.Permissions.COMMANDS_GAMEMASTER);
     }
+    /** Time controls: operators, or anyone in their own singleplayer world. (The server can be null while the command tree is being sent.) */
+    public static boolean canChangeTime(net.minecraft.commands.CommandSourceStack src) {
+        if (isOp(src)) return true;
+        var server = src.getServer();
+        return server != null && server.isSingleplayer();
+    }
+
     public static boolean isOp(ServerPlayer p) { return p.permissions().hasPermission(net.minecraft.server.permissions.Permissions.COMMANDS_GAMEMASTER); }
 
     public static Identifier id(String path) { return Identifier.fromNamespaceAndPath("earthlife", path); }

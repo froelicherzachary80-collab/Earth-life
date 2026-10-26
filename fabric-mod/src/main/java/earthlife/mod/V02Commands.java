@@ -53,11 +53,11 @@ public final class V02Commands {
         d.register(Commands.literal("earthlife")
             .then(Commands.literal("time")
                 .then(Commands.literal("show").executes(c -> run(c, (p, x) -> EarthLifeServices.get().time.describe(earthlife.mod.McCompat.dayTime(p.level())))))
-                .then(Commands.literal("realtime").requires(src -> earthlife.mod.McCompat.isOp(src) || src.getServer().isSingleplayer())
+                .then(Commands.literal("realtime").requires(earthlife.mod.McCompat::canChangeTime)
                     .executes(c -> run(c, (p, x) -> { EarthLifeServices.get().time.set(p.level().getServer(), GameClock.Mode.REALTIME, 1440); return "Clock now follows real time: 1 day = 1 day. Sleeping can't skip nights in this mode."; })))
-                .then(Commands.literal("vanilla").requires(src -> earthlife.mod.McCompat.isOp(src) || src.getServer().isSingleplayer())
+                .then(Commands.literal("vanilla").requires(earthlife.mod.McCompat::canChangeTime)
                     .executes(c -> run(c, (p, x) -> { EarthLifeServices.get().time.set(p.level().getServer(), GameClock.Mode.VANILLA, 20); return "Vanilla day/night cycle (20 minutes)."; })))
-                .then(Commands.literal("speed").requires(src -> earthlife.mod.McCompat.isOp(src) || src.getServer().isSingleplayer())
+                .then(Commands.literal("speed").requires(earthlife.mod.McCompat::canChangeTime)
                     .then(Commands.argument("minutesPerDay", DoubleArgumentType.doubleArg(1, 1440))
                         .executes(c -> run(c, (p, x) -> { double m = DoubleArgumentType.getDouble(x, "minutesPerDay");
                             EarthLifeServices.get().time.set(p.level().getServer(), GameClock.Mode.SCALED, m);

@@ -11,7 +11,7 @@ import earthlife.core.world.TileData;
 import earthlife.core.world.TileKey;
 import earthlife.core.world.Towns;
 import earthlife.mod.events.Halloween;
-import earthlife.mod.life.PlayerLife;
+import earthlife.core.life.PlayerLife;
 import earthlife.mod.net.Net;
 import earthlife.mod.net.Payloads;
 import earthlife.mod.npc.DialogueService;
@@ -157,7 +157,7 @@ public final class V04Commands {
                 .then(lit("carving").executes(c -> run(c, (p, x) -> Halloween.carvingContest(p)))))
             .then(lit("objectives").executes(c -> run(c, (p, x) -> {
                 var life = EarthLifeServices.get().life.life(p);
-                var lines = earthlife.mod.life.Objectives.lines(life);
+                var lines = earthlife.core.life.Objectives.lines(life);
                 return lines.isEmpty() ? "No guided objectives in Normal Survival." : "Objectives (" + life.scenario + "):\n" + String.join("\n", lines); })))
             .then(lit("admin").requires(McCompat::isOp)
                 .then(lit("reload").executes(c -> run(c, (p, x) -> {

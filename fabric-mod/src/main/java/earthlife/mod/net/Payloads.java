@@ -7,7 +7,7 @@ import net.minecraft.resources.Identifier;
 
 import java.util.*;
 
-/** Server -> client packets. UNVERIFIED: Identifier may be renamed (Identifier) in 26.x. */
+/** EarthLife packets (server -> client). Clients without EarthLife never receive them (see Net). */
 public final class Payloads {
     private Payloads() {}
 
