@@ -1,0 +1,36 @@
+{
+  "Test 1 - Compilation": {
+    "jar built": "PASSED - this test runs inside the compiled mod (Gradle :fabric-mod:build succeeded before the run)"
+  },
+  "Test 2 - Mod loading": {
+    "mod loaded": "PASSED - FabricLoader reports earthlife 0.5.0 loaded in Minecraft 26.3",
+    "keybinds registered": "PASSED - M/K/J/L/N key mappings exist in category earthlife"
+  },
+  "Test 17 - ZMF Cinema": {
+    "running in an ordinary world": "PASSED - generator=FlatLevelSource, Earth services=false, ZMF service=true, natural generation=true",
+    "12-screen multiplex": "PASSED - Odeon Multiplex (Urban multiplex, 1 floor) built in 3 s: 12 of 12 rooms complete, 12 unique room ids, 790/790 seat blocks in place, 12 doors open, 12 screen walls; 12 rooms: 3x2D 4x3D 5x4DX 1xIMAX 1xScreenX (2 combined); allocation valid",
+    "20-screen multiplex": "PASSED - Vista Theatres (Shopping mall, 2 floors) built in 4 s: 20 of 20 rooms complete, 20 unique room ids, 1940/1940 seat blocks in place, 20 doors open, 20 screen walls; 20 rooms: 5x2D 4x3D 6x4DX 4xIMAX 1xScreenX (0 combined); allocation valid",
+    "32-screen multiplex": "PASSED - Pinnacle Movie Palace (Brick, 2 floors) built in 4 s: 32 of 32 rooms complete, 32 unique room ids, 2938/2938 seat blocks in place, 32 doors open, 32 screen walls; 32 rooms: 5x2D 10x3D 10x4DX 6xIMAX 1xScreenX (0 combined); allocation valid",
+    "formats differ between buildings": "PASSED - Odeon Multiplex: 12 rooms: 3x2D 4x3D 5x4DX 1xIMAX 1xScreenX (2 combined), Urban multiplex; Vista Theatres: 20 rooms: 5x2D 4x3D 6x4DX 4xIMAX 1xScreenX (0 combined), Shopping mall; Pinnacle Movie Palace: 32 rooms: 5x2D 10x3D 10x4DX 6xIMAX 1xScreenX (0 combined), Brick; ",
+    "naturally generated multiplex": "PASSED - natural site m18_18 (Starlight Screens, 20 screens) at 20139 -56 20324, state BUILT; /zmfcinema locate nearest: \"🎬 Starlight Screens · 20 screens · south ↓, 38 blocks (x 20140, z 20323)\"",
+    "Cinema Locator points to it": "PASSED - locator shows Starlight Screens at 20140, 20323 (built=true, found=true), 38 blocks from the player",
+    "map marker": "PASSED - filled map with a target marker given",
+    "Jellyfin server": "BLOCKED - no Jellyfin server on the CI runner - connection, login, library metadata and streaming need a real server (see STATUS.md for how to verify at home)",
+    "library shared + films assigned": "PASSED - client: Shared 7 titles (6 from 2000 on); catalog 6 titles (2000+ only: true); 12-screen program: [Explosion Test (2020), Test Pattern Action (2018), Test Pattern Fantasy (2026), Test Pattern Comedy (2012), Test Pattern Space (2024), Test Pattern Night (2007)], 6 rooms Coming Soon",
+    "programs differ between multiplexes": "PASSED - first rooms: [Explosion Test, Test Pattern Action, Test Pattern Fantasy, Test Pattern Comedy, Test Pattern Space, Test Pattern Night] vs [Test Pattern Action, Test Pattern Night, Explosion Test, Test Pattern Fantasy, Test Pattern Comedy, Test Pattern Space]",
+    "showtimes menu": "PASSED - ZmfScreen, 24 rows, title Odeon Multiplex · 12 screens · Urban multiplex",
+    "admin panel": "PASSED - 23 admin rows",
+    "ticket bought and scanned at the door": "PASSED - without a ticket turned away: true; 🎟 Ticket for \"Door Test\" in Auditorium 1 · ScreenX (2 emeralds).; with the ticket inside: true; emeralds left 8",
+    "auto 3D from a 2D film": "PASSED - room c2-7, source 2D, format AUTO3D, anaglyph=true, auto3d=true, status Playing, 960x400, conversion 12.3 ms/frame, mean disparity 2.88 px, depth estimator: heuristic cues",
+    "4DX event detection": "PASSED - 4DX room c2-12, motion seat=true, film Playing, events detected: 1 ([Event[type=EXPLOSION, ptsMs=4044, durationMs=1800, intensity=0.7831643, confidence=0.7855705, dirX=0.0]]), max seat pitch 5.5°, atmosphere effects {EXPLOSION=18}",
+    "4DX atmospheric effect": "PASSED - virtual effect emitted for the detected event: {EXPLOSION=18}",
+    "IMAX room plays": "PASSED - IMAX room c3-11: Playing 960x400",
+    "ScreenX side walls": "PASSED - ScreenX room c3-6: Playing, side walls earthlife:cinema/c3-6_1f1b8ec7_sx_l / earthlife:cinema/c3-6_1f1b8ec7_sx_r",
+    "only the active room decodes": "PASSED - 10 showings started; client knows 23 showings; standing in the hallway: 0 films decoding; inside room c3-0: 1 decoding (c3-0)",
+    "web cinema (MCEF Modern)": "PASSED - room c1-4: Chromium ready, frames 3, url https://example.com/",
+    "TactSuit protocol (mock bHaptics Player)": "PASSED - stand-in Player on port 42579 received 3 frames; status \"TactSuit: connected to bHaptics Player\"; strongest motor 50 (safety limit 50); first: {\"Register\":[],\"Submit\":[{\"Type\":\"frame\",\"Key\":\"earthlife_front\",\"Frame\":{\"Position\":\"VestFront\",\"PathPoints\":[],\"DotPoints\":[{\"Index\":0,\"Intensity\":50},{\"Index",
+    "emergency stop silences the vest": "PASSED - frames after the stop: 0 (one zero frame allowed)",
+    "real TactSuit Air": "BLOCKED - no TactSuit or bHaptics Player on the CI runner - only the protocol was tested against a stand-in",
+    "rooms and programs kept after reload": "PASSED - c1 Odeon Multiplex: 12 rooms registered, formats 12 rooms: 3x2D 4x3D 5x4DX 1xIMAX 1xScreenX (2 combined), same film program as before the reload: true; c2 Vista Theatres: 20 rooms registered, formats 20 rooms: 5x2D 4x3D 6x4DX 4xIMAX 1xScreenX (0 combined), same film program as before the reload: true; c3 Pinnacle Movie Palace: 32 rooms registered, formats 32 rooms: 5x2D 10x3D 10x4DX 6xIMAX 1xScreenX (0 combined), same film program as before the reload: true"
+  }
+}
