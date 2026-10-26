@@ -19,6 +19,7 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Display;
 import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.projectile.FireworkRocketEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -119,7 +120,7 @@ public final class EventManager {
             double[] sb = Optional.ofNullable(lm.marker("scoreboard")).orElse(lm.marker("marquee"));
             if (sb != null) {
                 Display.TextDisplay board = boards.computeIfAbsent(e.id(), k -> {
-                    Display.TextDisplay d = net.minecraft.world.entity.EntityTypes.TEXT_DISPLAY.create(level, EntitySpawnReason.TRIGGERED);
+                    Display.TextDisplay d = EntityTypes.TEXT_DISPLAY.create(level, EntitySpawnReason.TRIGGERED);
                     d.setPos(sb[0], sb[1], sb[2]);
                     d.setYRot((float) (lm.placed().headingDeg + 90));
                     level.addFreshEntity(d);
@@ -182,7 +183,7 @@ public final class EventManager {
                 double[] door = doorstep(bd);
                 int y = level.getHeight(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, (int) Math.floor(door[0]), (int) Math.floor(door[1]));
                 var state = halloween ? Blocks.JACK_O_LANTERN.defaultBlockState() : winter ? Blocks.SEA_LANTERN.defaultBlockState() : earthlife.mod.McCompat.block("minecraft:red_wool");
-                Display.BlockDisplay d = net.minecraft.world.entity.EntityTypes.BLOCK_DISPLAY.create(level, EntitySpawnReason.TRIGGERED);
+                Display.BlockDisplay d = EntityTypes.BLOCK_DISPLAY.create(level, EntitySpawnReason.TRIGGERED);
                 if (d == null) continue;
                 d.setBlockState(state);
                 d.setTransformation(new com.mojang.math.Transformation(new org.joml.Vector3f(0, 0, 0), new org.joml.Quaternionf(),

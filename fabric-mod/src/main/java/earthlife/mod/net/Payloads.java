@@ -66,4 +66,88 @@ public final class Payloads {
                 buf -> new HudStatus(buf.readUtf(), buf.readUtf()));
         @Override public Type<? extends CustomPacketPayload> type() { return TYPE; }
     }
+
+    // ---------------------------------------------------------------- V0.4
+
+    static void writeStrings(FriendlyByteBuf buf, List<String> l) { buf.writeVarInt(l.size()); for (String x : l) buf.writeUtf(x); }
+    static List<String> readStrings(FriendlyByteBuf buf, int max) {
+        int n = Math.min(buf.readVarInt(), max); List<String> l = new ArrayList<>(n);
+        for (int i = 0; i < n; i++) l.add(buf.readUtf()); return l;
+    }
+
+    /** A named point on the map: town, airport, landmark, event, NPC or waypoint. kind is a short tag ("town", "airport"...). */
+    public record Poi(String kind, String name, double x, double z) {
+        static void write(FriendlyByteBuf b, Poi p) { b.writeUtf(p.kind); b.writeUtf(p.name); b.writeDouble(p.x); b.writeDouble(p.z); }
+        static Poi read(FriendlyByteBuf b) { return new Poi(b.readUtf(), b.readUtf(), b.readDouble(), b.readDouble()); }
+    }
+    static void writePois(FriendlyByteBuf b, List<Poi> l) { b.writeVarInt(l.size()); for (Poi p : l) Poi.write(b, p); }
+    static List<Poi> readPois(FriendlyByteBuf b, int max) {
+        int n = Math.min(b.readVarInt(), max); List<Poi> l = new ArrayList<>(n);
+        for (int i = 0; i < n; i++) l.add(Poi.read(b)); return l;
+    }
+
+    /**
+     * Sent on join (and after reloads): whether this is an Earth world and how to draw its map. The client draws roads
+     * and buildings from the same bundled map data the server uses, positioned with this origin.
+     */
+    public record WorldInfo(boolean earth, String region, double originLat, double originLon, int seaLevelYAt0m, String startTown,
+                            String scenario, boolean bundledData, String attribution, boolean showPlayersAllowed, List<Poi> pois) implements CustomPacketPayload {
+        public static final Type<WorldInfo> TYPE = new Type<>(id("world_info"));
+        public static final StreamCodec<FriendlyByteBuf, WorldInfo> CODEC = StreamCodec.of((b, p) -> {
+            b.writeBoolean(p.earth); b.writeUtf(p.region); b.writeDouble(p.originLat); b.writeDouble(p.originLon); b.writeVarInt(p.seaLevelYAt0m);
+            b.writeUtf(p.startTown); b.writeUtf(p.scenario); b.writeBoolean(p.bundledData); b.writeUtf(p.attribution); b.writeBoolean(p.showPlayersAllowed);
+            writePois(b, p.pois);
+        }, b -> new WorldInfo(b.readBoolean(), b.readUtf(), b.readDouble(), b.readDouble(), b.readVarInt(), b.readUtf(), b.readUtf(), b.readBoolean(),
+                b.readUtf(), b.readBoolean(), readPois(b, 4096)));
+        @Override public Type<? extends CustomPacketPayload> type() { return TYPE; }
+    }
+
+    /** Once a second: everything the HUD, LifeMap and EarthLife menu show about the player's own life. */
+    public record LifeState(long balance, long ticksUntilHourly, boolean hourlyReady, boolean dailyReady, String clock, String job, boolean onShift,
+                            String place, double lat, double lon, double elevationM, List<String> objectives, int objectivesDone,
+                            List<Poi> waypoints, String eventLine, int candy, boolean halloween, boolean sharingLocation) implements CustomPacketPayload {
+        public static final Type<LifeState> TYPE = new Type<>(id("life_state"));
+        public static final StreamCodec<FriendlyByteBuf, LifeState> CODEC = StreamCodec.of((b, p) -> {
+            b.writeVarLong(p.balance); b.writeVarLong(p.ticksUntilHourly); b.writeBoolean(p.hourlyReady); b.writeBoolean(p.dailyReady);
+            b.writeUtf(p.clock); b.writeUtf(p.job); b.writeBoolean(p.onShift); b.writeUtf(p.place); b.writeDouble(p.lat); b.writeDouble(p.lon); b.writeDouble(p.elevationM);
+            writeStrings(b, p.objectives); b.writeVarInt(p.objectivesDone); writePois(b, p.waypoints); b.writeUtf(p.eventLine);
+            b.writeVarInt(p.candy); b.writeBoolean(p.halloween); b.writeBoolean(p.sharingLocation);
+        }, b -> new LifeState(b.readVarLong(), b.readVarLong(), b.readBoolean(), b.readBoolean(), b.readUtf(), b.readUtf(), b.readBoolean(), b.readUtf(),
+                b.readDouble(), b.readDouble(), b.readDouble(), readStrings(b, 64), b.readVarInt(), readPois(b, 256), b.readUtf(), b.readVarInt(), b.readBoolean(), b.readBoolean()));
+        @Override public Type<? extends CustomPacketPayload> type() { return TYPE; }
+    }
+
+    /** One row of a menu list: a button runs {@code command} (an /earthlife command, so the server decides everything). */
+    public record Row(String title, String detail, String button, String command) {}
+
+    /** A list for an EarthLife menu tab (jobs, nearby, events, vehicles, flights). */
+    public record UiList(String tab, String title, List<Row> rows) implements CustomPacketPayload {
+        public static final Type<UiList> TYPE = new Type<>(id("ui_list"));
+        public static final StreamCodec<FriendlyByteBuf, UiList> CODEC = StreamCodec.of((b, p) -> {
+            b.writeUtf(p.tab); b.writeUtf(p.title); b.writeVarInt(p.rows.size());
+            for (Row r : p.rows) { b.writeUtf(r.title); b.writeUtf(r.detail); b.writeUtf(r.button); b.writeUtf(r.command); }
+        }, b -> {
+            String tab = b.readUtf(), title = b.readUtf(); int n = Math.min(b.readVarInt(), 200);
+            List<Row> rows = new ArrayList<>(n);
+            for (int i = 0; i < n; i++) rows.add(new Row(b.readUtf(), b.readUtf(), b.readUtf(), b.readUtf()));
+            return new UiList(tab, title, rows);
+        });
+        @Override public Type<? extends CustomPacketPayload> type() { return TYPE; }
+    }
+
+    /** A resident speaks; each option, when chosen, runs "/earthlife talk <entity> <index>". */
+    public record Dialogue(int entityId, String npcName, String relation, String line, List<String> options) implements CustomPacketPayload {
+        public static final Type<Dialogue> TYPE = new Type<>(id("dialogue"));
+        public static final StreamCodec<FriendlyByteBuf, Dialogue> CODEC = StreamCodec.of((b, p) -> {
+            b.writeVarInt(p.entityId); b.writeUtf(p.npcName); b.writeUtf(p.relation); b.writeUtf(p.line); writeStrings(b, p.options);
+        }, b -> new Dialogue(b.readVarInt(), b.readUtf(), b.readUtf(), b.readUtf(), readStrings(b, 8)));
+        @Override public Type<? extends CustomPacketPayload> type() { return TYPE; }
+    }
+
+    /** Positions of players who chose to share their location (and only when the server allows it). */
+    public record MapPlayers(List<Poi> players) implements CustomPacketPayload {
+        public static final Type<MapPlayers> TYPE = new Type<>(id("map_players"));
+        public static final StreamCodec<FriendlyByteBuf, MapPlayers> CODEC = StreamCodec.of((b, p) -> writePois(b, p.players), b -> new MapPlayers(readPois(b, 256)));
+        @Override public Type<? extends CustomPacketPayload> type() { return TYPE; }
+    }
 }

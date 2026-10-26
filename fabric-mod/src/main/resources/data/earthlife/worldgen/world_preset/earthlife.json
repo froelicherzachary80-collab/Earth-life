@@ -6,7 +6,7 @@
         "type": "earthlife:voxel_earth",
         "biome_source": {
           "type": "minecraft:fixed",
-          "biome": "minecraft:forest"
+          "biome": "minecraft:plains"
         }
       }
     },
