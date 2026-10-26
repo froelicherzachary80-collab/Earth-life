@@ -1,106 +1,111 @@
-# EARTHLIFE — Reality Simulator (V0.3 "Real World")
+# EarthLife 0.4 — "First Playable Life"
 
-A launcher + Fabric mod that turns your own copy of Minecraft: Java Edition into a life simulator on a
-1 block = 1 metre voxel Earth, starting in Williamson, NY, with LifeCoins and working airliners.
-No Minecraft files are included; the launcher downloads them from Mojang after verifying you own the game.
+A Fabric mod for **Minecraft Java Edition 26.3** that adds a new world type, **Earth — 1:1 Real World**: a
+block-for-metre copy of the real place, starting in **Williamson, New York**, built from real map and terrain data,
+with a life to live in it — residents to talk to, jobs with shifts and wages, LifeCoins, vehicles, airports and
+flights, real-time events (Halloween week is on now), and a full-screen interactive map on **M**.
 
-**Read STATUS.md first** — it says exactly what is tested, what is written but uncompiled, and what is missing.
+It is an ordinary mod: you keep your normal Minecraft and launcher, normal Survival, and your other worlds are not
+touched. **Read [STATUS.md](STATUS.md)** for exactly what is tested, how, and what isn't finished.
 
-## Layout
+## Install
 
-```
-core/         Engine-independent Java 21 (no deps): geo projection, tiles, streaming, ledger, rewards, flight sim, booking
-launcher/     EarthLife launcher (Java 21, no deps): MS sign-in, install/repair, Java runtimes, launch, mods, saves, Swing UI
-fabric-mod/   Minecraft side: VoxelEarth chunk generator, airliner entity, flights, commands, seatback + wallet screens
-tools/        Data pipeline (Python): OSM → features, OurAirports → airports, USGS DEM → elevation grid
-data/         airports.json (approximate fallback for KSDC/KROC until you import OurAirports)
-```
+1. Minecraft Java Edition 26.3 (the official launcher).
+2. Fabric Loader for 26.3: run the installer from https://fabricmc.net/use/installer/ and pick 26.3.
+3. Put two files in your `.minecraft/mods` folder:
+   - `earthlife-0.4.0.jar` (from this repo's GitHub Actions → *Fabric mod build* → artifact **earthlife-mod**, or build it yourself, below)
+   - Fabric API for 26.3 (0.165.0+26.3 or newer) from https://modrinth.com/mod/fabric-api
+4. Start the "fabric-loader-26.3" profile in the Minecraft Launcher.
 
-## 1. Build & test core + launcher (any OS, JDK 21+)
+The mod includes the Western New York starter map data (about 12 MB), so it works offline. For multiplayer, install
+the same jar on the server; players without the mod can still join, they just don't get the map, menu and HUD.
 
-```bash
-./build.sh            # compiles, runs all tests, writes dist/earthlife-launcher.jar
-```
+## Make an Earth world
 
-## 1b. Windows: build EarthLife.exe
+Singleplayer → Create New World → **World** tab → *World Type*: **Earth — 1:1 Real World** → **Customize**:
 
-**On your PC** (Windows 10/11, JDK 21 from https://adoptium.net): double-click `packaging\windows\build-exe.bat`.
-You get `dist\windows\EarthLife\EarthLife.exe` (portable, Java bundled) and a zip of it. If WiX Toolset 3.14 is installed
-(`winget install WiXToolset.WiXToolset`), you also get `EarthLife-0.3.0.exe`, an installer with Start-menu and desktop shortcuts.
-
-**Or on GitHub**: push the repo; the *Windows EXE* workflow (`.github/workflows/windows-exe.yml`) builds both on a Windows
-runner and attaches them as the `EarthLife-windows` artifact (and to a release when you push a `v*` tag).
-
-Put `earthlife-mod.jar` in the repo root before building and it's bundled next to the launcher.
-
-## 2. Generate real Western NY data (on your PC — needs internet)
-
-```bash
-# Roads, buildings, landuse, water, railways, airports, town/village names for Rochester → Wolcott → Canandaigua.
-# If Overpass times out, split the bbox into 2-4 pieces (e.g. --bbox 42.85,-77.75,43.30,-77.27 and ...,-77.27,...,-76.80).
-python3 tools/fetch_osm.py -o raw/western-ny.osm.json
-python3 tools/osm_to_earthlife.py raw/western-ny*.osm.json --origin 43.2237,-77.1861 \
-        -o regions/western-ny/features.json --towns-out regions/western-ny/towns.json --landmarks-out regions/western-ny/osm-landmarks.json
-# Snap the hand-entered landmarks to their real OSM positions/sizes (marks them verified)
-python3 tools/match_landmarks.py data/landmarks.json raw/western-ny*.osm.json --origin 43.2237,-77.1861 -o data/landmarks.json
-# Elevation (optional but recommended): USGS 3DEP 1/3" tiles n44w078 + n44w077 (+ n43w078/n43w077 for the south),
-# merged into one GeoTIFF (e.g. gdal_merge.py). 10 m cells keep the grid ~250 MB for the whole region.
-pip install rasterio numpy
-python3 tools/dem_to_grid.py western-ny.tif --origin 43.2237,-77.1861 --extent 45000 --cell 10 -o regions/western-ny/dem.eldg
-# Real runway coordinates
-curl -LO https://davidmegginson.github.io/ourairports-data/airports.csv
-curl -LO https://davidmegginson.github.io/ourairports-data/runways.csv
-python3 tools/import_ourairports.py airports.csv runways.csv --bbox 42.85,-78.25,43.30,-76.80 -o data/airports.json
-```
-
-Copy `regions/western-ny/features.json` (and `dem.eldg`) to `<EarthLife>/instances/earthlife/config/earthlife/regions/western-ny/`,
-and `towns.json`, `data/airports.json` and `landmarks.json` (merge in `osm-landmarks.json` entries you want) to `.../config/earthlife/`. Every airport in that file with a runway of 900 m or more gets a generated terminal.
-(`<EarthLife>` is `%APPDATA%\EarthLife` on Windows.)
-
-
-## 3. Build the Fabric mod (needs Gradle + internet)
-
-1. Look up the Loom, Fabric Loader and Fabric API versions for 26.3 at https://fabricmc.net/develop and put them in `fabric-mod/gradle.properties`.
-2. `gradle :fabric-mod:build` → `fabric-mod/build/libs/earthlife-mod-0.3.0.jar`
-3. Fix any API mismatches (start with `McCompat.java`, `earthlife.accesswidener`, `AirplaneEntity`'s save/hurt methods).
-4. Copy the jar next to the launcher as `earthlife-mod.jar`.
-
-## 4. Sign-in (no setup needed)
-
-EarthLife uses the **official Minecraft Launcher** for sign-in. Press **Sign in & Play** or **PLAY** in EarthLife. It adds an
-"EarthLife" installation (Fabric + the EarthLife mod, its own game folder) to the official launcher and opens it.
-Sign in there with your Microsoft account if asked, choose **EarthLife** next to the Play button, and press Play.
-Your existing installations are kept; a backup of `launcher_profiles.json` is saved alongside it.
-Requires the Minecraft Launcher (minecraft.net/download or the Xbox app). (Advanced: `login-direct` still supports your own Azure app id.)
-
-## 5. Play
-
-`EarthLife.exe` → **Day length** (optional) → **PLAY** → the Minecraft Launcher opens → select **EarthLife** → Play.
-First time: Create New World → World Type **EarthLife (Voxel Earth)**, name it `EarthLife Williamson`.
-
-| Do | How |
+| Setting | Choices |
 |---|---|
-| Wallet, tickets, job & time buttons | `[L]` |
-| Seatback map on a flight | `[M]` |
-| Change day length | `/earthlife time realtime` · `/earthlife time speed 120` (1 day = 2 h) · `/earthlife time vanilla` |
-| Fly | `/earthlife flights` → `/earthlife book EL101-0 3C` → walk down the jet bridge at gate A1 when boarding opens |
-| In the cabin | WASD walk · Jump at your row to sit/stand · walk out the door at the gate |
-| Work | `/earthlife job list` → `/earthlife job apply janitor Williamson` (or `checkin_agent KROC`) → `/earthlife job clockin` during your shift |
-| Licences | `/earthlife license driver` (driving test) · `/earthlife license pilot` (after 3 flights, 1,500 LC) |
-| Vehicles | `/earthlife vehicle shop` → `buy car red` → `summon car` → right-click; W/S/A/D, Space = handbrake, Sneak = exit |
-| Bus | Bus 1 Williamson ↔ Sodus ↔ Ontario ↔ Webster ↔ Rochester, 5 LC; right-click to board |
-| Talk | Right-click any resident; friendships build over days |
-| Sell crops | hold them and `/earthlife sell` |
-| Towns / landmarks | `/earthlife towns` · `/earthlife landmarks` |
-| Real events | `/earthlife events` (today + 7 days, real local times) · `/earthlife events buy 3` · `/earthlife events status` |
+| Starting place | Country / state / town. The Western NY towns (Williamson, Pultneyville, Sodus, Marion, Ontario, Webster, …) have real roads, buildings and terrain. Other towns are listed with *(estimated terrain)*. |
+| Quality | Low (no trees, no window rows) · Medium · High · Ultra (Medium, High and Ultra generate the same detail in 0.4) |
+| Buildings / Roads / Real terrain | on/off. Real terrain off = flat land at the town's height. |
+| Transport & airports / Residents & economy | on/off |
+| Start time | Real time · morning · noon · evening · night |
+| Scenario | **New Life** (moved to town with 250 LC, guided objectives) · **Career Starter** (a store job on day one) · **Traveler** (start at the airport, 1,500 LC) · **Normal Survival** |
+| Day length | 20 min (vanilla) · 1 hour · 2 hours · real time (24 h) |
 
-**Live events setup** (launcher "Live events" button, or CLI):
-`EarthLife.exe events ticketmaster <your free key>` (developer.ticketmaster.com) · `events ics https://…/calendar.ics` ·
-`events teams "Rochester Red Wings,Syracuse Mets"` · `events mlb off`. Holidays and Red Wings games work with no setup.
+Settings are stored in that world's `level.dat` (inside the overworld generator), so every world keeps its own.
+You spawn on solid open ground in the centre of your start town, never in water or on a roof.
 
-## Data licences
+## Keys (Options → Controls → Key Binds → *EarthLife*, all rebindable)
 
-Map data © OpenStreetMap contributors (ODbL 1.0) — attribution is carried in each region file and shown in-game
-(`/earthlife whereami`, F3). OurAirports and USGS 3DEP are public domain. LifeCoins are fictional and have no cash value.
-Event data: MLB Stats API (© MLB Advanced Media, personal non-commercial use), Ticketmaster Discovery API (their terms
-and attribution apply, your own key), and any iCal feeds you add. In-game concert music uses vanilla Minecraft discs; no real recordings are played.
+| Key | Opens |
+|---|---|
+| **M** | LifeMap: you (arrow), XYZ, latitude/longitude, elevation, towns, streets, buildings, water, airports, landmarks, residents, events, your waypoints/home/work, players who share their location. Scroll = zoom (9 levels, 4 px/m down to 64 m/px), drag = pan, click = select, double-click = road route, search box for towns/streets/places, Layers panel. In flight, M opens the seatback map instead. |
+| **K** | EarthLife menu: Life (objectives, home, waypoints, privacy), Jobs, Wallet, Nearby, Events, Travel, Vehicles, Help |
+| **J** | Jobs tab · **L** Wallet tab · **N** Nearby tab |
+
+Right-click a resident to talk; the conversation offers choices (chat, ask about their job, ask where to find work,
+directions to the town centre, give a gift, and "Trick or treat!" during Halloween week).
+
+## Commands
+
+`/earthlife help` lists them. Everyone: `map` (with `route home|work|town <name>|airport <ICAO>|geo <lat> <lon>|clear`,
+`share on|off`), `location`, `coordinates`, `towns`, `town <name>`, `landmarks`, `wallet`, `claim hourly|daily|weekly`,
+`jobs`, `job list|apply <job> <employer>|clockin|clockout|tasks|quit`, `vehicles`, `vehicle shop|buy|summon`,
+`flights`, `book <flight> auto`, `events`, `event costume|carving`, `time`, `objectives`, `waypoint add|set|remove|list`,
+`home set`, `work set`, `data status`, `world info`, `version`.
+Operators only: `admin reload`, `admin region status`, `admin debug`, `admin teleport town <name>|<lat> <lon>`,
+`admin halloween on|off`, `admin pay <amount>`. Routes are directions only — EarthLife never teleports players for navigation.
+
+## Playing a life
+
+- **Work**: apply in Jobs (J). Janitor (18–23 h), store clerk (8–16 h), construction, delivery and bus driver (need a
+  driving test), airport check-in and gate agents, pilot (flight school), farmer (sell crops). Go to work during your
+  shift, clock in, do the tasks you're given (clean, restock barrels, check in travelers, deliver…), clock out: pay =
+  hours + tasks, recorded in your ledger.
+- **LifeCoins** (LC) come from work, objectives, hourly/daily/weekly play rewards and contests, and are spent on
+  vehicles, flights and event tickets. They are a fictional in-game currency: not Minecoins, not real money, can't be
+  bought or cashed out.
+- **Halloween week (Oct 24 – Nov 1, real calendar)**: residents wear costumes; trick-or-treat them in the evening
+  (game time 17:00–23:00) for candy; costume contest at any town centre (wear a carved pumpkin, mob head or dyed
+  leather); pumpkin-carving contest judged around your home.
+- **Travel**: buy a car in Vehicles and summon it; Bus 1 runs Williamson ↔ Rochester; flights from Williamson–Sodus
+  (KSDC) and Rochester (KROC): book in Travel, walk down the jet bridge when boarding opens.
+
+## Map and terrain data
+
+Shipped in the jar (`data/earthlife/regions/western-ny/`, built by `.github/workflows/starter-data.yml`):
+
+- Roads, buildings, land use, water, railways and aeroways from **OpenStreetMap** for the box 43.12–43.33 N,
+  76.94–77.47 W (Williamson, Pultneyville, Sodus, Sodus Point, Marion, Ontario, Walworth, east Webster): about 26,000
+  buildings and 11,500 roads. © OpenStreetMap contributors, ODbL 1.0 (https://www.openstreetmap.org/copyright).
+- Elevation from **AWS Terrain Tiles** (Mapzen; sources include USGS 3DEP and SRTM) at 20 m for that box and 60 m for
+  the whole Western NY region (Rochester to Wolcott, the lake to Canandaigua/Geneva). Lake Ontario's flat surface is
+  turned into a lake bed by the pipeline.
+- Outside the starter box the world is still at real scale with real terrain from the region grid, but buildings are
+  estimated (marked *estimated* in `/earthlife location` and F3).
+
+Scale: 1 block = 1 m horizontally and vertically. Y 63 (vanilla sea level) = 74 m above sea level, the surface of
+Lake Ontario. The Earth overworld is 1,024 blocks tall (Y −64 to 959); the Nether and End are vanilla.
+
+To build data for another area, see `tools/` (`fetch_osm.py`, `osm_to_earthlife.py`, `terrain_tiles.py`) and put the
+result in `config/earthlife/regions/<region>/`.
+
+## Build from source
+
+Needs JDK 25 and Gradle 9.8+ with internet access (Fabric and Mojang Maven):
+
+```
+gradle :fabric-mod:build              # -> fabric-mod/build/libs/earthlife-0.4.0.jar
+gradle :core:runTests                 # engine tests (also: ./build.sh with only a JDK)
+gradle :fabric-mod:runClientGameTest  # in-game tests in a real client (see STATUS.md)
+```
+
+GitHub Actions does all three on every push (`.github/workflows/mod-build.yml`); the jar is the **earthlife-mod**
+artifact, the in-game test report and screenshots are pushed to the `ci-tests` branch.
+
+## Licence
+
+Code: MIT. Map data: ODbL (OpenStreetMap). EarthLife is not affiliated with Mojang or Microsoft and does not
+include or distribute Minecraft.

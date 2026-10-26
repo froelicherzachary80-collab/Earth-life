@@ -51,6 +51,11 @@ with open(os.path.join(out, "api.txt"), "w") as f:
     for c in classes:
         r = subprocess.run(["javap", "-public", "-cp", cp, c.replace("$", "$")], capture_output=True, text=True)
         f.write(f"==== {c}\n{r.stdout or r.stderr}\n")
+# Bytecode of a few classes whose behaviour (not just signature) matters for EarthLife.
+with open(os.path.join(out, "bytecode.txt"), "w") as f:
+    for c in ["net.minecraft.client.KeyMapping", "net.minecraft.world.level.Level", "net.minecraft.client.gui.screens.worldselection.CreateWorldScreen"]:
+        r = subprocess.run(["javap", "-c", "-p", "-cp", cp, c], capture_output=True, text=True)
+        f.write(f"==== {c}\n{r.stdout or r.stderr}\n")
 # Fabric API classes referenced by EarthLife
 fab = ["net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper", "net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback",
        "net.fabricmc.fabric.api.client.rendering.v1.hud.HudElementRegistry", "net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry",

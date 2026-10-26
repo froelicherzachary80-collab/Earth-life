@@ -200,6 +200,8 @@ public final class EarthLifeClientGameTest implements FabricClientGameTest {
             });
             check(T4, "Earth generator + services active", info.startsWith("VoxelEarthChunkGenerator services=true"), info);
             check(T4, "tall world (1024 blocks)", info.contains("height=1024"), info);
+            onServer(sp, s -> { McCompat.setDayTime(s, 6000); return 0; });   // noon, so screenshots show something
+            ctx.waitTicks(40);
             ctx.runOnClient(mc -> mc.debugEntries.setOverlayVisible(false));
             ctx.takeScreenshot("04_spawn_williamson");
             attempt(T4, "safe spawn in Williamson", () -> {
@@ -421,14 +423,16 @@ public final class EarthLifeClientGameTest implements FabricClientGameTest {
                 ServerPlayer p = s.getPlayerList().getPlayers().get(0);
                 p.getInventory().setSelectedSlot(0);
                 p.getInventory().setItem(0, new ItemStack(Items.OAK_PLANKS, 8));
+                p.inventoryMenu.broadcastChanges();
                 BlockPos g = p.blockPosition().relative(p.getDirection(), 2).below();
                 p.level().setBlockAndUpdate(g, Blocks.STONE.defaultBlockState());
                 p.level().setBlockAndUpdate(g.above(), Blocks.AIR.defaultBlockState());
                 return g;
             });
-            ctx.waitTicks(5);
+            ctx.waitTicks(20);
+            ctx.getInput().pressKey(InputConstants.KEY_1);
             ctx.getInput().lookAt(ground);
-            ctx.waitTicks(2);
+            ctx.waitTicks(5);
             ctx.getInput().pressMouse(InputConstants.MOUSE_BUTTON_RIGHT);
             ctx.waitTicks(10);
             String r = onServer(sp, s -> {
@@ -527,23 +531,27 @@ public final class EarthLifeClientGameTest implements FabricClientGameTest {
                 return hist.size() + " ledger entries (" + hist.stream().map(e -> e.type()).distinct().toList() + "), balances chain correctly=" + chain + "|" + (hist.size() >= 2 && chain);
             });
             check(T, "wallet transactions", r.endsWith("|true"), r.substring(0, r.lastIndexOf('|')));
-            ctx.getInput().pressKey(EarthLifeClient.WALLET);
-            ctx.waitForScreen(EarthMenuScreen.class);
-            ctx.waitTicks(20);
-            ctx.takeScreenshot("12_wallet_tab");
+        });
+        String[][] keys = {{"L", "wallet", "12_wallet_tab"}, {"J", "jobs", "13_jobs_tab"}, {"N", "nearby", "14_nearby_tab"}, {"K", "life", "14b_menu_life_tab"}};
+        for (String[] k : keys) attempt(T, k[0] + " key opens " + k[1], () -> {
+            var mapping = switch (k[0]) { case "L" -> EarthLifeClient.WALLET; case "J" -> EarthLifeClient.JOBS; case "N" -> EarthLifeClient.NEARBY; default -> EarthLifeClient.MENU; };
+            ctx.getInput().pressKey(mapping);
+            ctx.waitTicks(10);
+            String screen = ctx.computeOnClient(mc -> mc.gui.screen() == null ? "none" : mc.gui.screen().getClass().getSimpleName());
+            boolean ok = screen.equals("EarthMenuScreen");
+            if (!ok) ctx.runOnClient(mc -> mc.gui.setScreen(new EarthMenuScreen(k[1])));
+            ctx.waitTicks(30);
+            ctx.takeScreenshot(k[2]);
+            check(T, k[0] + " key opens " + k[1], ok, "pressed the " + k[0] + " mapping -> screen " + screen + (ok ? "" : " (tab opened directly for the screenshot)"));
             ctx.runOnClient(mc -> mc.gui.setScreen(null));
-            ctx.getInput().pressKey(EarthLifeClient.JOBS);
-            ctx.waitForScreen(EarthMenuScreen.class);
-            ctx.waitTicks(20);
-            ctx.takeScreenshot("13_jobs_tab");
-            ctx.runOnClient(mc -> mc.gui.setScreen(null));
-            ctx.getInput().pressKey(EarthLifeClient.NEARBY);
-            ctx.waitForScreen(EarthMenuScreen.class);
-            ctx.waitTicks(20);
-            ctx.takeScreenshot("14_nearby_tab");
+            ctx.waitTicks(5);
+        });
+        attempt(T, "events tab", () -> {
             ctx.runOnClient(mc -> mc.gui.setScreen(new EarthMenuScreen("events")));
             ctx.waitTicks(20);
             ctx.takeScreenshot("15_events_tab_halloween");
+            var ev = ClientState.lists.get("events");
+            check(T, "events tab", ev != null && !ev.rows().isEmpty(), ev == null ? "no events list received" : ev.rows().size() + " rows, first: " + ev.rows().get(0).title());
             ctx.runOnClient(mc -> mc.gui.setScreen(null));
         });
         attempt(T, "vehicle ownership", () -> {
@@ -596,6 +604,12 @@ public final class EarthLifeClientGameTest implements FabricClientGameTest {
             check(T, "airport generated", r.endsWith("|true"), r.substring(0, r.lastIndexOf('|')));
         });
         attempt(T, "boarding", () -> {
+            // go to the KSDC terminal first: aircraft only exist in loaded chunks, like everything else
+            onServer(sp, s -> { ServerPlayer p = s.getPlayerList().getPlayers().get(0);
+                double[] m = EarthLifeServices.get().airportLayouts.get("KSDC").placed.marker("bridge_end:A1");
+                s.overworld().getChunk((int) Math.floor(m[0]) >> 4, (int) Math.floor(m[2]) >> 4);
+                p.teleportTo(s.overworld(), m[0], m[1], m[2], Set.<Relative>of(), p.getYRot(), 0, true); return 0; });
+            ctx.waitTicks(100);
             String r = onServer(sp, s -> {
                 ServerPlayer p = s.getPlayerList().getPlayers().get(0);
                 var es = EarthLifeServices.get();

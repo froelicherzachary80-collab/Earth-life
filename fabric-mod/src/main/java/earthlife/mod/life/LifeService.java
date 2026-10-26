@@ -80,6 +80,7 @@ public final class LifeService {
                 if (r != 0 && k > 0 && Math.abs(i) == r && (k == 1 || k == 3)) continue;
                 int x = cx + (k == 0 ? i : k == 1 ? r : k == 2 ? -i : -r), z = cz + (k == 0 ? -r : k == 1 ? i : k == 2 ? r : -i);
                 if (!openColumn(x, z)) continue;
+                level.getChunk(x >> 4, z >> 4);          // generate/load it: getHeight() on an unloaded chunk returns the world bottom
                 int y = level.getHeight(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, x, z);
                 BlockPos below = new BlockPos(x, y - 1, z);
                 var st = level.getBlockState(below);
@@ -89,11 +90,10 @@ public final class LifeService {
             }
             if (r == 0) continue;
         }
+        level.getChunk(cx >> 4, cz >> 4);
         int y = level.getHeight(Heightmap.Types.MOTION_BLOCKING, cx, cz);
-        return new BlockPos(cx, Math.max(y, McCompatSea()), cz);
+        return new BlockPos(cx, Math.max(y, level.getMinY() + 2), cz);
     }
-
-    private static int McCompatSea() { return 64; }
 
     private boolean openColumn(int x, int z) {
         try {
