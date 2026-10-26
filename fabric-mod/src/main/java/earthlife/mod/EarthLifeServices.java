@@ -151,7 +151,11 @@ public final class EarthLifeServices implements AutoCloseable {
             for (var ring : placed.sites()) generator.addSite(new TileGenerator.Site(lm.id(), ring, placed.baseY(), TileData.Surface.CONCRETE));
         }
 
-        String dataHash = hash(Json.write(Map.of("lm", landmarks.keySet().toString(), "f", features.roads.size() + "/" + features.buildings.size() + "/" + features.areas.size(),
+        // V0.4.1 movie theaters at real OpenStreetMap cinema locations (sites + blueprints, before any tile exists)
+        earthlife.mod.cinema.CinemaService.start(this, generator, structures);
+        int cinemaCount = earthlife.mod.cinema.CinemaService.get().cinemas.size();
+
+        String dataHash = hash(Json.write(Map.of("cin", String.valueOf(cinemaCount), "lm", landmarks.keySet().toString(), "f", features.roads.size() + "/" + features.buildings.size() + "/" + features.areas.size(),
                 "a", airportLayouts.keySet().toString(), "dem", String.valueOf(elevation.getClass().getSimpleName()), "s", settings.toString(), "meta", String.valueOf(bundled("regions/western-ny/meta.json")), "v", "0.4/gen" + TileGenerator.VERSION)));
         tiles = new TileStreamer(generator, worldDir.resolve("tilecache").resolve(dataHash), new ModificationStore(worldDir.resolve("edits")),
                 Math.max(2, Runtime.getRuntime().availableProcessors() / 2), 4096, null);
@@ -227,6 +231,9 @@ public final class EarthLifeServices implements AutoCloseable {
     }
 
     public final ElevationSource elevationSource;
+
+    /** How far from the origin this world's map data reaches (features beyond are ignored). */
+    public double worldRadiusM() { return bundledData ? 70_000 : 30_000; }
 
     /** Day-length choice from the Customize screen; applied the first time the world opens (then /earthlife time). */
     private static Map<String, Object> timeDefaults(earthlife.mod.world.EarthSettings s) {

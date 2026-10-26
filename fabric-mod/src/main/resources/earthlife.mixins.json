@@ -4,7 +4,8 @@
   "package": "earthlife.mod.mixin",
   "compatibilityLevel": "JAVA_21",
   "client": [
-    "WorldCreationUiStateMixin"
+    "WorldCreationUiStateMixin",
+    "CameraMixin"
   ],
   "injectors": {
     "defaultRequire": 1

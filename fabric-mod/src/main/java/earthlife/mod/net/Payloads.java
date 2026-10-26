@@ -158,4 +158,16 @@ public final class Payloads {
         public static final StreamCodec<FriendlyByteBuf, OpenScreen> CODEC = StreamCodec.of((b, p) -> b.writeUtf(p.screen), b -> new OpenScreen(b.readUtf()));
         @Override public Type<? extends CustomPacketPayload> type() { return TYPE; }
     }
+    /**
+     * A showing in an auditorium (empty title = nothing playing). positionMs is the film position when the server sent
+     * this, so every client starts at the same moment without synchronised clocks. source: "jellyfin:<server>:<item>",
+     * "ia:<identifier>", "url:<link>" or "file:<path on the starter's computer>". format: 2D, SBS, HSBS, TAB, HTAB.
+     */
+    public record CinemaShow(String key, String title, String source, String format, long positionMs, boolean paused, boolean motion, String owner) implements CustomPacketPayload {
+        public static final Type<CinemaShow> TYPE = new Type<>(id("cinema_show"));
+        public static final StreamCodec<FriendlyByteBuf, CinemaShow> CODEC = StreamCodec.of((b, p) -> {
+            b.writeUtf(p.key); b.writeUtf(p.title); b.writeUtf(p.source, 4096); b.writeUtf(p.format); b.writeVarLong(p.positionMs); b.writeBoolean(p.paused); b.writeBoolean(p.motion); b.writeUtf(p.owner);
+        }, b -> new CinemaShow(b.readUtf(), b.readUtf(), b.readUtf(4096), b.readUtf(), b.readVarLong(), b.readBoolean(), b.readBoolean(), b.readUtf()));
+        @Override public Type<? extends CustomPacketPayload> type() { return TYPE; }
+    }
 }

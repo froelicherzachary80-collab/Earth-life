@@ -18,8 +18,8 @@ import java.util.*;
  * /earthlife command so the server validates everything (money, distance, permissions).
  */
 public final class EarthMenuScreen extends Screen {
-    public static final String[] TABS = {"life", "jobs", "wallet", "shop", "nearby", "events", "travel", "vehicles", "settings", "help"};
-    static final String[] LABELS = {"Profile", "Jobs", "Wallet", "Shop", "Nearby", "Events", "Travel", "Vehicles", "Settings", "Help"};
+    public static final String[] TABS = {"life", "jobs", "wallet", "shop", "cinema", "nearby", "events", "travel", "vehicles", "settings", "help"};
+    static final String[] LABELS = {"Profile", "Jobs", "Wallet", "Shop", "Cinema", "Nearby", "Events", "Travel", "Vehicles", "Settings", "Help"};
     public static volatile int listVersion;
 
     private String tab;
@@ -55,6 +55,8 @@ public final class EarthMenuScreen extends Screen {
             }
             y += rowH;
         }
+        if (tab.equals("cinema")) addRenderableWidget(Button.builder(Component.literal("Films & 4D settings"), b -> minecraft.gui.setScreen(new earthlife.mod.client.cinema.CinemaSettingsScreen(this)))
+                .bounds(width / 2 - 260, height - 26, 100, 20).build());
         addRenderableWidget(Button.builder(Component.literal("LifeMap [M]"), b -> minecraft.gui.setScreen(new LifeMapScreen())).bounds(width / 2 - 155, height - 26, 100, 20).build());
         addRenderableWidget(Button.builder(Component.literal("Refresh"), b -> request()).bounds(width / 2 - 50, height - 26, 100, 20).build());
         addRenderableWidget(Button.builder(Component.translatable("gui.done"), b -> onClose()).bounds(width / 2 + 55, height - 26, 100, 20).build());

@@ -269,9 +269,23 @@ public final class VoxelEarthChunkGenerator extends ChunkGenerator {
             if (b[2] < cx || b[0] > cx + 15 || b[3] < cz || b[1] > cz + 15) continue;
             placed.forEachIn(cx, cz, cx + 15, cz + 15, blk -> {
                 if (blk.y() <= minY || blk.y() > maxY) return;
-                McCompat.set(chunk, pos.set(blk.x(), blk.y(), blk.z()), McCompat.block(blk.id()));
+                McCompat.set(chunk, pos.set(blk.x(), blk.y(), blk.z()), oriented(placed, blk.id()));
             });
         }
+    }
+
+    /** Blueprint ids may carry a facing in the blueprint's own frame: "earthlife:recliner@u-" faces local -u. */
+    static BlockState oriented(earthlife.core.build.Blueprint.Placed placed, String id) {
+        int at = id.indexOf('@');
+        if (at < 0) return McCompat.block(id);
+        BlockState st = McCompat.block(id.substring(0, at));
+        String d = id.substring(at + 1);
+        double dx = d.startsWith("u") ? placed.ux : placed.vx, dz = d.startsWith("u") ? placed.uz : placed.vz;
+        if (d.endsWith("-")) { dx = -dx; dz = -dz; }
+        var dir = Math.abs(dx) > Math.abs(dz) ? (dx > 0 ? net.minecraft.core.Direction.EAST : net.minecraft.core.Direction.WEST)
+                : (dz > 0 ? net.minecraft.core.Direction.SOUTH : net.minecraft.core.Direction.NORTH);
+        var facing = net.minecraft.world.level.block.HorizontalDirectionalBlock.FACING;
+        return st.hasProperty(facing) ? st.setValue(facing, dir) : st;
     }
 
     static BlockState surfaceBlock(Surface s) {

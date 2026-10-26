@@ -84,6 +84,8 @@ public final class EarthLifeMod implements ModInitializer {
         PayloadTypeRegistry.clientboundPlay().register(Payloads.Dialogue.TYPE, Payloads.Dialogue.CODEC);
         PayloadTypeRegistry.clientboundPlay().register(Payloads.MapPlayers.TYPE, Payloads.MapPlayers.CODEC);
         PayloadTypeRegistry.clientboundPlay().register(Payloads.OpenScreen.TYPE, Payloads.OpenScreen.CODEC);
+        PayloadTypeRegistry.clientboundPlay().register(Payloads.CinemaShow.TYPE, Payloads.CinemaShow.CODEC);
+        earthlife.mod.cinema.CinemaContent.init();
         net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry.register(NPC, earthlife.mod.npc.NpcEntity.attributes());
 
         ServerLifecycleEvents.SERVER_STARTING.register(server -> earthSettings(server).ifPresent(st -> {
@@ -109,7 +111,9 @@ public final class EarthLifeMod implements ModInitializer {
             LOG.info("EarthLife: {} towns, {} residents, {} buildings ({} estimated), {} airports with terminals", s.towns.size(), residents,
                     s.features.buildings.size(), s.features.buildings.stream().filter(b -> b.prov() == earthlife.core.world.Features.Provenance.ESTIMATED).count(), s.airportLayouts.size());
         });
-        ServerLifecycleEvents.SERVER_STOPPING.register(server -> { if (!EarthLifeServices.running()) return; NPCS.clear(); EVENTS.shutdown(); HAUNTED.clear(); EarthLifeServices.stop(); });
+        ServerLifecycleEvents.SERVER_STOPPING.register(server -> { if (!EarthLifeServices.running()) return; NPCS.clear(); EVENTS.shutdown(); HAUNTED.clear();
+            if (earthlife.mod.cinema.CinemaService.get() != null) earthlife.mod.cinema.CinemaService.get().clear();
+            EarthLifeServices.stop(); });
         net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents.DISCONNECT.register((h, server) -> {
             if (EarthLifeServices.running()) { earthlife.mod.npc.DialogueService.forget(h.getPlayer()); EarthLifeServices.get().life.store.saveDirty(); }
         });
@@ -118,7 +122,10 @@ public final class EarthLifeMod implements ModInitializer {
         ServerPlayConnectionEvents.JOIN.register((h, sender, server) -> {
             ServerPlayer p = h.getPlayer();
             if (!EarthLifeServices.running()) return;
-            server.execute(() -> EarthLifeServices.get().life.onJoin(p));
+            server.execute(() -> {
+                EarthLifeServices.get().life.onJoin(p);
+                if (earthlife.mod.cinema.CinemaService.get() != null) earthlife.mod.cinema.CinemaService.get().sendAll(p);
+            });
         });
         PlayerBlockBreakEvents.AFTER.register((world, player, pos, state, be) -> {
             if (!EarthLifeServices.running()) return;
@@ -139,6 +146,7 @@ public final class EarthLifeMod implements ModInitializer {
         CommandRegistrationCallback.EVENT.register((dispatcher, registry, env) -> V02Commands.register(dispatcher));
         CommandRegistrationCallback.EVENT.register((dispatcher, registry, env) -> V03Commands.register(dispatcher));
         CommandRegistrationCallback.EVENT.register((dispatcher, registry, env) -> V04Commands.register(dispatcher));
+        CommandRegistrationCallback.EVENT.register((dispatcher, registry, env) -> earthlife.mod.cinema.CinemaCommands.register(dispatcher));
         CommandRegistrationCallback.EVENT.register((dispatcher, registry, env) -> dispatcher.register(Commands.literal("earthlife")
                 .then(Commands.literal("wallet").executes(EarthLifeMod::wallet))
                 .then(Commands.literal("claim").then(Commands.argument("kind", StringArgumentType.word()).executes(EarthLifeMod::claim)))
@@ -173,6 +181,7 @@ public final class EarthLifeMod implements ModInitializer {
         TRANSIT.tick(server);
         EVENTS.tick(server);
         HAUNTED.tick(server);
+        if (earthlife.mod.cinema.CinemaService.get() != null) earthlife.mod.cinema.CinemaService.get().tick(server);
         earthlife.mod.jobs.JobHooks.tick(server);
         if (now % 20 == 0) {
             java.time.ZoneId zone = s.time.clock().zone();

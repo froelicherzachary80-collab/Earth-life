@@ -52,6 +52,13 @@ public final class EarthLifeClient implements ClientModInitializer {
         ClientPlayNetworking.registerGlobalReceiver(Payloads.HudStatus.TYPE, (p, ctx) -> hud = p);
         ClientPlayNetworking.registerGlobalReceiver(Payloads.FlightTelemetry.TYPE, (p, ctx) -> { telemetry = p; telemetryAtMs = System.currentTimeMillis(); });
         ClientPlayNetworking.registerGlobalReceiver(Payloads.WalletStatus.TYPE, (p, ctx) -> wallet = p);
+        ClientPlayNetworking.registerGlobalReceiver(Payloads.CinemaShow.TYPE, (p, ctx) -> earthlife.mod.client.cinema.CinemaClient.receive(p));
+        earthlife.mod.client.cinema.CinemaConfig.load();
+        EntityRendererRegistry.register(earthlife.mod.cinema.CinemaContent.SEAT, NoopRenderer::new);
+        EntityRendererRegistry.register(earthlife.mod.cinema.CinemaContent.SCREEN, earthlife.mod.client.cinema.CinemaScreenRenderer::new);
+        ClientTickEvents.END_CLIENT_TICK.register(earthlife.mod.client.cinema.CinemaClient::tick);
+        ClientTickEvents.END_CLIENT_TICK.register(earthlife.mod.client.cinema.FourD::tick);
+        HudElementRegistry.addLast(EarthLifeMod.id("cinema_4d"), (g, delta) -> earthlife.mod.client.cinema.FourD.drawHud(g, Minecraft.getInstance()));
         ClientPlayNetworking.registerGlobalReceiver(Payloads.WorldInfo.TYPE, (p, ctx) -> {
             ClientState.world = p;
             ClientMapData.load(p);
@@ -62,7 +69,7 @@ public final class EarthLifeClient implements ClientModInitializer {
         ClientPlayNetworking.registerGlobalReceiver(Payloads.MapPlayers.TYPE, (p, ctx) -> ClientState.sharedPlayers = p.players());
         ClientPlayNetworking.registerGlobalReceiver(Payloads.Dialogue.TYPE, (p, ctx) -> ctx.client().gui.setScreen(new DialogueScreen(p)));
         ClientPlayNetworking.registerGlobalReceiver(Payloads.OpenScreen.TYPE, (p, ctx) -> open(ctx.client(), p.screen()));
-        ClientPlayConnectionEvents.DISCONNECT.register((h, mc) -> { ClientState.reset(); ClientMapData.unload(); welcomeUntilMs = 0; });
+        ClientPlayConnectionEvents.DISCONNECT.register((h, mc) -> { ClientState.reset(); ClientMapData.unload(); welcomeUntilMs = 0; earthlife.mod.client.cinema.CinemaClient.reset(); earthlife.mod.client.cinema.Haptics.close(); });
 
         KeyMapping.Category cat = KeyMapping.Category.register(EarthLifeMod.id("earthlife"));
         MAP = KeyMappingHelper.registerKeyMapping(new KeyMapping("key.earthlife.map", InputConstants.KEY_M, cat));
@@ -117,6 +124,10 @@ public final class EarthLifeClient implements ClientModInitializer {
             catch (NumberFormatException ignored) {}
         } else if (screen.startsWith("menu:")) mc.gui.setScreen(new EarthMenuScreen(screen.substring(5)));
         else if (screen.equals("seatback")) mc.gui.setScreen(new SeatbackScreen());
+        else if (screen.startsWith("cinema:pick:")) {
+            String[] a = screen.split(":", 5);              // cinema:pick:<aud>:<4d|std>:<label>
+            if (a.length >= 4) mc.gui.setScreen(new earthlife.mod.client.cinema.MoviePickerScreen(a[2], a[3].equals("4d"), a.length > 4 ? a[4] : "Cinema"));
+        }
     }
 
     static void drawHud(GuiGraphicsExtractor g) {

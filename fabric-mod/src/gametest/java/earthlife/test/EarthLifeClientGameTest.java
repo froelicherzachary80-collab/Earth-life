@@ -231,6 +231,7 @@ public final class EarthLifeClientGameTest implements FabricClientGameTest {
             survival(ctx, sp);
             life(ctx, sp);
             haunted(ctx, sp);
+            cinema(ctx, sp);
             aviation(ctx, sp);
             // something to verify after reload
             onServer(sp, s -> { ServerPlayer p = s.getPlayerList().getPlayers().get(0);
@@ -743,6 +744,145 @@ public final class EarthLifeClientGameTest implements FabricClientGameTest {
                         + " hidden pumpkins, found " + EarthLifeMod.HAUNTED.progress(p) + ", candy now " + EarthLifeServices.get().life.life(p).candy + "|" + (found == 3);
             });
             check(T, "Halloween haunted house", r.endsWith("|true"), r.substring(0, r.lastIndexOf('|')));
+        });
+    }
+
+    /** V0.4.1 movie theaters at real OSM cinema locations: building, seats, concessions, screen, playback, 3D, 4D. */
+    void cinema(ClientGameTestContext ctx, TestSingleplayerContext sp) {
+        String T = "Test 15 - Cinema";
+        String[] audKey = {null, null};
+        attempt(T, "real cinemas placed", () -> {
+            String r = onServer(sp, s -> {
+                var cs = earthlife.mod.cinema.CinemaService.get();
+                ServerPlayer p = s.getPlayerList().getPlayers().get(0);
+                if (cs == null || cs.cinemas.isEmpty()) return "no cinemas in this world|false";
+                var c = cs.nearestCinema(p.getX(), p.getZ()).get();
+                audKey[0] = c.auds().stream().filter(a -> !a.motion()).findFirst().map(a -> a.key()).orElse(null);
+                audKey[1] = c.auds().stream().filter(a -> a.motion()).findFirst().map(a -> a.key()).orElse(null);
+                var g = EarthLifeServices.get().projection.fromBlock(c.kiosk()[0], c.kiosk()[2]);
+                return String.format("%d theaters from OpenStreetMap in this world; nearest: %s (%d auditoriums, one 4D) - its kiosk maps back to %.5f, %.5f vs OSM %.5f, %.5f",
+                        cs.cinemas.size(), c.name(), c.auds().size(), g.lat(), g.lon(), c.lat(), c.lon()) + "|" + (c.auds().size() >= 1 && audKey[0] != null);
+            });
+            check(T, "real cinemas placed", r.endsWith("|true"), r.substring(0, r.lastIndexOf('|')));
+        });
+        if (audKey[0] == null) return;
+        attempt(T, "theater interior generated", () -> {
+            String r = onServer(sp, s -> {
+                var cs = earthlife.mod.cinema.CinemaService.get();
+                ServerPlayer p = s.getPlayerList().getPlayers().get(0);
+                var a = cs.auds.get(audKey[0]);
+                var lvl = s.overworld();
+                var c = a.cinema();
+                p.teleportTo(c.kiosk()[0], c.kiosk()[1] + 0.1, c.kiosk()[2]);
+                int recliners = 0, other = 0;
+                for (var seat : a.seats()) { lvl.getChunk(seat); if (lvl.getBlockState(seat).getBlock() == earthlife.mod.cinema.CinemaContent.RECLINER) recliners++; else other++; }
+                int machines = 0;
+                BlockPos k = BlockPos.containing(c.concessions()[0], c.concessions()[1], c.concessions()[2]);
+                for (BlockPos q : BlockPos.betweenClosed(k.offset(-12, -1, -12), k.offset(12, 2, 12))) {
+                    var b = lvl.getBlockState(q).getBlock();
+                    if (b == earthlife.mod.cinema.CinemaContent.POPCORN_MACHINE || b == earthlife.mod.cinema.CinemaContent.SODA_FOUNTAIN || b == earthlife.mod.cinema.CinemaContent.TICKET_KIOSK) machines++;
+                }
+                return String.format("%s: %d of %d seats are recliners, %d popcorn machines / soda fountains / kiosks in the lobby", a.name(), recliners, recliners + other, machines)
+                        + "|" + (recliners > 5 && machines >= 3);
+            });
+            check(T, "theater interior generated", r.endsWith("|true"), r.substring(0, r.lastIndexOf('|')));
+            ctx.waitTicks(60);
+            ctx.takeScreenshot("30_cinema_lobby");
+        });
+        attempt(T, "concessions: buy and eat popcorn", () -> {
+            String r = onServer(sp, s -> {
+                ServerPlayer p = s.getPlayerList().getPlayers().get(0);
+                var src = p.createCommandSourceStack();
+                s.getCommands().performPrefixedCommand(src, "earthlife admin pay 500");
+                long before = EarthLifeServices.get().ledger.balance(p.getStringUUID());
+                s.getCommands().performPrefixedCommand(src, "earthlife cinema buy popcorn");
+                s.getCommands().performPrefixedCommand(src, "earthlife cinema buy cola");
+                s.getCommands().performPrefixedCommand(src, "earthlife cinema buy gummy_bears");
+                long after = EarthLifeServices.get().ledger.balance(p.getStringUUID());
+                int pop = 0, cola = 0, gum = 0;
+                for (int i = 0; i < p.getInventory().getContainerSize(); i++) {
+                    var st = p.getInventory().getItem(i);
+                    if (st.is(earthlife.mod.cinema.CinemaContent.POPCORN)) pop += st.getCount();
+                    if (st.is(earthlife.mod.cinema.CinemaContent.COLA)) cola += st.getCount();
+                    if (st.is(earthlife.mod.cinema.CinemaContent.GUMMY_BEARS)) gum += st.getCount();
+                }
+                boolean food = new net.minecraft.world.item.ItemStack(earthlife.mod.cinema.CinemaContent.POPCORN).has(net.minecraft.core.component.DataComponents.FOOD)
+                        && new net.minecraft.world.item.ItemStack(earthlife.mod.cinema.CinemaContent.COLA).has(net.minecraft.core.component.DataComponents.CONSUMABLE);
+                p.getFoodData().setFoodLevel(10);
+                return String.format("paid %d LC; popcorn %d, cola %d, gummy bears %d; popcorn/cola are food/drink: %s", before - after, pop, cola, gum, food) + "|" + (pop > 0 && cola > 0 && gum > 0 && food && after < before);
+            });
+            check(T, "concessions: buy and eat popcorn", r.endsWith("|true"), r.substring(0, r.lastIndexOf('|')));
+            // eat the popcorn (hold use)
+            ctx.runOnClient(mc -> { var inv = mc.player.getInventory(); for (int i = 0; i < 9; i++) if (inv.getItem(i).is(earthlife.mod.cinema.CinemaContent.POPCORN)) inv.setSelectedSlot(i); });
+            ctx.waitTicks(5);
+            ctx.getInput().holdMouseFor(InputConstants.MOUSE_BUTTON_RIGHT, 50);
+            ctx.waitTicks(10);
+            int food = onServer(sp, s -> s.getPlayerList().getPlayers().get(0).getFoodData().getFoodLevel());
+            check(T, "eating popcorn fills hunger", food > 10, "hunger 10 -> " + food + " after eating popcorn");
+        });
+        java.nio.file.Path film = java.nio.file.Path.of("test-films/test-pattern.mp4").toAbsolutePath(), film3d = java.nio.file.Path.of("test-films/test-pattern-3d-sbs.mp4").toAbsolutePath();
+        attempt(T, "film plays on the screen", () -> {
+            if (!java.nio.file.Files.exists(film)) { record(T, "film plays on the screen", "BLOCKED", "no test film at " + film + " (FFmpeg missing on this machine)"); return; }
+            onServer(sp, s -> {
+                ServerPlayer p = s.getPlayerList().getPlayers().get(0);
+                var src = p.createCommandSourceStack();
+                s.getCommands().performPrefixedCommand(src, "earthlife cinema start " + audKey[0] + " 2D \"file:" + film.toString().replace("\\", "\\\\") + "\" Test Pattern");
+                s.getCommands().performPrefixedCommand(src, "earthlife cinema sit " + audKey[0]);
+                return 0;
+            });
+            ctx.waitTicks(200);
+            String r = ctx.computeOnClient(mc -> {
+                var pl = earthlife.mod.client.cinema.CinemaClient.player(audKey[0]);
+                var sh = earthlife.mod.client.cinema.CinemaClient.show(audKey[0]);
+                return "show=" + sh.map(x -> x.title()).orElse("none") + ", seated=" + (mc.player.getVehicle() != null)
+                        + (pl == null ? ", no player" : String.format(", status=%s, %dx%d, clock %.1f s, picture=%s, sound=%s%s", pl.status, pl.width(), pl.height(), pl.clockMs() / 1000.0,
+                        pl.texture(), pl.hasAudio ? "yes" : "no", pl.error == null ? "" : ", error=" + pl.error))
+                        + "|" + (pl != null && pl.texture() != null && pl.clockMs() > 2000);
+            });
+            ctx.takeScreenshot("31_cinema_screen_2d");
+            check(T, "film plays on the screen", r.endsWith("|true"), r.substring(0, r.lastIndexOf('|')));
+        });
+        attempt(T, "3D with red/cyan glasses", () -> {
+            if (!java.nio.file.Files.exists(film3d)) { record(T, "3D with red/cyan glasses", "BLOCKED", "no 3D test film"); return; }
+            onServer(sp, s -> {
+                ServerPlayer p = s.getPlayerList().getPlayers().get(0);
+                p.setItemSlot(net.minecraft.world.entity.EquipmentSlot.HEAD, new net.minecraft.world.item.ItemStack(earthlife.mod.cinema.CinemaContent.GLASSES_3D));
+                var src = p.createCommandSourceStack();
+                s.getCommands().performPrefixedCommand(src, "earthlife cinema start " + audKey[0] + " SBS \"file:" + film3d.toString().replace("\\", "\\\\") + "\" Test Pattern 3D");
+                return 0;
+            });
+            ctx.waitTicks(200);
+            String r = ctx.computeOnClient(mc -> {
+                var pl = earthlife.mod.client.cinema.CinemaClient.player(audKey[0]);
+                return (pl == null ? "no player" : String.format("format=%s anaglyph=%s status=%s picture=%s glasses=%s", pl.format, pl.anaglyph, pl.status, pl.texture(),
+                        earthlife.mod.client.cinema.CinemaClient.wearingGlasses())) + "|" + (pl != null && pl.anaglyph && pl.texture() != null);
+            });
+            ctx.takeScreenshot("32_cinema_screen_3d_anaglyph");
+            check(T, "3D with red/cyan glasses", r.endsWith("|true"), r.substring(0, r.lastIndexOf('|')));
+        });
+        attempt(T, "4D motion seat effects", () -> {
+            if (audKey[1] == null) { record(T, "4D motion seat effects", "FAILED", "no 4D auditorium in the nearest theater"); return; }
+            String closed = onServer(sp, s -> {
+                ServerPlayer p = s.getPlayerList().getPlayers().get(0);
+                var src = p.createCommandSourceStack();
+                p.stopRiding();
+                p.setItemSlot(net.minecraft.world.entity.EquipmentSlot.HEAD, net.minecraft.world.item.ItemStack.EMPTY);
+                boolean open = earthlife.mod.cinema.CinemaService.fourDOpen(EarthLifeServices.get().time.clock().zone());
+                s.getCommands().performPrefixedCommand(src, "earthlife cinema 4d on");
+                s.getCommands().performPrefixedCommand(src, "earthlife cinema start " + audKey[1] + " 2D \"file:" + film.toString().replace("\\", "\\\\") + "\" Test Pattern 4D");
+                s.getCommands().performPrefixedCommand(src, "earthlife cinema sit " + audKey[1]);
+                return "4D season open today (Oct 29 - Nov 3): " + open + "; forced on for the test";
+            });
+            ctx.waitTicks(220);
+            String r = ctx.computeOnClient(mc -> {
+                var pl = earthlife.mod.client.cinema.CinemaClient.player(audKey[1]);
+                boolean motionSeat = mc.player.getVehicle() instanceof earthlife.mod.cinema.SeatEntity se && se.motion();
+                return String.format("%s; motion seat=%s, 4D active=%s, effects: %s, picture=%s, TactSuit: %s", closed, motionSeat, earthlife.mod.client.cinema.FourD.yawOffset() != 0 || earthlife.mod.client.cinema.FourD.pitchOffset() != 0 || !earthlife.mod.client.cinema.FourD.last.isEmpty(),
+                        earthlife.mod.client.cinema.FourD.last, pl == null ? null : pl.texture(), earthlife.mod.client.cinema.Haptics.status) + "|" + (motionSeat && pl != null && pl.texture() != null && !earthlife.mod.client.cinema.FourD.last.isEmpty());
+            });
+            ctx.takeScreenshot("33_cinema_4d_motion");
+            check(T, "4D motion seat effects", r.endsWith("|true"), r.substring(0, r.lastIndexOf('|')));
+            onServer(sp, s -> { ServerPlayer p = s.getPlayerList().getPlayers().get(0); p.stopRiding(); s.getCommands().performPrefixedCommand(p.createCommandSourceStack(), "earthlife cinema 4d auto"); return 0; });
         });
     }
 

@@ -26,7 +26,7 @@ import java.util.*;
 public final class UiLists {
     private UiLists() {}
 
-    public static final List<String> TABS = List.of("life", "jobs", "wallet", "shop", "nearby", "events", "travel", "vehicles");
+    public static final List<String> TABS = List.of("life", "jobs", "wallet", "shop", "cinema", "nearby", "events", "travel", "vehicles");
 
     public static void send(ServerPlayer p, String tab) {
         List<Row> rows = new ArrayList<>();
@@ -38,6 +38,7 @@ public final class UiLists {
             case "travel" -> travel(p, rows);
             case "vehicles" -> vehicles(p, rows);
             case "shop" -> shop(p, rows);
+            case "cinema" -> earthlife.mod.cinema.CinemaService.get() == null ? "Cinema" : earthlife.mod.cinema.CinemaService.get().rows(p, rows);
             default -> life(p, rows);
         };
         Net.send(p, new Payloads.UiList(tab, title, rows));

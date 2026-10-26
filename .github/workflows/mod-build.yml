@@ -122,8 +122,13 @@ jobs:
       - name: Graphics stack (Mesa software rendering + virtual display)
         run: |
           sudo apt-get update -q
-          sudo apt-get install -y -q mesa-vulkan-drivers libgl1-mesa-dri libegl1 xvfb
-          mkdir -p fabric-mod/build/run/clientGameTest
+          sudo apt-get install -y -q mesa-vulkan-drivers libgl1-mesa-dri libegl1 xvfb ffmpeg
+          mkdir -p fabric-mod/build/run/clientGameTest/test-films
+          # synthetic test films for the cinema checks (FFmpeg's built-in test pattern + tone; no real films)
+          F=fabric-mod/build/run/clientGameTest/test-films
+          ffmpeg -hide_banner -loglevel error -f lavfi -i "testsrc2=size=960x400:rate=24" -f lavfi -i "sine=frequency=440:sample_rate=48000" -t 60 -c:v libx264 -pix_fmt yuv420p -c:a aac -shortest "$F/test-pattern.mp4"
+          ffmpeg -hide_banner -loglevel error -f lavfi -i "testsrc2=size=480x400:rate=24" -f lavfi -i "sine=frequency=220:sample_rate=48000" -filter_complex "[0:v]split[l][r];[r]hue=h=180[r2];[l][r2]hstack[v]" -map "[v]" -map 1:a -t 60 -c:v libx264 -pix_fmt yuv420p -c:a aac -shortest "$F/test-pattern-3d-sbs.mp4"
+          ls -la "$F"
           echo "eula=true" > fabric-mod/build/run/clientGameTest/eula.txt
           printf 'version:4896\npreferredGraphicsBackend:"vulkan"\nonboardAccessibility:false\n' > fabric-mod/build/run/clientGameTest/options.txt
       - name: Run in-game tests
