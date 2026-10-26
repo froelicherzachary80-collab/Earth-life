@@ -1,0 +1,94 @@
+To honour the JVM settings for this build a single-use Daemon process will be forked. For more on this, please refer to https://docs.gradle.org/9.8.2/userguide/gradle_daemon.html#sec:disabling_the_daemon in the Gradle documentation.
+Daemon will be stopped at the end of the build 
+
+> Configure project :fabric-mod
+Fabric Loom: 1.19.3
+
+> Task :core:compileJava
+> Task :core:processResources NO-SOURCE
+> Task :core:classes
+> Task :core:compileTestJava
+> Task :core:processTestResources
+> Task :core:testClasses
+
+> Task :core:runTests
+  PASS GeoTest.testElevationMapping
+  PASS GeoTest.testLongitudeWrapAndAntimeridianInterpolation
+  PASS GeoTest.testOneBlockIsOneMetre
+  PASS GeoTest.testOriginMapsToZero
+  PASS GeoTest.testPolarCapsAreSingleRegions
+  PASS GeoTest.testRoundTripWithin2cmAt30km
+  PASS WorldTest.testDeterministic
+  PASS WorldTest.testLandcoverAndWaterTilesAcrossBoundaries
+  PASS WorldTest.testLodSamplesAreCoarser
+  PASS WorldTest.testPlayerEditsPersistAndCorruptionIsQuarantined
+[EarthLife] quarantined corrupt edit file /tmp/earthlife-test5557079997898659383/r/m_0_-1.eld: checksum mismatch
+  PASS WorldTest.testRoadsBuildingsWaterRasterize
+  PASS WorldTest.testStreamingLoadsNearUnloadsFarAndUsesDiskCache
+  PASS WorldTest.testTileSerializationDetectsCorruption
+  PASS EconomyTest.testDailyRewardResistsClockRollback
+  PASS EconomyTest.testHourlyRewardRequiresActivePlay
+  PASS EconomyTest.testLedgerCreditDebitAndPersistence
+  PASS EconomyTest.testLedgerTamperDetected
+  PASS EconomyTest.testWeeklyMilestone
+  PASS AviationTest.testBookingPricingSeatsAndWallet
+    SDC->ROC: 50.3 km path, cruise 1471 m MSL, 12.9 min real time at 1x
+  PASS AviationTest.testFullFlightSdcToRocIsContinuousAndLands
+  PASS AviationTest.testLongRouteFollowsGreatCircle
+  PASS AviationTest.testTimeCompressionShortensFlightNotPath
+    KSDC: SMALL airport, 29816 blocks, 1 gates
+    KROC: MEDIUM airport, 61950 blocks, 4 gates
+  PASS V02WorldTest.testAirportBuildingsAreWalkableAndClearOfRunways
+    KSDC->KROC: 51 km, 13.8 min at 1x
+    KROC->KSDC: 51 km, 13.4 min at 1x
+    KROC->KIUA: 40 km, 12.2 min at 1x
+    KIUA->KROC: 42 km, 13.0 min at 1x
+    KROC->KGVQ: 46 km, 13.2 min at 1x
+    KGVQ->KROC: 46 km, 13.7 min at 1x
+  PASS V02WorldTest.testAllTimetableRoutesFly
+    cabin: 17.0 m long, 173 model parts
+  PASS V02WorldTest.testCabinModelHasFloorWindowsAndDoor
+  PASS V02WorldTest.testCabinWalkingAndCollision
+  PASS V02WorldTest.testFlightUsesTaxiwaysAndParksAtStand
+  PASS V02WorldTest.testInfillAddsEstimatedHousesOnlyInGaps
+  PASS V02WorldTest.testRealtimeFollowsWallClockAndNeverRunsBackwards
+  PASS V02WorldTest.testScaledSpeeds
+  PASS V02WorldTest.testTicksOfDayMapping
+  PASS V02WorldTest.testTownsCatalog
+  PASS V02LifeTest.testCropSalesAndTasks
+  PASS V02LifeTest.testJobShiftTasksAndWages
+  PASS V02LifeTest.testManualDrivingPhysics
+  PASS V02LifeTest.testPilotChecklistWindows
+  PASS V02LifeTest.testPopulationSchedulesAndSpawning
+  PASS V02LifeTest.testRelationshipsAndDialogue
+  PASS V02LifeTest.testRoutingAndAutopilotDrive
+  PASS V02LifeTest.testSkinsArePlayerFormatAndUnique
+  PASS V02LifeTest.testTrainTimetable
+  PASS V02LifeTest.testVehicleModelsAndSeats
+  PASS V03Test.testEnginePlacesDedupsCachesAndSurvivesOffline
+  PASS V03Test.testFeedParsers
+  PASS V03Test.testHolidaysAreExact
+  PASS V03Test.testLandmarksBuildForEveryType
+  PASS V03Test.testTaggedBuildingsUseRealHeightRoofAndColour
+  PASS V03Test.testUntaggedDefaultsAreRegional
+  PASS V04Test.testBundledStarterDataset
+  PASS V04Test.testBundledTerrain
+  PASS V04Test.testGridReadsFromGzipStream
+  PASS V04Test.testHalloweenCalendar
+  PASS V04Test.testHouseInteriorMarkersAndRoadPriority
+  PASS V04Test.testObjectivesPerScenario
+  PASS V04Test.testOldOrPartialRecordsLoad
+  PASS V04Test.testPlayerLifeRoundTrip
+  PASS V04Test.testStarterTileGeneratesRealRoads
+  PASS V04Test.testVerticalDatum
+  PASS V041Test.testAzimuthalScaleAcrossTheNortheast
+  PASS V041Test.testDeepBuildingTwoRows
+  PASS V041Test.testMultiplexLayout
+  PASS V041Test.testRegionPackCell
+  PASS V041Test.testSmallCinema
+63 passed, 0 failed
+gradle/actions: Writing build results to /home/runner/work/_temp/.gradle-actions/build-results/__run-1793010420960.json
+
+BUILD SUCCESSFUL in 19s
+4 actionable tasks: 4 executed
+Consider enabling configuration cache to speed up this build: https://docs.gradle.org/9.8.2/userguide/configuration_cache_enabling.html

@@ -1,0 +1,81 @@
+==== net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper
+Error: class not found: net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper
+
+==== net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback
+Error: class not found: net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback
+
+==== net.fabricmc.fabric.api.client.rendering.v1.hud.HudElementRegistry
+Compiled from "HudElementRegistry.java"
+public interface net.fabricmc.fabric.api.client.rendering.v1.hud.HudElementRegistry {
+  public static void addFirst(net.minecraft.resources.Identifier, net.fabricmc.fabric.api.client.rendering.v1.hud.HudElement);
+  public static void addLast(net.minecraft.resources.Identifier, net.fabricmc.fabric.api.client.rendering.v1.hud.HudElement);
+  public static void attachElementBefore(net.minecraft.resources.Identifier, net.minecraft.resources.Identifier, net.fabricmc.fabric.api.client.rendering.v1.hud.HudElement);
+  public static void attachElementAfter(net.minecraft.resources.Identifier, net.minecraft.resources.Identifier, net.fabricmc.fabric.api.client.rendering.v1.hud.HudElement);
+  public static void removeElement(net.minecraft.resources.Identifier);
+  public static void replaceElement(net.minecraft.resources.Identifier, java.util.function.Function<net.fabricmc.fabric.api.client.rendering.v1.hud.HudElement, net.fabricmc.fabric.api.client.rendering.v1.hud.HudElement>);
+}
+
+==== net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry
+Compiled from "EntityRendererRegistry.java"
+public final class net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry {
+  public static <E extends net.minecraft.world.entity.Entity> void register(net.minecraft.world.entity.EntityType<? extends E>, net.minecraft.client.renderer.entity.EntityRendererProvider<E>);
+}
+
+==== net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry
+Compiled from "PayloadTypeRegistry.java"
+public interface net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry<B extends net.minecraft.network.FriendlyByteBuf> {
+  public abstract <T extends net.minecraft.network.protocol.common.custom.CustomPacketPayload> net.minecraft.network.protocol.common.custom.CustomPacketPayload$TypeAndCodec<? super B, T> register(net.minecraft.network.protocol.common.custom.CustomPacketPayload$Type<T>, net.minecraft.network.codec.StreamCodec<? super B, T>);
+  public abstract <T extends net.minecraft.network.protocol.common.custom.CustomPacketPayload> net.minecraft.network.protocol.common.custom.CustomPacketPayload$TypeAndCodec<? super B, T> register(net.minecraft.network.protocol.common.custom.CustomPacketPayload$Type<T>, net.minecraft.network.codec.StreamCodec<? super B, T>, java.util.function.Predicate<net.fabricmc.fabric.api.networking.v1.context.PacketContext>);
+  public abstract <T extends net.minecraft.network.protocol.common.custom.CustomPacketPayload> net.minecraft.network.protocol.common.custom.CustomPacketPayload$TypeAndCodec<? super B, T> registerLarge(net.minecraft.network.protocol.common.custom.CustomPacketPayload$Type<T>, net.minecraft.network.codec.StreamCodec<? super B, T>, int);
+  public abstract <T extends net.minecraft.network.protocol.common.custom.CustomPacketPayload> net.minecraft.network.protocol.common.custom.CustomPacketPayload$TypeAndCodec<? super B, T> registerLarge(net.minecraft.network.protocol.common.custom.CustomPacketPayload$Type<T>, net.minecraft.network.codec.StreamCodec<? super B, T>, int, java.util.function.Predicate<net.fabricmc.fabric.api.networking.v1.context.PacketContext>);
+  public abstract <T extends net.minecraft.network.protocol.common.custom.CustomPacketPayload> net.minecraft.network.protocol.common.custom.CustomPacketPayload$TypeAndCodec<? super B, T> registerLarge(net.minecraft.network.protocol.common.custom.CustomPacketPayload$Type<T>, net.minecraft.network.codec.StreamCodec<? super B, T>, java.util.function.IntSupplier);
+  public abstract <T extends net.minecraft.network.protocol.common.custom.CustomPacketPayload> net.minecraft.network.protocol.common.custom.CustomPacketPayload$TypeAndCodec<? super B, T> registerLarge(net.minecraft.network.protocol.common.custom.CustomPacketPayload$Type<T>, net.minecraft.network.codec.StreamCodec<? super B, T>, java.util.function.IntSupplier, java.util.function.Predicate<net.fabricmc.fabric.api.networking.v1.context.PacketContext>);
+  public static net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry<net.minecraft.network.FriendlyByteBuf> serverboundConfiguration();
+  public static net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry<net.minecraft.network.FriendlyByteBuf> clientboundConfiguration();
+  public static net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry<net.minecraft.network.RegistryFriendlyByteBuf> serverboundPlay();
+  public static net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry<net.minecraft.network.RegistryFriendlyByteBuf> clientboundPlay();
+}
+
+==== net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry
+Compiled from "FabricDefaultAttributeRegistry.java"
+public final class net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry {
+  public static final net.fabricmc.fabric.api.event.Event<net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry$ModifyDefaultAttribute> MODIFY;
+  public static void register(net.minecraft.world.entity.EntityType<? extends net.minecraft.world.entity.LivingEntity>, net.minecraft.world.entity.ai.attributes.AttributeSupplier$Builder);
+  public static void register(net.minecraft.world.entity.EntityType<? extends net.minecraft.world.entity.LivingEntity>, net.minecraft.world.entity.ai.attributes.AttributeSupplier);
+}
+
+==== net.fabricmc.fabric.api.event.player.UseBlockCallback
+Compiled from "UseBlockCallback.java"
+public interface net.fabricmc.fabric.api.event.player.UseBlockCallback {
+  public static final net.fabricmc.fabric.api.event.Event<net.fabricmc.fabric.api.event.player.UseBlockCallback> EVENT;
+  public abstract net.minecraft.world.InteractionResult interact(net.minecraft.world.entity.player.Player, net.minecraft.world.level.Level, net.minecraft.world.InteractionHand, net.minecraft.world.phys.BlockHitResult);
+}
+
+==== net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents
+Compiled from "PlayerBlockBreakEvents.java"
+public final class net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents {
+  public static final net.fabricmc.fabric.api.event.Event<net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents$Before> BEFORE;
+  public static final net.fabricmc.fabric.api.event.Event<net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents$After> AFTER;
+  public static final net.fabricmc.fabric.api.event.Event<net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents$Canceled> CANCELED;
+}
+
+==== net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback
+Compiled from "CommandRegistrationCallback.java"
+public interface net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback {
+  public static final net.fabricmc.fabric.api.event.Event<net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback> EVENT;
+  public abstract void register(com.mojang.brigadier.CommandDispatcher<net.minecraft.commands.CommandSourceStack>, net.minecraft.commands.CommandBuildContext, net.minecraft.commands.Commands$CommandSelection);
+}
+
+==== net.fabricmc.fabric.api.networking.v1.PlayerLookup
+Compiled from "PlayerLookup.java"
+public final class net.fabricmc.fabric.api.networking.v1.PlayerLookup {
+  public static java.util.Collection<net.minecraft.server.level.ServerPlayer> all(net.minecraft.server.MinecraftServer);
+  public static java.util.Collection<net.minecraft.server.level.ServerPlayer> level(net.minecraft.server.level.ServerLevel);
+  public static java.util.Collection<net.minecraft.server.level.ServerPlayer> tracking(net.minecraft.server.level.ServerLevel, net.minecraft.world.level.ChunkPos);
+  public static java.util.Collection<net.minecraft.server.level.ServerPlayer> tracking(net.minecraft.world.entity.Entity);
+  public static java.util.Collection<net.minecraft.server.level.ServerPlayer> tracking(net.minecraft.world.level.block.entity.BlockEntity);
+  public static java.util.Collection<net.minecraft.server.level.ServerPlayer> tracking(net.minecraft.server.level.ServerLevel, net.minecraft.core.BlockPos);
+  public static java.util.Collection<net.minecraft.server.level.ServerPlayer> around(net.minecraft.server.level.ServerLevel, net.minecraft.world.phys.Vec3, double);
+  public static java.util.Collection<net.minecraft.server.level.ServerPlayer> around(net.minecraft.server.level.ServerLevel, net.minecraft.core.Vec3i, double);
+}
+
