@@ -6,6 +6,8 @@ name: Fabric mod build
 on:
   push:
     branches: [main]
+  pull_request:
+    branches: [main]
   workflow_dispatch:
 
 permissions:
@@ -44,7 +46,9 @@ jobs:
           gradle --version | tee ci-out/gradle-version.txt
 
       - name: Core engine tests
-        run: gradle :core:runTests --no-daemon > ci-out/core-tests.log 2>&1 || echo "CORE_TESTS_FAILED" >> ci-out/core-tests.log
+        run: |
+          set -o pipefail
+          gradle :core:runTests --no-daemon 2>&1 | tee ci-out/core-tests.log
 
       - name: Compile Fabric mod
         id: build
@@ -59,8 +63,22 @@ jobs:
         if: always()
         run: python3 tools/ci/dump_api.py tools/ci/api_classes.txt ci-out || true
 
+      # Upload before the orphan-branch checkout below removes the build directory.
+      - name: Verify distributable jar
+        if: steps.build.outcome == 'success'
+        run: |
+          test -s fabric-mod/build/libs/earthlife-0.4.0.jar
+          jar tf fabric-mod/build/libs/earthlife-0.4.0.jar | grep -x 'fabric.mod.json'
+
+      - uses: actions/upload-artifact@v4
+        if: steps.build.outcome == 'success'
+        with:
+          name: earthlife-mod
+          path: fabric-mod/build/libs/earthlife-0.4.0.jar
+          if-no-files-found: error
+
       - name: Publish logs to ci-logs branch
-        if: always()
+        if: always() && github.event_name != 'pull_request'
         run: |
           echo "${{ steps.build.outcome }}" > ci-out/RESULT
           ls fabric-mod/build/libs >> ci-out/RESULT 2>/dev/null || true
@@ -71,12 +89,6 @@ jobs:
           cp -r /tmp/ci-out/* .
           git add -A && git commit -qm "CI logs for ${GITHUB_SHA}"
           git push -f origin ci-logs-tmp:ci-logs
-
-      - uses: actions/upload-artifact@v4
-        if: steps.build.outcome == 'success'
-        with:
-          name: earthlife-mod
-          path: fabric-mod/build/libs/*.jar
 
       - name: Fail if the mod did not build
         if: steps.build.outcome != 'success'
@@ -120,7 +132,7 @@ jobs:
         run: |
           set -o pipefail
           xvfb-run -a -s "-screen 0 1920x1080x24" gradle :fabric-mod:runClientGameTest --no-daemon --stacktrace 2>&1 | tee gametest.log
-      - name: Publish results to ci-tests branch
+      - name: Collect in-game results
         if: always()
         run: |
           R=fabric-mod/build/run/clientGameTest
@@ -131,6 +143,9 @@ jobs:
           grep -E "EARTHLIFE-TEST|ERROR|Exception|at earthlife|Caused by" gametest.log | head -400 > /tmp/out/gametest-highlights.txt || true
           tail -300 gametest.log > /tmp/out/gametest-tail.txt
           echo "${{ steps.gt.outcome }} ${GITHUB_SHA}" > /tmp/out/RESULT
+      - name: Publish results to ci-tests branch
+        if: always() && github.event_name != 'pull_request'
+        run: |
           git config user.name "ci"; git config user.email "ci@users.noreply.github.com"
           git checkout --orphan ci-tests-tmp
           git rm -rfq . ; rm -rf ./* .github 2>/dev/null || true
