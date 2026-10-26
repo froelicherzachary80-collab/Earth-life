@@ -1,0 +1,15 @@
+
+------------------------------------------------------------
+Gradle 9.8.2
+------------------------------------------------------------
+
+Build time:    2026-10-19 16:29:26 UTC
+Revision:      8de7bcf76e785507ad92f0741ab9235a430c95e6
+
+Kotlin:        2.4.10
+Groovy:        4.0.33
+Ant:           Apache Ant(TM) version 1.10.17 compiled on April 6 2026
+Launcher JVM:  25.0.4.1 (Eclipse Adoptium 25.0.4.1+1-LTS)
+Daemon JVM:    /usr/lib/jvm/temurin-25-jdk-amd64 (no Daemon JVM specified, using current Java home)
+OS:            Linux 6.17.0-1022-azure amd64
+
