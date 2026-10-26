@@ -1,0 +1,21 @@
+{
+ "region": "western-ny",
+ "origin": [
+  43.2237,
+  -77.1861
+ ],
+ "starter_bbox": "43.120,-77.470,43.330,-76.940",
+ "region_bbox": "42.840,-77.760,43.360,-76.780",
+ "built": "2026-10-26T00:29:23.358931Z",
+ "counts": {
+  "roads": 11542,
+  "buildings": 26175,
+  "areas": 2260,
+  "water": 324,
+  "coastline": 0
+ },
+ "attribution": [
+  "Map data (c) OpenStreetMap contributors, ODbL 1.0 - https://www.openstreetmap.org/copyright",
+  "Terrain: AWS Terrain Tiles (Mapzen); sources USGS 3DEP, NOAA Great Lakes bathymetry, SRTM and others"
+ ]
+}

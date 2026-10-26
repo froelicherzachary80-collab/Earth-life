@@ -1,0 +1,309 @@
+{
+ "_source": "OpenStreetMap place nodes (ODbL)",
+ "towns": [
+  {
+   "name": "East Penfield",
+   "kind": "HAMLET",
+   "lat": 43.1293746,
+   "lon": -77.4126487,
+   "population": 0,
+   "verified": true
+  },
+  {
+   "name": "Roseland",
+   "kind": "HAMLET",
+   "lat": 43.181452,
+   "lon": -77.3863803,
+   "population": 0,
+   "verified": true
+  },
+  {
+   "name": "West Walworth",
+   "kind": "HAMLET",
+   "lat": 43.1467299,
+   "lon": -77.3455444,
+   "population": 0,
+   "verified": true
+  },
+  {
+   "name": "Lincoln",
+   "kind": "HAMLET",
+   "lat": 43.1833965,
+   "lon": -77.3444337,
+   "population": 0,
+   "verified": true
+  },
+  {
+   "name": "Penfield Center",
+   "kind": "HAMLET",
+   "lat": 43.1672577,
+   "lon": -77.4310724,
+   "population": 0,
+   "verified": true
+  },
+  {
+   "name": "Gananda",
+   "kind": "VILLAGE",
+   "lat": 43.123044,
+   "lon": -77.3208325,
+   "population": 5867,
+   "verified": true
+  },
+  {
+   "name": "Lloyd's Corners",
+   "kind": "HAMLET",
+   "lat": 43.1308878,
+   "lon": -77.4414584,
+   "population": 0,
+   "verified": true
+  },
+  {
+   "name": "Huddle",
+   "kind": "HAMLET",
+   "lat": 43.1225633,
+   "lon": -77.2719293,
+   "population": 0,
+   "verified": true
+  },
+  {
+   "name": "Minsteed",
+   "kind": "HAMLET",
+   "lat": 43.1492308,
+   "lon": -77.1202539,
+   "population": 0,
+   "verified": true
+  },
+  {
+   "name": "Owls Nest",
+   "kind": "HAMLET",
+   "lat": 43.1820086,
+   "lon": -77.1385886,
+   "population": 0,
+   "verified": true
+  },
+  {
+   "name": "Walworth",
+   "kind": "HAMLET",
+   "lat": 43.13923,
+   "lon": -77.272207,
+   "population": 0,
+   "verified": true
+  },
+  {
+   "name": "Marion",
+   "kind": "VILLAGE",
+   "lat": 43.143397,
+   "lon": -77.189147,
+   "population": 4566,
+   "verified": true
+  },
+  {
+   "name": "Wayne Center",
+   "kind": "HAMLET",
+   "lat": 43.1508982,
+   "lon": -76.9588551,
+   "population": 0,
+   "verified": true
+  },
+  {
+   "name": "Zurich",
+   "kind": "HAMLET",
+   "lat": 43.15062,
+   "lon": -77.0433046,
+   "population": 0,
+   "verified": true
+  },
+  {
+   "name": "South Sodus",
+   "kind": "HAMLET",
+   "lat": 43.1672871,
+   "lon": -76.9869123,
+   "population": 0,
+   "verified": true
+  },
+  {
+   "name": "Thorntons Corner",
+   "kind": "HAMLET",
+   "lat": 43.174787,
+   "lon": -77.0110805,
+   "population": 0,
+   "verified": true
+  },
+  {
+   "name": "Lakeside",
+   "kind": "HAMLET",
+   "lat": 43.2556188,
+   "lon": -77.3383231,
+   "population": 0,
+   "verified": true
+  },
+  {
+   "name": "Webster",
+   "kind": "TOWN",
+   "lat": 43.212285,
+   "lon": -77.429994,
+   "population": 0,
+   "verified": true
+  },
+  {
+   "name": "Union Hill",
+   "kind": "HAMLET",
+   "lat": 43.2228409,
+   "lon": -77.3716577,
+   "population": 0,
+   "verified": true
+  },
+  {
+   "name": "Fruitland",
+   "kind": "HAMLET",
+   "lat": 43.22423,
+   "lon": -77.3374894,
+   "population": 0,
+   "verified": true
+  },
+  {
+   "name": "Ontario Center",
+   "kind": "VILLAGE",
+   "lat": 43.2261334,
+   "lon": -77.306286,
+   "population": 0,
+   "verified": true
+  },
+  {
+   "name": "Ontario",
+   "kind": "VILLAGE",
+   "lat": 43.2208968,
+   "lon": -77.2830421,
+   "population": 0,
+   "verified": true
+  },
+  {
+   "name": "Furnaceville",
+   "kind": "HAMLET",
+   "lat": 43.2522858,
+   "lon": -77.2738754,
+   "population": 0,
+   "verified": true
+  },
+  {
+   "name": "East Williamson",
+   "kind": "HAMLET",
+   "lat": 43.23062,
+   "lon": -77.1452561,
+   "population": 0,
+   "verified": true
+  },
+  {
+   "name": "Williamson",
+   "kind": "VILLAGE",
+   "lat": 43.2238186,
+   "lon": -77.1864012,
+   "population": 6860,
+   "verified": true
+  },
+  {
+   "name": "Sodus",
+   "kind": "VILLAGE",
+   "lat": 43.2359298,
+   "lon": -77.0615956,
+   "population": 0,
+   "verified": true
+  },
+  {
+   "name": "Alton",
+   "kind": "HAMLET",
+   "lat": 43.2111765,
+   "lon": -76.9805232,
+   "population": 0,
+   "verified": true
+  },
+  {
+   "name": "Wallington",
+   "kind": "VILLAGE",
+   "lat": 43.2217967,
+   "lon": -77.01232,
+   "population": 0,
+   "verified": true
+  },
+  {
+   "name": "Sunset View",
+   "kind": "HAMLET",
+   "lat": 43.2445103,
+   "lon": -76.9413544,
+   "population": 0,
+   "verified": true
+  },
+  {
+   "name": "Joy",
+   "kind": "HAMLET",
+   "lat": 43.1922867,
+   "lon": -77.0930302,
+   "population": 0,
+   "verified": true
+  },
+  {
+   "name": "York",
+   "kind": "HAMLET",
+   "lat": 43.2000654,
+   "lon": -76.9432987,
+   "population": 0,
+   "verified": true
+  },
+  {
+   "name": "Sodus Center",
+   "kind": "HAMLET",
+   "lat": 43.2046245,
+   "lon": -77.0246381,
+   "population": 0,
+   "verified": true
+  },
+  {
+   "name": "Ontario on the Lake",
+   "kind": "HAMLET",
+   "lat": 43.2781186,
+   "lon": -77.348324,
+   "population": 0,
+   "verified": true
+  },
+  {
+   "name": "Holland Cove",
+   "kind": "HAMLET",
+   "lat": 43.2870087,
+   "lon": -77.1435903,
+   "population": 0,
+   "verified": true
+  },
+  {
+   "name": "Pultneyville",
+   "kind": "HAMLET",
+   "lat": 43.2797862,
+   "lon": -77.1860929,
+   "population": 817,
+   "verified": true
+  },
+  {
+   "name": "Bear Creek Harbor",
+   "kind": "HAMLET",
+   "lat": 43.2770228,
+   "lon": -77.2766397,
+   "population": 0,
+   "verified": true
+  },
+  {
+   "name": "Lake Bluff",
+   "kind": "HAMLET",
+   "lat": 43.2725658,
+   "lon": -76.941355,
+   "population": 0,
+   "verified": true
+  },
+  {
+   "name": "Sodus Point",
+   "kind": "VILLAGE",
+   "lat": 43.2702281,
+   "lon": -76.982637,
+   "population": 822,
+   "verified": true
+  }
+ ]
+}
