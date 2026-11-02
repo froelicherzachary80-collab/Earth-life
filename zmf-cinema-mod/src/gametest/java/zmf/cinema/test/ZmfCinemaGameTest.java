@@ -35,12 +35,12 @@ import java.util.function.Function;
  * passed.
  */
 final class ZmfCinemaGameTest {
-    final ZmfCinemaClientGameTest t;
+    final ZmfStandaloneGameTest t;
     static final String T = "ZMF Cinema";
     final Map<Integer, String> built = new LinkedHashMap<>();        // rooms -> multiplex id
     Path films;
 
-    ZmfCinemaGameTest(ZmfCinemaClientGameTest t) { this.t = t; }
+    ZmfCinemaGameTest(ZmfStandaloneGameTest t) { this.t = t; }
 
     <R> R server(TestSingleplayerContext sp, Function<MinecraftServer, R> f) { return sp.getServer().computeOnServer(f::apply); }
 
