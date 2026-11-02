@@ -1,0 +1,397 @@
+[03:27:17] [main/INFO] (FabricLoader/GameProvider) Loading Minecraft 26.3 with Fabric Loader 0.20.1
+[03:27:17] [main/INFO] (FabricLoader/Mappings) Mappings not present!
+[03:27:18] [ForkJoinPool-1-worker-1/WARN] (FabricLoader/Metadata) Mod me_friwi_jcef-api uses the version jcef-d3de827+cef-146.0.10+g8219561+chromium-146.0.7680.179 which isn't compatible with Loader's extended semantic version format (Could not parse version number component 'jcef'!), SemVer is recommended for reliably evaluating dependencies and prioritizing newer version
+[03:27:18] [main/INFO] (FabricLoader) Loading 56 mods:
+	- fabric-advancement-api-v1 1.0.1+38c7a2d55d
+	- fabric-api 0.165.0+26.3
+	- fabric-api-base 2.0.6+fcdff87f5d
+	- fabric-api-lookup-api-v1 2.0.24+3434d6d95d
+	- fabric-biome-api-v1 20.1.1+85210bca5d
+	- fabric-block-api-v1 3.1.0+0ae6f9115d
+	- fabric-block-getter-api-v2 2.0.9+3434d6d95d
+	- fabric-client-gametest-api-v1 6.0.11+131f8d475d
+	- fabric-command-api-v2 3.1.2+fcdff87f5d
+	- fabric-content-registries-v0 15.0.6+74ed1ea55d
+	- fabric-convention-tags-v2 4.10.5+187b64905d
+	- fabric-crash-report-info-v1 1.0.7+fcdff87f5d
+	- fabric-creative-tab-api-v1 5.0.22+fcdff87f5d
+	- fabric-data-attachment-api-v1 2.2.33+b9b88df45d
+	- fabric-data-generation-api-v1 27.4.2+187b64905d
+	- fabric-debug-api-v1 1.0.5+5af7744b5d
+	- fabric-dimensions-v1 5.1.20+5af7744b5d
+	- fabric-entity-events-v1 6.0.4+3434d6d95d
+	- fabric-events-interaction-v0 5.3.9+b9b88df45d
+	- fabric-game-rule-api-v1 4.0.10+3434d6d95d
+	- fabric-gametest-api-v1 4.0.35+3434d6d95d
+	- fabric-item-api-v1 14.8.0+d1c0d72b5d
+	- fabric-key-mapping-api-v1 2.0.8+3434d6d95d
+	- fabric-lifecycle-events-v1 4.1.9+ffef5f675d
+	- fabric-loot-api-v3 4.0.9+4068fd645d
+	- fabric-menu-api-v1 2.0.30+ed66f0a35d
+	- fabric-message-api-v1 7.0.10+3434d6d95d
+	- fabric-model-loading-api-v1 8.0.37+fcdff87f5d
+	- fabric-networking-api-v1 6.4.0+a21c9eb65d
+	- fabric-object-builder-api-v1 24.1.12+e2f63d3e5d
+	- fabric-particles-v1 5.0.27+3434d6d95d
+	- fabric-permission-api-v1 1.0.8+fcdff87f5d
+	- fabric-recipe-api-v1 10.0.11+b9b88df45d
+	- fabric-registry-sync-v0 8.0.4+1ca9f6365d
+	- fabric-renderer-api-v1 17.0.17+79385d0b5d
+	- fabric-renderer-indigo 9.1.25+b9d63e335d
+	- fabric-rendering-fluids-v1 6.0.6+3434d6d95d
+	- fabric-rendering-v1 27.2.0+eb9fe70b5d
+	- fabric-resource-conditions-api-v1 6.2.0+0d124ae85d
+	- fabric-resource-loader-v0 3.3.27+4fc5413f5d
+	- fabric-resource-loader-v1 3.1.0+5af7744b5d
+	- fabric-screen-api-v1 5.2.4+48607d035d
+	- fabric-serialization-api-v1 2.0.7+74ed1ea55d
+	- fabric-sound-api-v1 2.0.7+3434d6d95d
+	- fabric-tag-api-v1 2.1.11+fcdff87f5d
+	- fabric-transfer-api-v1 8.0.25+fcdff87f5d
+	- fabric-transitive-access-wideners-v1 8.1.17+e2f63d3e5d
+	- fabricloader 0.20.1
+	- java 25
+	- mcef-modern 0.3.3+mc26.3.jcef146.0.10
+	   |-- me_friwi_jcef-api jcef-d3de827+cef-146.0.10+g8219561+chromium-146.0.7680.179
+	   \-- me_friwi_jcefmaven 146.0.10
+	- minecraft 26.3
+	- mixinextras 0.5.5
+	- zmfcinema 0.1.0
+	- zmfcinema-gametest 0.1.0
+[03:27:18] [main/INFO] (FabricLoader/Mixin) SpongePowered MIXIN Subsystem Version=0.8.7 Source=file:/home/runner/.gradle/caches/modules-2/files-2.1/net.fabricmc/sponge-mixin/0.17.5+mixin.0.8.7/cef8519a91129d0c21fa03bb9378f0e8ca810e5/sponge-mixin-0.17.5+mixin.0.8.7.jar Service=Knot/Fabric Env=CLIENT
+[03:27:20] [main/INFO] (FabricLoader/MixinExtras|Service) Initializing MixinExtras via com.llamalad7.mixinextras.service.MixinExtrasServiceImpl(version=0.5.5).
+[03:27:21] [Datafixer Bootstrap #0/INFO] (Minecraft) 307 Datafixer optimizations took 690 milliseconds
+[03:27:28] [Render thread/INFO] (Minecraft) Environment: Environment[discoveryUrl=https://discovery.minecraftservices.com/minecraft/client, name=PROD]
+[03:27:28] [Render thread/INFO] (Minecraft) Setting user: Player0
+[03:27:28] [Render thread/INFO] (ZMF Cinema) ZMF cinema: 31 items, 15 concession products
+[03:27:28] [Render thread/INFO] (ZMF Cinema) ZMF Cinema 0.1.0 ready
+[03:27:28] [Download-2/ERROR] (Minecraft) Failed to fetch user properties
+com.mojang.authlib.exceptions.InvalidCredentialsException: Status: 401
+	at knot//com.mojang.authlib.exceptions.MinecraftClientHttpException.toAuthenticationException(MinecraftClientHttpException.java:70)
+	at knot//com.mojang.authlib.services.MinecraftServicesUserApiService.fetchProperties(MinecraftServicesUserApiService.java:168)
+	at knot//net.minecraft.client.Minecraft.lambda$new$1(Minecraft.java:451)
+	at java.base/java.util.concurrent.CompletableFuture$AsyncSupply.run(CompletableFuture.java:1789)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1090)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:614)
+	at java.base/java.lang.Thread.run(Thread.java:1474)
+Caused by: MinecraftClientHttpException[type=HTTP_ERROR, status=401, response=ErrorResponse[path=/player/attributes, error=null, errorMessage=null, details=null]]
+	at knot//com.mojang.authlib.minecraft.client.MinecraftClient.buildHttpException(MinecraftClient.java:170)
+	at knot//com.mojang.authlib.minecraft.client.MinecraftClient.readServiceResponse(MinecraftClient.java:147)
+	at knot//com.mojang.authlib.minecraft.client.MinecraftClient.getWithEtag(MinecraftClient.java:81)
+	at knot//com.mojang.authlib.minecraft.client.MinecraftClient.get(MinecraftClient.java:65)
+	at knot//com.mojang.authlib.services.MinecraftServicesUserApiService.fetchProperties(MinecraftServicesUserApiService.java:118)
+	... 5 more
+[03:27:28] [Render thread/INFO] (Indigo) [Indigo] Registering Indigo renderer!
+[03:27:29] [Render thread/WARN] (Minecraft) Error reading pack metadata, attempting fallback type
+com.google.gson.JsonParseException: Pack declares support for format 1, but game versions supporting formats 15 to 64 require a supported_formats field. Add "supported_formats": [1, 64] or require a version greater or equal to 65.0.
+	at knot//com.mojang.serialization.DataResult$Error.getOrThrow(DataResult.java:287)
+	at knot//net.minecraft.server.packs.resources.ResourceMetadata$2.getSection(ResourceMetadata.java:40)
+	at knot//net.fabricmc.fabric.impl.resource.pack.ModNioPackResources.getMetadataSection(ModNioPackResources.java:286)
+	at knot//net.minecraft.server.packs.repository.Pack.readPackMetadata(Pack.java:58)
+	at knot//net.minecraft.server.packs.repository.Pack.readMetaAndCreate(Pack.java:43)
+	at knot//net.fabricmc.fabric.impl.resource.ResourceLoaderImpl.registerBuiltinResourcePacks(ResourceLoaderImpl.java:336)
+	at knot//net.fabricmc.fabric.impl.resource.pack.ModResourcePackCreator.loadPacks(ModResourcePackCreator.java:115)
+	at knot//net.fabricmc.fabric.impl.resource.client.DefaultResourcePackStorage.process(DefaultResourcePackStorage.java:84)
+	at knot//net.minecraft.client.Options.handler$bdh000$fabric-resource-loader-v1$onLoad(Options.java:3393)
+	at knot//net.minecraft.client.Options.load(Options.java:2047)
+	at knot//net.minecraft.client.Options.<init>(Options.java:1776)
+	at knot//net.minecraft.client.Minecraft.<init>(Minecraft.java:471)
+	at knot//net.minecraft.client.main.Main.main(Main.java:278)
+	at net.fabricmc.loader.impl.game.minecraft.MinecraftGameProvider.launch(MinecraftGameProvider.java:517)
+	at net.fabricmc.loader.impl.launch.knot.Knot.launch(Knot.java:72)
+	at net.fabricmc.loader.impl.launch.knot.KnotClient.main(KnotClient.java:23)
+	at net.fabricmc.devlaunchinjector.Main.main(Main.java:86)
+[03:27:29] [Render thread/ERROR] (Minecraft) Illegal option value 0 for Anisotropic Filtering
+[03:27:29] [Render thread/INFO] (Minecraft) Backend library: LWJGL version 3.4.3-snapshot
+[03:27:29] [Render thread/INFO] (Minecraft) SDL [SYSTEM]: App name: Minecraft
+[03:27:29] [Render thread/INFO] (Minecraft) SDL [SYSTEM]: App version: 26.3
+[03:27:29] [Render thread/INFO] (Minecraft) SDL [SYSTEM]: App ID: com.mojang.minecraft
+[03:27:29] [Render thread/INFO] (Minecraft) SDL [SYSTEM]: SDL revision: SDL-3.4.14--128-NOTFOUND
+[03:27:29] [Render thread/INFO] (Minecraft) Enabling optional FeatureSet [Calibrated Timestamps]
+[03:27:29] [Render thread/INFO] (Minecraft) Enabling optional FeatureSet [Wireframe]
+[03:27:29] [Render thread/INFO] (Minecraft) Enabling optional FeatureSet [EXT MultiDraw]
+[03:27:29] [Render thread/INFO] (Minecraft) Optional FeatureSet [AMD Buffer Marker] not supported
+[03:27:29] [Render thread/INFO] (Minecraft) Optional FeatureSet [NV Diagnostic Checkpoint] not supported
+[03:27:30] [Render thread/INFO] (Minecraft) Using graphics backend Vulkan, using drivers: 1.4.318 llvmpipe Mesa 25.2.8-0ubuntu0.24.04.4 (LLVM 20.1.2)
+[03:27:30] [Render thread/INFO] (Minecraft) Using graphics device: llvmpipe (LLVM 20.1.2, 256 bits) (0x10005)
+[03:27:30] [Render thread/INFO] (Minecraft) Using graphics device extensions: VK_EXT_calibrated_timestamps (D), VK_KHR_synchronization2 (D), VK_EXT_multi_draw (D), VK_EXT_vertex_attribute_divisor (D), VK_KHR_swapchain (D), VK_KHR_surface (I), VK_KHR_push_descriptor (D), VK_KHR_xlib_surface (I), VK_EXT_debug_utils (I), VK_KHR_dynamic_rendering (D)
+[03:27:30] [Render thread/INFO] (Minecraft) Created window using SDL video driver: x11
+[03:27:30] [Render thread/WARN] (Minecraft) Error reading pack metadata, attempting fallback type
+com.google.gson.JsonParseException: Pack declares support for format 1, but game versions supporting formats 15 to 64 require a supported_formats field. Add "supported_formats": [1, 64] or require a version greater or equal to 65.0.
+	at knot//com.mojang.serialization.DataResult$Error.getOrThrow(DataResult.java:287)
+	at knot//net.minecraft.server.packs.resources.ResourceMetadata$2.getSection(ResourceMetadata.java:40)
+	at knot//net.fabricmc.fabric.impl.resource.pack.ModNioPackResources.getMetadataSection(ModNioPackResources.java:286)
+	at knot//net.minecraft.server.packs.repository.Pack.readPackMetadata(Pack.java:58)
+	at knot//net.minecraft.server.packs.repository.Pack.readMetaAndCreate(Pack.java:43)
+	at knot//net.fabricmc.fabric.impl.resource.ResourceLoaderImpl.registerBuiltinResourcePacks(ResourceLoaderImpl.java:336)
+	at knot//net.fabricmc.fabric.impl.resource.pack.ModResourcePackCreator.loadPacks(ModResourcePackCreator.java:115)
+	at knot//net.minecraft.server.packs.repository.BuiltInPackSource.handler$bdb000$fabric-resource-loader-v1$addBuiltinResourcePacks(BuiltInPackSource.java:539)
+	at knot//net.minecraft.server.packs.repository.BuiltInPackSource.loadPacks(BuiltInPackSource.java:49)
+	at knot//net.minecraft.server.packs.repository.PackRepository.discoverAvailable(PackRepository.java:43)
+	at knot//net.minecraft.server.packs.repository.PackRepository.reload(PackRepository.java:36)
+	at knot//net.minecraft.client.Minecraft.<init>(Minecraft.java:605)
+	at knot//net.minecraft.client.main.Main.main(Main.java:278)
+	at net.fabricmc.loader.impl.game.minecraft.MinecraftGameProvider.launch(MinecraftGameProvider.java:517)
+	at net.fabricmc.loader.impl.launch.knot.Knot.launch(Knot.java:72)
+	at net.fabricmc.loader.impl.launch.knot.KnotClient.main(KnotClient.java:23)
+	at net.fabricmc.devlaunchinjector.Main.main(Main.java:86)
+[03:27:31] [Download-2/INFO] (Minecraft) Could not authorize you against Realms server: java.lang.RuntimeException: Failed to parse into SignedJWT: FabricMC
+[03:27:31] [Download-2/ERROR] (Minecraft) Failed to fetch Realms feature flags
+com.mojang.realmsclient.exception.RealmsServiceException: Realms authentication error with message 'java.lang.RuntimeException: Failed to parse into SignedJWT: FabricMC'
+	at knot//com.mojang.realmsclient.client.RealmsClient.execute(RealmsClient.java:625)
+	at knot//com.mojang.realmsclient.client.RealmsClient.fetchFeatureFlags(RealmsClient.java:204)
+	at java.base/java.util.concurrent.CompletableFuture$AsyncSupply.run(CompletableFuture.java:1789)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1090)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:614)
+	at java.base/java.lang.Thread.run(Thread.java:1474)
+[03:27:31] [Render thread/INFO] (Minecraft) Reloading ResourceManager: vanilla, vanilla, fabric-advancement-api-v1, fabric-api, fabric-api-base, fabric-api-lookup-api-v1, fabric-biome-api-v1, fabric-block-api-v1, fabric-block-getter-api-v2, fabric-client-gametest-api-v1, fabric-command-api-v2, fabric-content-registries-v0, fabric-convention-tags-v2, fabric-crash-report-info-v1, fabric-creative-tab-api-v1, fabric-data-attachment-api-v1, fabric-data-generation-api-v1, fabric-debug-api-v1, fabric-dimensions-v1, fabric-entity-events-v1, fabric-events-interaction-v0, fabric-game-rule-api-v1, fabric-gametest-api-v1, fabric-item-api-v1, fabric-key-mapping-api-v1, fabric-lifecycle-events-v1, fabric-loot-api-v3, fabric-menu-api-v1, fabric-message-api-v1, fabric-model-loading-api-v1, fabric-networking-api-v1, fabric-object-builder-api-v1, fabric-particles-v1, fabric-permission-api-v1, fabric-recipe-api-v1, fabric-registry-sync-v0, fabric-renderer-api-v1, fabric-renderer-indigo, fabric-rendering-fluids-v1, fabric-rendering-v1, fabric-resource-conditions-api-v1, fabric-resource-loader-v0, fabric-resource-loader-v1, fabric-screen-api-v1, fabric-serialization-api-v1, fabric-sound-api-v1, fabric-tag-api-v1, fabric-transfer-api-v1, fabric-transitive-access-wideners-v1, fabricloader, mcef-modern, zmfcinema
+[03:27:32] [Worker-Main-1/INFO] (Minecraft) Found unifont_all_no_pua-17.0.01.hex, loading
+[03:27:32] [Worker-Main-2/INFO] (Minecraft) Found unifont_pua-17.0.01.hex, loading
+[03:27:32] [Worker-Main-1/INFO] (Minecraft) Found unifont_jp_patch-17.0.01.hex, loading
+[03:27:35] [Render thread/ERROR] (Minecraft) Error starting SoundSystem. Turning off sounds & music
+java.lang.IllegalStateException: Failed to open OpenAL device
+	at knot//com.mojang.blaze3d.audio.Library.openDeviceOrFallback(Library.java:274)
+	at knot//com.mojang.blaze3d.audio.Library.init(Library.java:149)
+	at knot//net.minecraft.client.sounds.SoundEngine.loadLibrary(SoundEngine.java:121)
+	at knot//net.minecraft.client.sounds.SoundEngine.reload(SoundEngine.java:110)
+	at knot//net.minecraft.client.sounds.SoundManager.apply(SoundManager.java:122)
+	at knot//net.minecraft.client.sounds.SoundManager.apply(SoundManager.java:41)
+	at knot//net.minecraft.server.packs.resources.SimplePreparableReloadListener.lambda$reload$1(SimplePreparableReloadListener.java:15)
+	at java.base/java.util.concurrent.CompletableFuture$UniAccept.tryFire(CompletableFuture.java:739)
+	at java.base/java.util.concurrent.CompletableFuture$Completion.run(CompletableFuture.java:503)
+	at knot//net.minecraft.server.packs.resources.SimpleReloadInstance.lambda$prepareTasks$3(SimpleReloadInstance.java:59)
+	at knot//net.minecraft.util.thread.BlockableEventLoop.doRunTask(BlockableEventLoop.java:173)
+	at knot//net.minecraft.util.thread.ReentrantBlockableEventLoop.doRunTask(ReentrantBlockableEventLoop.java:23)
+	at knot//net.minecraft.util.thread.BlockableEventLoop.pollTask(BlockableEventLoop.java:147)
+	at knot//net.minecraft.util.thread.BlockableEventLoop.runAllTasks(BlockableEventLoop.java:127)
+	at knot//net.minecraft.client.Minecraft.runTick(Minecraft.java:1240)
+	at knot//net.minecraft.client.Minecraft.run$mixinextras$wrapped$270(Minecraft.java:967)
+	at knot//net.minecraft.client.Minecraft.mixinextras$bridge$run$mixinextras$wrapped$270$271(Minecraft.java)
+	at knot//net.minecraft.client.Minecraft.wrapMethod$zhc000$fabric-client-gametest-api-v1$onRun(Minecraft.java:5228)
+	at knot//net.minecraft.client.Minecraft.run(Minecraft.java)
+	at knot//net.minecraft.client.main.Main.main(Main.java:292)
+	at net.fabricmc.loader.impl.game.minecraft.MinecraftGameProvider.launch(MinecraftGameProvider.java:517)
+	at net.fabricmc.loader.impl.launch.knot.Knot.launch(Knot.java:72)
+	at net.fabricmc.loader.impl.launch.knot.KnotClient.main(KnotClient.java:23)
+	at net.fabricmc.devlaunchinjector.Main.main(Main.java:86)
+[03:27:35] [Render thread/INFO] (Minecraft) Created: 512x256x0 minecraft:textures/atlas/particles.png-atlas
+[03:27:35] [Render thread/INFO] (Minecraft) Created: 256x128x0 minecraft:textures/atlas/celestials.png-atlas
+[03:27:35] [Render thread/INFO] (Minecraft) Created: 128x128x0 minecraft:textures/atlas/decorated_pot.png-atlas
+[03:27:35] [Render thread/INFO] (Minecraft) Created: 512x256x0 minecraft:textures/atlas/paintings.png-atlas
+[03:27:35] [Render thread/INFO] (Minecraft) Created: 1024x512x0 minecraft:textures/atlas/shield_patterns.png-atlas
+[03:27:35] [Render thread/INFO] (Minecraft) Created: 1024x512x0 minecraft:textures/atlas/banner_patterns.png-atlas
+[03:27:35] [Render thread/INFO] (Minecraft) Created: 2048x2048x4 minecraft:textures/atlas/blocks.png-atlas
+[03:27:35] [Render thread/INFO] (Minecraft) Created: 1024x512x0 minecraft:textures/atlas/items.png-atlas
+[03:27:35] [Render thread/INFO] (Minecraft) Created: 1024x1024x0 minecraft:textures/atlas/gui.png-atlas
+[03:27:35] [Render thread/INFO] (Minecraft) Created: 128x64x0 minecraft:textures/atlas/map_decorations.png-atlas
+[03:27:35] [Render thread/INFO] (Minecraft) Created: 512x512x0 minecraft:textures/atlas/chest.png-atlas
+[03:27:35] [Render thread/INFO] (Minecraft) Created: 512x512x0 minecraft:textures/atlas/shulker_boxes.png-atlas
+[03:27:36] [Download-2/INFO] (Minecraft) Could not authorize you against Realms server: java.lang.RuntimeException: Failed to parse into SignedJWT: FabricMC
+[03:27:36] [Download-2/ERROR] (Minecraft) Couldn't connect to realms
+com.mojang.realmsclient.exception.RealmsServiceException: Realms authentication error with message 'java.lang.RuntimeException: Failed to parse into SignedJWT: FabricMC'
+	at knot//com.mojang.realmsclient.client.RealmsClient.execute(RealmsClient.java:625)
+	at knot//com.mojang.realmsclient.client.RealmsClient.clientCompatible(RealmsClient.java:354)
+	at knot//com.mojang.realmsclient.RealmsAvailability.lambda$check$0(RealmsAvailability.java:48)
+	at java.base/java.util.concurrent.CompletableFuture$AsyncSupply.run(CompletableFuture.java:1789)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1090)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:614)
+	at java.base/java.lang.Thread.run(Thread.java:1474)
+[03:27:40] [Test thread/INFO] (Minecraft) [STDOUT]: ZMFCINEMA-TEST [ZMF Cinema] mod loaded: PASSED - zmfcinema 0.1.0 loaded on Minecraft 26.3 without EarthLife (earthlife loaded: false)
+[03:27:42] [Worker-Main-1/INFO] (Minecraft) Loaded 1866 advancements
+[03:27:43] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: null screen: net.minecraft.client.gui.screens.GenericMessageScreen@43a7e230
+[03:27:43] [Render thread/INFO] (BiomeModificationImpl) Applied 0 biome modifications to 0 of 67 new biomes in 1.562 ms
+[03:27:43] [Server thread/INFO] (Minecraft) Starting integrated minecraft server version 26.3
+[03:27:43] [Server thread/INFO] (Minecraft) Generating keypair
+[03:27:43] [Server thread/INFO] (Minecraft) Selecting global world spawn...
+[03:27:44] [Server thread/INFO] (Minecraft) Loading 0 persistent chunks...
+[03:27:44] [Server thread/INFO] (Minecraft) Preparing spawn area: 16%
+[03:27:44] [Server thread/INFO] (Minecraft) Saving chunks for level 'ServerLevel[ZMF Cinema Test World]'/minecraft:overworld
+[03:27:44] [Server thread/INFO] (Minecraft) Saving chunks for level 'ServerLevel[ZMF Cinema Test World]'/minecraft:the_nether
+[03:27:44] [Server thread/INFO] (Minecraft) Saving chunks for level 'ServerLevel[ZMF Cinema Test World]'/minecraft:the_end
+[03:27:44] [Server thread/INFO] (ZMF Cinema) ZMF Cinema: 0 multiplexes built in this world (0 known sites), natural generation on (COMMON), 0 catalog titles
+[03:27:44] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: null screen: net.minecraft.client.gui.screens.LevelLoadingScreen@7c54f7c
+[03:27:44] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: null screen: net.minecraft.client.gui.screens.LevelLoadingScreen@7c54f7c
+[03:27:44] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: null screen: net.minecraft.client.gui.screens.LevelLoadingScreen@7c54f7c
+[03:27:44] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: null screen: net.minecraft.client.gui.screens.LevelLoadingScreen@7c54f7c
+[03:27:44] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: null screen: net.minecraft.client.gui.screens.LevelLoadingScreen@7c54f7c
+[03:27:44] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: null screen: net.minecraft.client.gui.screens.LevelLoadingScreen@7c54f7c
+[03:27:44] [Server thread/INFO] (Minecraft) Loading 48 chunks for player spawn...
+[03:27:44] [Server thread/INFO] (Minecraft) Preparing spawn area: 16%
+[03:27:44] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: null screen: net.minecraft.client.gui.screens.LevelLoadingScreen@7c54f7c
+[03:27:44] [Server thread/INFO] (Minecraft) Preparing spawn area: 16%
+[03:27:45] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: null screen: net.minecraft.client.gui.screens.LevelLoadingScreen@7c54f7c
+[03:27:45] [Server thread/INFO] (Minecraft) Preparing spawn area: 16%
+[03:27:45] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: null screen: net.minecraft.client.gui.screens.LevelLoadingScreen@7c54f7c
+[03:27:45] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: null screen: net.minecraft.client.gui.screens.LevelLoadingScreen@7c54f7c
+[03:27:45] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: null screen: net.minecraft.client.gui.screens.LevelLoadingScreen@7c54f7c
+[03:27:45] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: null screen: net.minecraft.client.gui.screens.LevelLoadingScreen@7c54f7c
+[03:27:45] [Server thread/INFO] (Minecraft) Time elapsed: 1889 ms
+[03:27:45] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: null screen: net.minecraft.client.gui.screens.LevelLoadingScreen@7c54f7c
+[03:27:45] [Server thread/INFO] (Minecraft) Player0[local:E:b424c55f] logged in with entity id 1 at (0.5, -60.0, 0.5)
+[03:27:45] [Server thread/INFO] (Minecraft) System chat: Player0 joined the game
+[03:27:45] [Render thread/INFO] (Minecraft) [System] [CHAT] §6🎟 You got a ZMF Cinema Pass!§r Use it to travel to the nearest multiplex cinema (sneak + use to come back).
+[03:27:45] [Server thread/INFO] (Minecraft) Changing view distance to 5, from 10
+[03:27:45] [Server thread/INFO] (Minecraft) Changing simulation distance to 12, from 0
+[03:27:45] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: ClientLevel screen: net.minecraft.client.gui.screens.LevelLoadingScreen@7c54f7c
+[03:27:46] [Render thread/WARN] (Minecraft) Requested post effect does not exist: minecraft:end_of_frame
+[03:27:46] [Render thread/INFO] (Minecraft) Resizing Dynamic Transforms UBO, capacity limit of 2 reached during a single frame. New capacity will be 4.
+[03:27:46] [Render thread/INFO] (Minecraft) Loaded 2 advancements
+[03:27:46] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: ClientLevel screen: net.minecraft.client.gui.screens.LevelLoadingScreen@7c54f7c
+[03:27:46] [Render thread/INFO] (Minecraft) Resizing Dynamic Transforms UBO, capacity limit of 4 reached during a single frame. New capacity will be 8.
+[03:27:46] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: ClientLevel screen: net.minecraft.client.gui.screens.LevelLoadingScreen@7c54f7c
+[03:27:46] [Render thread/INFO] (Minecraft) Resizing Dynamic Transforms UBO, capacity limit of 8 reached during a single frame. New capacity will be 16.
+[03:27:46] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: ClientLevel screen: net.minecraft.client.gui.screens.LevelLoadingScreen@7c54f7c
+[03:27:46] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: ClientLevel screen: net.minecraft.client.gui.screens.LevelLoadingScreen@7c54f7c
+[03:27:47] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: ClientLevel screen: net.minecraft.client.gui.screens.LevelLoadingScreen@7c54f7c
+[03:27:47] [Render thread/INFO] (Minecraft) Resizing Chunk Sections Command Buffer, capacity limit of 2 reached during a single frame. New capacity will be 8.
+[03:27:47] [Render thread/INFO] (Minecraft) Resizing Chunk Sections Instanced, capacity limit of 2 reached during a single frame. New capacity will be 8.
+[03:27:47] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: ClientLevel screen: net.minecraft.client.gui.screens.LevelLoadingScreen@7c54f7c
+[03:27:47] [Server thread/WARN] (Minecraft) Can't keep up! Is the server overloaded? Running 2101ms or 42 ticks behind
+[03:27:47] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: ClientLevel screen: net.minecraft.client.gui.screens.LevelLoadingScreen@7c54f7c
+[03:27:47] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: ClientLevel screen: net.minecraft.client.gui.screens.LevelLoadingScreen@7c54f7c
+[03:27:47] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: ClientLevel screen: net.minecraft.client.gui.screens.LevelLoadingScreen@7c54f7c
+[03:27:47] [Render thread/INFO] (Minecraft) Resizing Chunk Sections Command Buffer, capacity limit of 8 reached during a single frame. New capacity will be 16.
+[03:27:47] [Render thread/INFO] (Minecraft) Resizing Chunk Sections Instanced, capacity limit of 8 reached during a single frame. New capacity will be 16.
+[03:27:47] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: ClientLevel screen: null
+[03:27:48] [Render thread/INFO] (Minecraft) Resizing Chunk Sections Command Buffer, capacity limit of 16 reached during a single frame. New capacity will be 32.
+[03:27:48] [Render thread/INFO] (Minecraft) Resizing Chunk Sections Instanced, capacity limit of 16 reached during a single frame. New capacity will be 32.
+[03:27:49] [Render thread/INFO] (Minecraft) Resizing Chunk Sections Command Buffer, capacity limit of 32 reached during a single frame. New capacity will be 64.
+[03:27:49] [Render thread/INFO] (Minecraft) Resizing Chunk Sections Instanced, capacity limit of 32 reached during a single frame. New capacity will be 64.
+[03:27:49] [Render thread/INFO] (Minecraft) Resizing Chunk Sections Command Buffer, capacity limit of 64 reached during a single frame. New capacity will be 128.
+[03:27:49] [Render thread/INFO] (Minecraft) Resizing Chunk Sections Instanced, capacity limit of 64 reached during a single frame. New capacity will be 128.
+[03:27:49] [Render thread/INFO] (Minecraft) Resizing Dynamic Transforms UBO, capacity limit of 16 reached during a single frame. New capacity will be 32.
+[03:27:50] [Test thread/INFO] (Minecraft) [STDOUT]: ZMFCINEMA-TEST [ZMF Cinema] running in an ordinary world: PASSED - generator=FlatLevelSource, standalone=true, ZMF service=true, natural generation=true
+[03:27:53] [Server thread/INFO] (ZMF Cinema) ZMF Cinema: building Silver Screen Cinemas (12 rooms, FUTURISTIC) at 0 -56 -12
+[03:27:53] [Render thread/INFO] (Minecraft) [System] [CHAT] 🏗 Building Silver Screen Cinemas (12 screens, Futuristic glass, 120 x 67 blocks) in front of you - it takes a few seconds. Id c1.
+[03:27:54] [Server thread/INFO] (ZMF Cinema) ZMF Cinema: Silver Screen Cinemas built - 38280 blocks set, 0 cleared, 27492 foundation blocks, 10220 columns in 1.8 s
+[03:27:54] [Render thread/INFO] (Minecraft) [System] [CHAT] §6🎬 Silver Screen Cinemas§r - a 12-screen multiplex - opened nearby.
+[03:27:55] [Test thread/INFO] (Minecraft) [STDOUT]: ZMFCINEMA-TEST [ZMF Cinema] 12-screen multiplex: PASSED - Silver Screen Cinemas (Futuristic glass, 1 floor) built in 3 s: 12 of 12 rooms complete, 12 unique room ids, 700/700 seat blocks in place, 12 doors open, 12 screen walls; 12 rooms: 3x2D 3x3D 6x4DX 1xIMAX 1xScreenX (2 combined); allocation valid
+[03:28:00] [Render thread/INFO] (Minecraft) Resizing Chunk Sections Command Buffer, capacity limit of 128 reached during a single frame. New capacity will be 256.
+[03:28:00] [Render thread/INFO] (Minecraft) Resizing Chunk Sections Instanced, capacity limit of 128 reached during a single frame. New capacity will be 256.
+[03:28:05] [Server thread/WARN] (Minecraft) Can't keep up! Is the server overloaded? Running 2852ms or 57 ticks behind
+[03:28:06] [Server thread/INFO] (ZMF Cinema) ZMF Cinema: building Vista Picture House (20 rooms, HOLLYWOOD) at 4000 -56 -12
+[03:28:06] [Render thread/INFO] (Minecraft) [System] [CHAT] 🏗 Building Vista Picture House (20 screens, Vintage Hollywood, 132 x 73 blocks) in front of you - it takes a few seconds. Id c2.
+[03:28:08] [Server thread/INFO] (ZMF Cinema) ZMF Cinema: Vista Picture House built - 80181 blocks set, 0 cleared, 30136 foundation blocks, 11400 columns in 1.9 s
+[03:28:08] [Render thread/INFO] (Minecraft) [System] [CHAT] §6🎬 Vista Picture House§r - a 20-screen multiplex - opened nearby.
+[03:28:08] [Test thread/INFO] (Minecraft) [STDOUT]: ZMFCINEMA-TEST [ZMF Cinema] 20-screen multiplex: PASSED - Vista Picture House (Vintage Hollywood, 2 floors) built in 2 s: 20 of 20 rooms complete, 20 unique room ids, 1656/1656 seat blocks in place, 20 doors open, 20 screen walls; 20 rooms: 3x2D 5x3D 9x4DX 2xIMAX 1xScreenX (0 combined); allocation valid
+[03:28:20] [Render thread/INFO] (Minecraft) [System] [CHAT] 🏗 Building Metropolitan Screens (32 screens, Glass front, 199 x 73 blocks) in front of you - it takes a few seconds. Id c3.
+[03:28:20] [Server thread/INFO] (ZMF Cinema) ZMF Cinema: building Metropolitan Screens (32 rooms, GLASS_FRONT) at 8000 -56 -12
+[03:28:23] [Server thread/INFO] (ZMF Cinema) ZMF Cinema: Metropolitan Screens built - 133932 blocks set, 0 cleared, 46584 foundation blocks, 17958 columns in 2.9 s
+[03:28:23] [Render thread/INFO] (Minecraft) [System] [CHAT] §6🎬 Metropolitan Screens§r - a 32-screen multiplex - opened nearby.
+[03:28:23] [Test thread/INFO] (Minecraft) [STDOUT]: ZMFCINEMA-TEST [ZMF Cinema] 32-screen multiplex: PASSED - Metropolitan Screens (Glass front, 2 floors) built in 4 s: 32 of 32 rooms complete, 32 unique room ids, 3041/3041 seat blocks in place, 32 doors open, 32 screen walls; 32 rooms: 5x2D 10x3D 10x4DX 6xIMAX 1xScreenX (0 combined); allocation valid
+[03:28:24] [Server thread/WARN] (Minecraft) Can't keep up! Is the server overloaded? Running 4086ms or 81 ticks behind
+[03:28:31] [Test thread/INFO] (Minecraft) [STDOUT]: ZMFCINEMA-TEST [ZMF Cinema] formats differ between buildings: PASSED - Silver Screen Cinemas: 12 rooms: 3x2D 3x3D 6x4DX 1xIMAX 1xScreenX (2 combined), Futuristic glass; Vista Picture House: 20 rooms: 3x2D 5x3D 9x4DX 2xIMAX 1xScreenX (0 combined), Vintage Hollywood; Metropolitan Screens: 32 rooms: 5x2D 10x3D 10x4DX 6xIMAX 1xScreenX (0 combined), Glass front; 
+[03:28:32] [Server thread/INFO] (ZMF Cinema) ZMF Cinema: building Starlight Screens (20 rooms, GLASS_FRONT) at 20139 -56 20324
+[03:28:34] [Server thread/INFO] (ZMF Cinema) ZMF Cinema: Starlight Screens built - 87885 blocks set, 0 cleared, 32004 foundation blocks, 11932 columns in 2.0 s
+[03:28:34] [Render thread/INFO] (Minecraft) [System] [CHAT] §6🎬 Starlight Screens§r - a 20-screen multiplex - opened nearby.
+[03:28:37] [Test thread/INFO] (Minecraft) [STDOUT]: ZMFCINEMA-TEST [ZMF Cinema] naturally generated multiplex: PASSED - natural site m18_18 (Starlight Screens, 20 screens) at 20139 -56 20324, state BUILT; /zmfcinema locate nearest: "🎬 Starlight Screens · 20 screens · south ↓, 38 blocks (x 20140, z 20323)"
+[03:28:37] [Test thread/INFO] (Minecraft) [STDOUT]: ZMFCINEMA-TEST [ZMF Cinema] Cinema Locator points to it: PASSED - locator shows Starlight Screens at 20140, 20323 (built=true, found=true), 38 blocks from the player
+[03:28:37] [Test thread/INFO] (Minecraft) [STDOUT]: ZMFCINEMA-TEST [ZMF Cinema] map marker: PASSED - filled map with a target marker given
+[03:28:37] [Test thread/INFO] (Minecraft) [STDOUT]: ZMFCINEMA-TEST [ZMF Cinema] starter pass given on first join: PASSED - player tagged as having received the pass: true, ZMF config giveStarterPass=true, pass in the inventory right after joining: true
+[03:28:37] [Render thread/INFO] (Minecraft) [System] [CHAT] 🗺 A map to Starlight Screens is in your inventory.
+[03:28:40] [Server thread/INFO] (ZMF Cinema) ZMF Cinema: building Vista Cineplex (20 rooms, GLASS_FRONT) at -20510 -56 -20477
+[03:28:40] [Render thread/INFO] (Minecraft) [System] [CHAT] 🏗 Opening Vista Cineplex (20 screens) for you - you'll be transported in a moment...
+[03:28:42] [Server thread/WARN] (Minecraft) Can't keep up! Is the server overloaded? Running 2859ms or 57 ticks behind
+[03:28:42] [Server thread/INFO] (ZMF Cinema) ZMF Cinema: Vista Cineplex built - 84428 blocks set, 0 cleared, 30436 foundation blocks, 11692 columns in 1.7 s
+[03:28:42] [Render thread/INFO] (Minecraft) [System] [CHAT] 🎬 Welcome to §6Vista Cineplex§r - 20 screens, Glass front. Press B for showtimes. (Sneak + use the pass to go back.)
+[03:28:46] [Test thread/INFO] (Minecraft) [STDOUT]: ZMFCINEMA-TEST [ZMF Cinema] Cinema Pass takes you to the nearest cinema: PASSED - used the pass at -20001, -20001 -> arrived at -20505 -55 -20477 after 1 s, 0.0 blocks from the doors of Vista Cineplex (m-19_-19, 20 screens, BUILT), standing on block.minecraft.smooth_stone, travelled 693 blocks
+[03:28:46] [Test thread/INFO] (Minecraft) [STDOUT]: ZMFCINEMA-TEST [ZMF Cinema] sneak + use brings you back: PASSED - ↩ Back where you were. - 0.3 blocks from where the pass was used
+[03:28:46] [Test thread/INFO] (Minecraft) [STDOUT]: ZMFCINEMA-TEST [ZMF Cinema] second trip is instant: PASSED - 🎬 Welcome to §6Vista Cineplex§r - 20 screens, Glass front. Press B for showtimes. (Sneak + use the pass to go back.) (moved 693 blocks at once)
+[03:28:46] [Test thread/INFO] (Minecraft) [STDOUT]: ZMFCINEMA-TEST [ZMF Cinema] Jellyfin server: BLOCKED - no Jellyfin server on the CI runner - connection, login, library metadata and streaming need a real server (see STATUS.md for how to verify at home)
+[03:28:46] [Server thread/INFO] (ZMF Cinema) ZMF Cinema: Player0 shared 7 film titles (6 usable in the schedules)
+[03:28:50] [Test thread/INFO] (Minecraft) [STDOUT]: ZMFCINEMA-TEST [ZMF Cinema] library shared + films assigned: PASSED - client: Shared 7 titles (6 from 2000 on); catalog 6 titles (2000+ only: true); 12-screen program: [Test Pattern Space (2024), Test Pattern Comedy (2012), Test Pattern Fantasy (2026), Test Pattern Action (2018), Test Pattern Night (2007), Explosion Test (2020)], 6 rooms Coming Soon
+[03:28:50] [Test thread/INFO] (Minecraft) [STDOUT]: ZMFCINEMA-TEST [ZMF Cinema] programs differ between multiplexes: PASSED - first rooms: [Test Pattern Space, Test Pattern Comedy, Test Pattern Fantasy, Test Pattern Action, Test Pattern Night, Explosion Test] vs [Test Pattern Night, Test Pattern Fantasy, Test Pattern Comedy, Explosion Test, Test Pattern Action, Test Pattern Space]
+[03:28:53] [Test thread/INFO] (Minecraft) [STDOUT]: ZMFCINEMA-TEST [ZMF Cinema] showtimes menu: PASSED - ZmfScreen, 24 rows, title Silver Screen Cinemas · 12 screens · Futuristic glass
+[03:28:56] [Test thread/INFO] (Minecraft) [STDOUT]: ZMFCINEMA-TEST [ZMF Cinema] admin panel: PASSED - 24 admin rows
+[03:28:57] [Render thread/INFO] (Minecraft) Loaded 3 advancements
+[03:28:58] [ZMF-cinema-start/INFO] (ZMF Cinema) Cinema sound unavailable (java.lang.ExceptionInInitializerError); films play silently
+[03:28:59] [Test thread/INFO] (Minecraft) [STDOUT]: ZMFCINEMA-TEST [ZMF Cinema] ticket bought and scanned at the door: PASSED - without a ticket turned away: true; 🎟 Ticket for "Door Test" in Web Cinema C · 4DX (2 emeralds).; with the ticket inside: true; emeralds left 8
+[03:28:59] [Render thread/INFO] (Minecraft) [System] [CHAT] 🎬 "test-pattern.mp4" in Auditorium 8 · 3D (free). Find your seat - the film is starting!
+[03:28:59] [Render thread/WARN] (Minecraft) Received passengers for unknown entity
+[03:28:59] [Render thread/INFO] (Minecraft) [System] [CHAT] You sit down in Auditorium 8 · 3D.
+[03:28:59] [ZMF-cinema-start/INFO] (ZMF Cinema) Cinema sound unavailable (java.lang.NoClassDefFoundError: Could not initialize class org.lwjgl.openal.AL$ICDStatic$WriteOnce); films play silently
+[03:29:02] [Server thread/WARN] (Minecraft) Can't keep up! Is the server overloaded? Running 5177ms or 103 ticks behind
+[03:29:18] [Test thread/INFO] (Minecraft) [STDOUT]: ZMFCINEMA-TEST [ZMF Cinema] auto 3D from a 2D film: PASSED - room c2-7, source 2D, format AUTO3D, anaglyph=true, auto3d=true, status Playing, 960x400, conversion 13.5 ms/frame, mean disparity 2.85 px, depth estimator: heuristic cues
+[03:29:18] [Render thread/INFO] (Minecraft) [System] [CHAT] 🎬 "explosion-test.mp4" in Auditorium 2 · 4DX (free). Find your seat - the film is starting!
+[03:29:18] [Render thread/INFO] (Minecraft) [System] [CHAT] You sit down in Auditorium 2 · 4DX.
+[03:29:18] [ZMF-cinema-start/INFO] (ZMF Cinema) Cinema sound unavailable (java.lang.NoClassDefFoundError: Could not initialize class org.lwjgl.openal.AL$ICDStatic$WriteOnce); films play silently
+[03:29:24] [Server thread/WARN] (Minecraft) Can't keep up! Is the server overloaded? Running 7644ms or 152 ticks behind
+[03:29:34] [Test thread/INFO] (Minecraft) [STDOUT]: ZMFCINEMA-TEST [ZMF Cinema] 4DX event detection: PASSED - 4DX room c2-1, motion seat=true, film Playing, events detected: 1 ([Event[type=EXPLOSION, ptsMs=4044, durationMs=1800, intensity=0.74478114, confidence=0.7422489, dirX=0.0]]), max seat pitch 5.2°, atmosphere effects {EXPLOSION=23}
+[03:29:34] [Test thread/INFO] (Minecraft) [STDOUT]: ZMFCINEMA-TEST [ZMF Cinema] 4DX atmospheric effect: PASSED - virtual effect emitted for the detected event: {EXPLOSION=23}
+[03:29:34] [Render thread/INFO] (Minecraft) [System] [CHAT] 🎬 "test-pattern.mp4" in Auditorium 8 · IMAX (free). Find your seat - the film is starting!
+[03:29:34] [Render thread/WARN] (Minecraft) Received passengers for unknown entity
+[03:29:34] [Render thread/INFO] (Minecraft) [System] [CHAT] You sit down in Auditorium 8 · IMAX.
+[03:29:35] [ZMF-cinema-start/INFO] (ZMF Cinema) Cinema sound unavailable (java.lang.NoClassDefFoundError: Could not initialize class org.lwjgl.openal.AL$ICDStatic$WriteOnce); films play silently
+[03:29:44] [Server thread/WARN] (Minecraft) Can't keep up! Is the server overloaded? Running 4851ms or 97 ticks behind
+[03:29:48] [Test thread/INFO] (Minecraft) [STDOUT]: ZMFCINEMA-TEST [ZMF Cinema] IMAX room plays: PASSED - IMAX room c3-7: Playing 960x400
+[03:29:48] [Render thread/INFO] (Minecraft) [System] [CHAT] 🎬 "test-pattern.mp4" in Auditorium 12 · ScreenX (free). Find your seat - the film is starting!
+[03:29:48] [Render thread/INFO] (Minecraft) [System] [CHAT] You sit down in Auditorium 12 · ScreenX.
+[03:29:48] [ZMF-cinema-start/INFO] (ZMF Cinema) Cinema sound unavailable (java.lang.NoClassDefFoundError: Could not initialize class org.lwjgl.openal.AL$ICDStatic$WriteOnce); films play silently
+[03:30:04] [Test thread/INFO] (Minecraft) [STDOUT]: ZMFCINEMA-TEST [ZMF Cinema] ScreenX side walls: PASSED - ScreenX room c3-11: Playing, side walls zmfcinema:cinema/c3-11_754a209e_sx_l / zmfcinema:cinema/c3-11_754a209e_sx_r
+[03:30:06] [Server thread/WARN] (Minecraft) Can't keep up! Is the server overloaded? Running 6558ms or 131 ticks behind
+[03:30:08] [ZMF-cinema-start/INFO] (ZMF Cinema) Cinema sound unavailable (java.lang.NoClassDefFoundError: Could not initialize class org.lwjgl.openal.AL$ICDStatic$WriteOnce); films play silently
+[03:30:12] [Test thread/INFO] (Minecraft) [STDOUT]: ZMFCINEMA-TEST [ZMF Cinema] only the active room decodes: PASSED - 10 showings started; client knows 14 showings; standing in the hallway: 0 films decoding; inside room c3-0: 1 decoding (c3-0)
+[03:30:20] [AWT-EventQueue-0/INFO] (Minecraft) [STDOUT]: initialize on Thread[#106,AWT-EventQueue-0,6,InnocuousForkJoinWorkerThreadGroup] with library path /home/runner/work/Earth-life/Earth-life/zmf-cinema-mod/build/run/clientGameTest/config/mcef-modern/jcef
+[03:30:24] [Test thread/INFO] (Minecraft) [STDOUT]: ZMFCINEMA-TEST [ZMF Cinema] web cinema (MCEF Modern): PASSED - room c1-2: Chromium ready, frames 2, url https://example.com/
+[03:30:24] [ForkJoinPool.commonPool-worker-3/INFO] (ZMF Cinema) bHaptics Player connected
+[03:30:28] [Test thread/INFO] (Minecraft) [STDOUT]: ZMFCINEMA-TEST [ZMF Cinema] TactSuit protocol (mock bHaptics Player): PASSED - stand-in Player on port 39823 received 3 frames; status "TactSuit: connected to bHaptics Player"; strongest motor 50 (safety limit 50); first: {"Register":[],"Submit":[{"Type":"frame","Key":"zmfcinema_front","Frame":{"Position":"VestFront","PathPoints":[],"DotPoints":[{"Index":0,"Intensity":50},{"Index
+[03:30:29] [Test thread/INFO] (Minecraft) [STDOUT]: ZMFCINEMA-TEST [ZMF Cinema] emergency stop silences the vest: PASSED - frames after the stop: 1 (one zero frame allowed)
+[03:30:29] [Test thread/INFO] (Minecraft) [STDOUT]: ZMFCINEMA-TEST [ZMF Cinema] real TactSuit Air: BLOCKED - no TactSuit or bHaptics Player on the CI runner - only the protocol was tested against a stand-in
+[03:30:29] [Server thread/INFO] (Minecraft) Player0 lost connection: Disconnected
+[03:30:29] [Server thread/INFO] (Minecraft) System chat: Player0 left the game
+[03:30:29] [Server thread/INFO] (Minecraft) Stopping singleplayer server as player logged out
+[03:30:29] [Server thread/INFO] (Minecraft) Stopping server
+[03:30:29] [Server thread/INFO] (Minecraft) Saving players
+[03:30:29] [Server thread/INFO] (Minecraft) Saving worlds
+[03:30:29] [Server thread/INFO] (Minecraft) Saving chunks for level 'ServerLevel[ZMF Cinema Test World]'/minecraft:overworld
+[03:30:30] [Server thread/INFO] (Minecraft) Saving chunks for level 'ServerLevel[ZMF Cinema Test World]'/minecraft:the_nether
+[03:30:30] [Server thread/INFO] (Minecraft) Saving chunks for level 'ServerLevel[ZMF Cinema Test World]'/minecraft:the_end
+[03:30:30] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: null screen: net.minecraft.client.gui.screens.GenericMessageScreen@49090ca3
+[03:30:31] [Worker-Main-2/INFO] (Minecraft) Loaded 1866 advancements
+[03:30:31] [Render thread/INFO] (BiomeModificationImpl) Applied 0 biome modifications to 0 of 67 new biomes in 575.9 μs
+[03:30:31] [Server thread/INFO] (Minecraft) Starting integrated minecraft server version 26.3
+[03:30:31] [Server thread/INFO] (Minecraft) Generating keypair
+[03:30:31] [Server thread/INFO] (Minecraft) Loading 0 persistent chunks...
+[03:30:31] [Server thread/INFO] (Minecraft) Saving chunks for level 'ServerLevel[ZMF Cinema Test World]'/minecraft:overworld
+[03:30:31] [Server thread/INFO] (Minecraft) Saving chunks for level 'ServerLevel[ZMF Cinema Test World]'/minecraft:the_nether
+[03:30:31] [Server thread/INFO] (Minecraft) Saving chunks for level 'ServerLevel[ZMF Cinema Test World]'/minecraft:the_end
+[03:30:31] [Server thread/INFO] (ZMF Cinema) ZMF Cinema: 5 multiplexes built in this world (17 known sites), natural generation on (COMMON), 6 catalog titles
+[03:30:31] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: null screen: net.minecraft.client.gui.screens.LevelLoadingScreen@117231d2
+[03:30:31] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: null screen: net.minecraft.client.gui.screens.LevelLoadingScreen@117231d2
+[03:30:31] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: null screen: net.minecraft.client.gui.screens.LevelLoadingScreen@117231d2
+[03:30:32] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: null screen: net.minecraft.client.gui.screens.LevelLoadingScreen@117231d2
+[03:30:32] [Server thread/INFO] (Minecraft) Loading 49 chunks for player spawn...
+[03:30:32] [Server thread/INFO] (Minecraft) Preparing spawn area: 16%
+[03:30:32] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: null screen: net.minecraft.client.gui.screens.LevelLoadingScreen@117231d2
+[03:30:32] [Server thread/INFO] (Minecraft) Preparing spawn area: 16%
+[03:30:32] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: null screen: net.minecraft.client.gui.screens.LevelLoadingScreen@117231d2
+[03:30:32] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: null screen: net.minecraft.client.gui.screens.LevelLoadingScreen@117231d2
+[03:30:32] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: null screen: net.minecraft.client.gui.screens.LevelLoadingScreen@117231d2
+[03:30:32] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: null screen: net.minecraft.client.gui.screens.LevelLoadingScreen@117231d2
+[03:30:32] [Server thread/INFO] (Minecraft) Preparing spawn area: 100%
+[03:30:32] [Server thread/INFO] (Minecraft) Time elapsed: 1001 ms
+[03:30:32] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: null screen: net.minecraft.client.gui.screens.LevelLoadingScreen@117231d2
+[03:30:32] [Server thread/INFO] (Minecraft) Player0[local:E:56ee4bc5] logged in with entity id 338 at (15.0, -52.0, -84.0)
+[03:30:32] [Server thread/INFO] (Minecraft) System chat: Player0 joined the game
+[03:30:32] [Server thread/INFO] (Minecraft) Changing view distance to 5, from 10
+[03:30:32] [Server thread/INFO] (Minecraft) Changing simulation distance to 12, from 0
+[03:30:32] [Render thread/INFO] (Minecraft) Loaded 3 advancements
+[03:30:32] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: ClientLevel screen: net.minecraft.client.gui.screens.LevelLoadingScreen@117231d2
+[03:30:32] [Server thread/INFO] (ZMF Cinema) ZMF Cinema: Player0 shared 7 film titles (6 usable in the schedules)
+[03:30:33] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: ClientLevel screen: net.minecraft.client.gui.screens.LevelLoadingScreen@117231d2
+[03:30:33] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: ClientLevel screen: net.minecraft.client.gui.screens.LevelLoadingScreen@117231d2
+[03:30:33] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: ClientLevel screen: net.minecraft.client.gui.screens.LevelLoadingScreen@117231d2
+[03:30:33] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: ClientLevel screen: null
+[03:30:35] [Test thread/INFO] (Minecraft) [STDOUT]: ZMFCINEMA-TEST [ZMF Cinema] rooms and programs kept after reload: PASSED - c1 Silver Screen Cinemas: 12 rooms registered, formats 12 rooms: 3x2D 3x3D 6x4DX 1xIMAX 1xScreenX (2 combined), same film program as before the reload: true; c2 Vista Picture House: 20 rooms registered, formats 20 rooms: 3x2D 5x3D 9x4DX 2xIMAX 1xScreenX (0 combined), same film program as before the reload: true; c3 Metropolitan Screens: 32 rooms registered, formats 32 rooms: 5x2D 10x3D 10x4DX 6xIMAX 1xScreenX (0 combined), same film program as before the reload: true
+[03:30:35] [Server thread/INFO] (Minecraft) Player0 lost connection: Disconnected
+[03:30:35] [Server thread/INFO] (Minecraft) System chat: Player0 left the game
+[03:30:35] [Server thread/INFO] (Minecraft) Stopping singleplayer server as player logged out
+[03:30:35] [Server thread/INFO] (Minecraft) Stopping server
+[03:30:35] [Server thread/INFO] (Minecraft) Saving players
+[03:30:35] [Server thread/INFO] (Minecraft) Saving worlds
+[03:30:35] [Server thread/INFO] (Minecraft) Saving chunks for level 'ServerLevel[ZMF Cinema Test World]'/minecraft:overworld
+[03:30:35] [Server thread/INFO] (Minecraft) Saving chunks for level 'ServerLevel[ZMF Cinema Test World]'/minecraft:the_nether
+[03:30:35] [Server thread/INFO] (Minecraft) Saving chunks for level 'ServerLevel[ZMF Cinema Test World]'/minecraft:the_end
+[03:30:35] [Test thread/INFO] (Minecraft) [STDOUT]: ZMFCINEMA-TEST SUMMARY: 0 failed checks
+[03:30:35] [Render thread/INFO] (Minecraft) Stopping!
+[03:30:35] [AWT-EventQueue-0/INFO] (Minecraft) [STDOUT]: shutdown on Thread[#106,AWT-EventQueue-0,6,InnocuousForkJoinWorkerThreadGroup]
