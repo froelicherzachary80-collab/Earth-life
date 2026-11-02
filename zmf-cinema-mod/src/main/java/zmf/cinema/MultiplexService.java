@@ -710,7 +710,7 @@ public final class MultiplexService {
         if (!ZmfConfig.get().giveStarterPass || p.entityTags().contains("zmfcinema_pass")) return;
         p.addTag("zmfcinema_pass");
         ItemStack pass = new ItemStack(CinemaContent.CINEMA_PASS);
-        if (!p.getInventory().add(pass)) p.drop(pass, false);
+        if (!p.getInventory().add(pass)) p.level().addFreshEntity(new net.minecraft.world.entity.item.ItemEntity(p.level(), p.getX(), p.getY() + 0.5, p.getZ(), pass));
         p.sendSystemMessage(Component.literal("§6🎟 You got a ZMF Cinema Pass!§r Use it to travel to the nearest multiplex cinema (sneak + use to come back)."));
     }
 
