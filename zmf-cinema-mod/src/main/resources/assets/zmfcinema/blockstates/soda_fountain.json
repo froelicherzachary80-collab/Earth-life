@@ -1,0 +1,19 @@
+{
+ "variants": {
+  "facing=north": {
+   "model": "zmfcinema:block/soda_fountain"
+  },
+  "facing=east": {
+   "model": "zmfcinema:block/soda_fountain",
+   "y": 90
+  },
+  "facing=south": {
+   "model": "zmfcinema:block/soda_fountain",
+   "y": 180
+  },
+  "facing=west": {
+   "model": "zmfcinema:block/soda_fountain",
+   "y": 270
+  }
+ }
+}

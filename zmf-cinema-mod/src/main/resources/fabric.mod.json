@@ -1,0 +1,29 @@
+{
+  "schemaVersion": 1,
+  "id": "zmfcinema",
+  "version": "${version}",
+  "name": "ZMF Cinema",
+  "description": "12-32 screen multiplex cinemas generate in your worlds. Every player starts with a ZMF Cinema Pass that takes them to the nearest one. Films from your own Jellyfin servers or video folders, automatic red/cyan 3D, automatic 4DX, IMAX, ScreenX, web cinemas (with MCEF Modern) and bHaptics TactSuit support.",
+  "license": "MIT",
+  "icon": "assets/zmfcinema/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "main": ["zmf.cinema.ZmfCinemaMod"],
+    "client": ["zmf.cinema.client.ZmfCinemaClient"]
+  },
+  "depends": {
+    "fabricloader": "*",
+    "fabric-api": "*",
+    "minecraft": "~26.3",
+    "java": ">=25"
+  },
+  "suggests": {
+    "mcef-modern": ">=0.3.3"
+  },
+  "conflicts": {
+    "earthlife": "<0.6.0"
+  },
+  "mixins": ["zmfcinema.mixins.json", "zmfcinema.mcef.mixins.json"],
+  "contact": { "sources": "https://github.com/froelicherzachary80-collab/Earth-life/tree/main/zmf-cinema-mod" },
+  "authors": ["ZMF"]
+}

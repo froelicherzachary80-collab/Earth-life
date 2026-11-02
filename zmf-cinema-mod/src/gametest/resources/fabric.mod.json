@@ -1,0 +1,10 @@
+{
+  "schemaVersion": 1,
+  "id": "zmfcinema-gametest",
+  "name": "ZMF Cinema in-game tests",
+  "version": "0.1.0",
+  "environment": "*",
+  "license": "MIT",
+  "entrypoints": { "fabric-client-gametest": ["zmf.cinema.test.ZmfStandaloneGameTest"] },
+  "depends": { "zmfcinema": "*", "fabric-api": "*" }
+}

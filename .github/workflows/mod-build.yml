@@ -6,6 +6,7 @@ name: Fabric mod build
 on:
   push:
     branches: [main, 'zmf-*']
+    paths-ignore: ['zmf-cinema-mod/**', '.github/workflows/zmf-cinema.yml', 'tools/zmf/**', 'ZMF-CINEMA-STANDALONE.md']
   pull_request:
     branches: [main]
   workflow_dispatch:

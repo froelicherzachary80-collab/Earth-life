@@ -1,0 +1,19 @@
+{
+ "variants": {
+  "facing=north": {
+   "model": "zmfcinema:block/effect_module"
+  },
+  "facing=east": {
+   "model": "zmfcinema:block/effect_module",
+   "y": 90
+  },
+  "facing=south": {
+   "model": "zmfcinema:block/effect_module",
+   "y": 180
+  },
+  "facing=west": {
+   "model": "zmfcinema:block/effect_module",
+   "y": 270
+  }
+ }
+}
