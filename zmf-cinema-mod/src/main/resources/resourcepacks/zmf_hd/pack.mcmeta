@@ -1,0 +1,8 @@
+{
+ "pack": {
+  "description": "ZMF Cinema HD - 128px cinema textures with LabPBR normal/specular maps",
+  "min_format": 1,
+  "max_format": 999,
+  "pack_format": 100
+ }
+}

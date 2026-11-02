@@ -1,0 +1,13 @@
+{
+  "required": false,
+  "minVersion": "0.8",
+  "package": "zmf.cinema.mixin.mcef",
+  "compatibilityLevel": "JAVA_21",
+  "plugin": "zmf.cinema.mixin.mcef.McefPlugin",
+  "client": [
+    "McefPaintMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 0
+  }
+}

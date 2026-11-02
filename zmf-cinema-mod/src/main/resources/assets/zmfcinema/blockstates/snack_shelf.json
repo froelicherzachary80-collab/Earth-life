@@ -1,0 +1,19 @@
+{
+ "variants": {
+  "facing=north": {
+   "model": "zmfcinema:block/snack_shelf"
+  },
+  "facing=east": {
+   "model": "zmfcinema:block/snack_shelf",
+   "y": 90
+  },
+  "facing=south": {
+   "model": "zmfcinema:block/snack_shelf",
+   "y": 180
+  },
+  "facing=west": {
+   "model": "zmfcinema:block/snack_shelf",
+   "y": 270
+  }
+ }
+}
